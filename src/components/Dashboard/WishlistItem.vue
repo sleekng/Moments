@@ -1,11 +1,11 @@
 <template>
-<div class="flex p-4 rounded-lg bg-white shadow border mb-4 overflow-y-auto">
+<div class="flex flex-col md:flex-row p-4 rounded-lg md:space-x-4 lg:space-x-0 bg-white shadow border mb-4 overflow-y-auto">
     <img :src="imgSrc" alt="Wishlist Image" class="w-36 h-36 rounded-xl object-cover">
-    <div class="flex-1 flex flex-col justify-between px-6">
+    <div class="flex-1 flex flex-col justify-between lg:px-6 pb-4 lg:pb-0 border-b lg:border-0">
         <div>
             <h2 class="text-lg font-semibold text-gray-900">{{ title }}</h2>
         </div>
-        <div class="flex justify-between space-x-8">
+        <div class="flex justify-between lg:space-x-8 md:space-x-4">
             <div>
                 <p class="text-sm text-gray-500">Likes</p>
                 <p class="text-xl font-bold text-gray-900">{{ likes }}</p>
@@ -24,14 +24,14 @@
             </div>
         </div>
     </div>
-    <div class="flex flex-col justify-between  space-y-2 ">
-        <div class="text-gray-500 text-sm font-semibold pr-4">Top wishes</div>
+    <div class="flex flex-col justify-between  space-y-2 mt-4 lg:mt-0 ">
+        <div class="text-gray-500 text-lg font-semibold pr-4">Top wishes</div>
         <div class="flex space-x-2">
             <div v-for="wish in topWishes" :key="wish.label" class="relative">
 
                 <div @click="preview" :class="classList" class="bg-white cursor-pointer rounded-lg shadow-lg overflow-hidden relative card group ">
                     <div class="relative ">
-                        <img :src="wish.img" alt="Wishlist Item" class="w-24 h-24  object-cover">
+                        <img :src="wish.img" alt="Wishlist Item" class="lg:w-24 lg:h-24 w-16   object-cover">
                     </div>
                     <!-- Wish Detail -->
                     <div class="absolute bottom-0 left-0 p-1 bg-gradient-to-t from-black z-50  to-transparent w-full text-white">

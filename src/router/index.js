@@ -5,6 +5,9 @@ import Home from '@/pages/Home/Home.vue'
 
 import UserDashboard from '@/pages/Dashboard/UserDashboard.vue';
 import UserExplore from '@/pages/Dashboard/UserExplore.vue';
+import Account from '@/pages/Dashboard/Account.vue';
+import Archived from '@/pages/Dashboard/Archived.vue';
+import ArchivedView from '@/pages/Dashboard/ArchivedView.vue';
 import AllMyWishes from '@/pages/Dashboard/AllMyWishes.vue';
 import Wishlist from '@/pages/Wishlist.vue';
 import Friends from '@/pages/Friends.vue';
@@ -43,6 +46,21 @@ const router = createRouter({
       path: '/explore',
       name: 'explore',
       component:UserExplore,
+    },
+    {
+      path: '/account',
+      name: 'Account',
+      component:Account,
+    },
+    {
+      path: '/archived',
+      name: 'Archived',
+      component:Archived,
+    },
+    {
+      path: '/view-archived',
+      name: 'ArchivedView',
+      component:ArchivedView,
     },
     {
       path: '/dashboard',

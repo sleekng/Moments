@@ -1,5 +1,5 @@
 <template>
-<div class="bg-white rounded-2xl p-4 mx-auto ">
+<div class="bg-white rounded-2xl lg:p-4 mx-auto ">
 
     <!-- Header -->
     <div class="flex items-center mb-8">
@@ -8,12 +8,12 @@
     </div>
 
     <!-- Displaying Summary Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
         <SummaryCard v-for="item in summaryItems" :key="item.title" :title="item.title" :value="item.value" :icon="item.icon" :icon-bg-class="item.bgColor" />
     </div>
 
     <!-- Wishlist Section -->
-    <div class="bg-white p-6 rounded-lg shadow border">
+    <div class="bg-white p-2 lg:p-6 rounded-lg shadow border">
         <h2 class="text-xl font-semibold mb-4 text-gray-900">Top performing wishlist</h2>
         <WishlistItem v-for="wishlist in wishlists" :key="wishlist.id" :title="wishlist.title" :img-src="wishlist.imgSrc" :likes="wishlist.likes" :views="wishlist.views" :saves="wishlist.saves" :created="wishlist.created" :top-wishes="wishlist.topWishes" />
     </div>

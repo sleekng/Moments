@@ -1,34 +1,41 @@
 <template>
-<div class="bg-gray-100">
-    <AppHeader />
+<div class="bg-gray-100 pb-10">
+    <AppHeader @showCategoryModal="$emit('showCategoryModal')" />
     <div class="container mx-auto pt-20">
         <WishDetails />
 
         <!-- Pass activeTab and method to handle tab switch -->
         <TabNavigationsWish :activeTab="activeTab" @switchTab="setActiveTab" />
-
         <!-- Wishes Grid -->
-        <div class="grid grid-cols-4 gap-6 px-12 py-6 bg-white" @mouseleave="handleCloseDropdown">
-            <div v-if="activeTab == 'myWishes'" class="flex flex-col h-[360px] items-center justify-center bg-gray-100 rounded-lg ZQAaz cursor-pointer">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 px-4 lg:px-12 py-6 pb-12 bg-white rounded-b-lg" @mouseleave="handleCloseDropdown">
+            <div v-if="activeTab == 'myWishes'" class="flex flex-col items-center justify-center bg-gray-100 h-full rounded-lg p-4 py-8  cursor-pointer" @click="showCreateWishModal = true">
                 <div class="flex items-center justify-center w-12 h-12 bg-black rounded-full mb-4">
                     <img src="/assets/add.svg" alt="Add" class="h-5 w-5">
                 </div>
                 <div class="text-lg font-medium text-center text-gray-800 leading-relaxed">Make a Wish</div>
             </div>
-            <WishCard v-for="(wish, index) in filteredWishes" :key="index" :wish="wish" @preview = "prevWish" :openDropdownId="openDropdownId" @toggleDropdown="handleToggleDropdown" @closeDropdown="handleCloseDropdown" />
+
+            <WishCard v-for="(wish, index) in filteredWishes" :key="index" :wish="wish" @preview="prevWish" :openDropdownId="openDropdownId" @toggleDropdown="handleToggleDropdown" @closeDropdown="handleCloseDropdown" />
+
         </div>
+
     </div>
-    <WishDetailView v-if="showWishDetailsModal" @close="closeWishDetailsModal" :wish="showPrevWish"  />
-</div>
+    <WishDetailView v-if="showWishDetailsModal" @close="closeWishDetailsModal" :wish="showPrevWish" />
+    <CreateWishModal
+      v-if="showCreateWishModal"
+      @addWish="AddWish"
+      @close="closeCreateWishModal"
+    />
+    </div>
 </template>
 
 <script>
 import AppHeader from '@/components/Dashboard/AppHeader.vue';
 import WishDetails from '@/components/Dashboard/WishDetails.vue';
-
 import TabNavigationsWish from '@/components/Dashboard/TabNavigationsWish.vue';
 import WishCard from '@/components/Dashboard/WishCard.vue';
 import WishDetailView from '@/components/Dashboard/WishDetailView.vue';
+import CreateWishModal from '@/components/Dashboard/CreateWishModal.vue';
 
 export default {
 
@@ -39,7 +46,8 @@ export default {
         WishDetails,
         TabNavigationsWish,
         WishCard,
-        WishDetailView
+        WishDetailView,
+        CreateWishModal
     },
 
     data() {
@@ -47,6 +55,7 @@ export default {
             showPrevWish: null,
             openDropdownId: null, // Track which dropdown is open by its ID
             showWishDetailsModal: false,
+            showCreateWishModal:false,
             activeTab: 'myWishes', // Track the active tab
             wishes: [{
                     id: 1,
@@ -211,14 +220,13 @@ export default {
         };
 
     },
-    
 
     computed: {
         filteredWishes() {
             // Filter wishes based on the active tab
             return this.wishes.filter(wish => wish.status === this.activeTab);
         },
-        showPrevWish(){
+        showPrevWish() {
             return this.wishes.find(wish => wish.id === this.showPrevWish);
         },
 
@@ -226,11 +234,15 @@ export default {
 
     methods: {
 
-        prevWish(wishId){
-            this.showWishDetailsModal = true
-            this.showPrevWish = this.showPrevWish ===  wishId ? null : wishId
+        closeCreateWishModal(){
+            this.showCreateWishModal = false
         },
-        
+
+        prevWish(wishId) {
+            this.showWishDetailsModal = true
+            this.showPrevWish = this.showPrevWish === wishId ? null : wishId
+        },
+
         closeWishDetailsModal() {
             this.showWishDetailsModal = false; // Hide the wish details modal
             this.showPrevWish = null

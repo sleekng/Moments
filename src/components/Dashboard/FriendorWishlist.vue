@@ -1,9 +1,9 @@
 <template>
-<div class="px-12 py-8 bg-white" @mouseleave="handleCloseDropdown">
+<div class="lg:px-12 px-4 py-8 bg-white rounded-b-lg" @mouseleave="handleCloseDropdown">
 
     <!-- Trending Wishlist Everyone's Talking About! -->
     <div v-if="activeTab === 'Wishes'" class="mb-8">
-        <div class="text-2xl font-bold">Trending Wishlist Everyone's Talking About!</div>
+        <div class="lg:text-2xl text-lg font-bold mb-2">Trending Wishlist Everyone's Talking About!</div>
         <div class="flex w-full overflow-x-auto space-x-6">
             <WishlistCard class="w-[286px] flex-shrink-0" v-for="wishlist in filteredWishlist('trending')" :key="wishlist.id" :wishlist="wishlist" :openDropdownId="openDropdownId" @toggleDropdown="handleToggleDropdown" @closeDropdown="handleCloseDropdown" />
         </div>
@@ -11,7 +11,7 @@
 
     <!-- Recently Added Wishlist You Can't Miss -->
     <div v-if="activeTab === 'Wishes' || activeTab === 'Friends'" class="mb-8">
-        <div class="text-2xl font-bold">Recently Added Wishlist You Can't Miss</div>
+        <div class="lg:text-2xl text-lg font-bold mb-2">Recently Added Wishlist You Can't Miss</div>
         <div class="flex w-full overflow-x-auto space-x-6">
             <WishlistCard class="w-[286px] flex-shrink-0" v-for="wishlist in filteredWishlist('recently-added')" :key="wishlist.id" :wishlist="wishlist" :openDropdownId="openDropdownId" @toggleDropdown="handleToggleDropdown" @closeDropdown="handleCloseDropdown" />
         </div>
@@ -19,7 +19,7 @@
 
     <!-- Its Raining Birthdays -->
     <div v-if="activeTab === 'Wishes' || activeTab === 'Friends'" class="mb-8">
-        <div class="text-2xl font-bold">Its Raining Birthdays</div>
+        <div class="lg:text-2xl text-lg font-bold mb-2">Its Raining Birthdays</div>
         <div class="flex w-full overflow-x-auto space-x-6">
             <WishlistCard class="w-[286px] flex-shrink-0" v-for="wishlist in filteredWishlist('raining')" :key="wishlist.id" :wishlist="wishlist" :openDropdownId="openDropdownId" @toggleDropdown="handleToggleDropdown" @closeDropdown="handleCloseDropdown" />
         </div>
@@ -27,7 +27,7 @@
 
     <!-- Wishes You Reserved For Your Friends -->
     <div v-if="activeTab === 'Friends'" class="mb-8">
-        <div class="text-2xl font-bold">Wishes You Reserved For Your Friends</div>
+        <div class="lg:text-2xl text-lg font-bold mb-2">Wishes You Reserved For Your Friends</div>
         <div class="flex w-full overflow-x-auto space-x-6">
             <WishlistCard class="w-[286px] flex-shrink-0" v-for="wishlist in filteredWishlist('reserved-for-friends')" :key="wishlist.id" :wishlist="wishlist" :openDropdownId="openDropdownId" @toggleDropdown="handleToggleDropdown" @closeDropdown="handleCloseDropdown" />
         </div>

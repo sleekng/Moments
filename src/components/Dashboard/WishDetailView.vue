@@ -1,14 +1,14 @@
 <template>
-<div class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50" @click.self="closeModal">
-    <div class="bg-white rounded-2xl max-w-4xl w-full overflow-hidden shadow-lg p-6 mx-auto relative">
+<div class="fixed inset-0 flex items-center justify-center bg-gray-800 p-4  bg-opacity-50 z-50" @click.self="closeModal">
+    <div class="bg-white rounded-2xl max-w-4xl w-full   h-[98vh] lg:h-auto  shadow-lg p-6 mx-auto relative">
         <button @click="closeModal" class="bg-gray-100 rounded-full p-2 hover:bg-gray-200 absolute top-4 z-50 left-4">
             <img src="/assets/close.svg" alt="Close" class="w-6 h-6" />
         </button>
-        <div class="flex flex-col lg:flex-row gap-8 relative ">
+        <div class="flex flex-col lg:flex-row gap-8 relative overflow-y-auto h-full lg:h-auto lg:pb-0 pb-4">
 
             <!-- Image with Priority Tag -->
             <div class="relative rounded-lg overflow-hidden ">
-                <img src="/assets/image-59.svg" alt="Hermes Birkin Bag" class="w-full  object-cover">
+                <img src="/assets/image-59.svg" alt="Hermes Birkin Bag" class="w-full h-[364px] lg:h-auto object-cover">
                 <img src="/assets/gradient.svg" alt="Gradient Overlay" class="absolute bottom-0 w-full  object-cover">
 
                 <div class="absolute bottom-4 left-4 text-white">
@@ -29,7 +29,7 @@
             </div>
 
             <!-- Details Section -->
-            <div class="flex-1 space-y-6 ">
+            <div class="flex-1 lg:space-y-6 space-y-2">
                 <div class="flex justify-between items-center relative">
                     <div class="space-y-1">
                         <div class="flex items-center space-x-2 text-sm text-gray-600">
@@ -204,7 +204,7 @@
                     </div>
 
                 </div>
-                <div class="space-y-6">
+                <div class="lg:space-y-6 space-y-4">
 
                     <div class="bg-gray-100 p-4 rounded-lg">
                         <div class="text-sm text-gray-600">Comment:</div>
@@ -278,10 +278,11 @@
                 <!-- Actions received -->
                 <div v-if="wish.status == 'received'" class="pt-8 flex justify-between w-full space-x-4 relative">
                     <button class="flex-1 px-8 py-3 bg-gray-200 text-gray-800 rounded-full hover:bg-gray-300">
-                        Mark as Unreceived
+                        <span class="lg:inline hidden">Mark as</span> Unreceived
                     </button>
                     <button class="flex-1 px-8 py-3 bg-primaryColor text-white rounded-full hover:shadow-lg">
-                        Move to Archive
+                        <span class="lg:inline hidden">Move to</span>
+                         Archive
                     </button>
                 </div>
 

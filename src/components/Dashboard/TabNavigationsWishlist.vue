@@ -1,38 +1,38 @@
 <template>
-  <div class="px-12 bg-white">
-    <div class="flex justify-between items-center">
+  <div class=" lg:px-12 bg-white">
+    <div class="flex justify-between items-center ">
       <!-- Tabs -->
-      <div class="flex">
+      <div class="flex overflow-x-auto">
         <!-- My Wishlist Tab -->
         <div class="flex flex-col items-center cursor-pointer" @click="switchTab('myWishes')">
-          <div :class="activeTab === 'myWishes' ? 'text-gray-900' : 'text-[#616874]'" class="text-lg px-8 font-medium">
+          <div :class="activeTab === 'myWishes' ? 'text-gray-900' : 'text-[#616874]'" class="lg:text-base text-[12px] px-2 whitespace-nowrap lg:px-8 font-medium">
             My Wishlist <span class="text-[16px]">10</span>
           </div>
-          <div :class="activeTab === 'myWishes' ? 'bg-black' : ''" class="w-full h-1 mt-2"></div>
+          <div :class="activeTab === 'myWishes' ? 'bg-black' : ''" class="w-full h-1 lg:mt-2"></div>
         </div>
 
         <!-- Reserved Wish Tab -->
         <div class="flex flex-col items-center cursor-pointer" @click="switchTab('reserved')">
-          <div :class="activeTab === 'reserved' ? 'text-gray-900' : 'text-[#616874]'" class="text-lg px-8 font-medium">
+          <div :class="activeTab === 'reserved' ? 'text-gray-900' : 'text-[#616874]'" class="lg:text-base text-[12px] px-2 whitespace-nowrap lg:px-8 font-medium">
             Reserved Wish <span class="text-[16px]">10</span>
           </div>
-          <div :class="activeTab === 'reserved' ? 'bg-black' : ''" class="w-full h-1 mt-2"></div>
+          <div :class="activeTab === 'reserved' ? 'bg-black' : ''" class="w-full h-1 lg:mt-2"></div>
         </div>
 
         <!-- Received Wish Tab -->
         <div class="flex flex-col items-center cursor-pointer" @click="switchTab('saved')">
-          <div :class="activeTab === 'saved' ? 'text-gray-900' : 'text-[#616874]'" class="text-lg px-8 font-medium">
+          <div :class="activeTab === 'saved' ? 'text-gray-900' : 'text-[#616874]'" class="lg:text-base text-[12px] px-2 whitespace-nowrap lg:px-8 font-medium">
             Saved Wish <span class="text-[16px]">10</span>
           </div>
-          <div :class="activeTab === 'saved' ? 'bg-black' : ''" class="w-full h-1 mt-2"></div>
+          <div :class="activeTab === 'saved' ? 'bg-black' : ''" class="w-full h-1 lg:mt-2"></div>
         </div>
       </div>
       
       <!-- Sort By Dropdown -->
-      <div class="relative flex items-center space-x-2 z-50" @mouseleave="toggleDropdown">
-        <img src="/assets/sort-vertical-svgrepo-com-1.svg" alt="Sort Icon" class="h-4 w-4" @click="toggleDropdown">
-        <span class="text-base font-medium text-[#616874] cursor-pointer" @click="toggleDropdown">Sort by</span>
-        <img src="/assets/dropdown.svg" alt="Dropdown Icon" class="h-4 w-4" @click="toggleDropdown">
+      <div class="relative flex items-center space-x-2 z-30" @mouseleave="isDropdownOpen = false">
+        <img src="/assets/sort-vertical-svgrepo-com-1.svg" alt="Sort Icon" class="lg:h-4 lg:w-4 h-8 w-8 mr-2 lg:mr-auto" @click="toggleDropdown">
+        <span class="text-base hidden lg:inline font-medium text-[#616874] cursor-pointer" @click="toggleDropdown">Sort by</span>
+        <img src="/assets/dropdown.svg" alt="Dropdown Icon" class="h-4 w-4 hidden lg:inline" @click="toggleDropdown">
         
         <!-- Dropdown  MyWishList -->
          <template v-if="selectedTab == 'myWishes'">

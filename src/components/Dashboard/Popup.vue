@@ -1,5 +1,5 @@
 <template>
-    <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+    <div class="fixed inset-0 px-4 flex items-center justify-center bg-black bg-opacity-50 z-50">
       <div class="bg-white rounded-2xl p-4 pb-10 relative  max-w-[400px]">
         <button @click="closeModal" class="absolute top-4 right-4">
           <img src="/assets/close.svg" alt="Close" class="w-6 h-6">

@@ -1,35 +1,35 @@
 <template>
-<div class="px-12 py-8 bg-white" @mouseleave="handleCloseDropdown">
+<div class=" lg:px-12 py-8 bg-white rounded-b-lg" @mouseleave="handleCloseDropdown">
 
     <!-- Reserved Wishes -->
     <div class="mb-8">
-        <div class="text-2xl font-bold mb-4">Wishes You Reserved for Your Friends</div>
-        <div class="flex w-full overflow-x-auto space-x-6">
-            <WishCard v-for="(wish, index) in filteredWishes('reserved')" :key="index" :wish="wish"  @preview = "preview" :openDropdownId="openDropdownId" @toggleDropdown="handleToggleDropdown" @closeDropdown="handleCloseDropdown" class="w-[286px] flex-shrink-0" />
+        <div class=" text-[18px] lg:text-2xl font-bold mb-4">Wishes You Reserved for Your Friends</div>
+        <div class="flex w-full overflow-x-auto space-x-3 lg:space-x-6">
+            <WishCard v-for="(wish, index) in filteredWishes('reserved')" :key="index" :wish="wish"  @preview = "preview" :openDropdownId="openDropdownId" @toggleDropdown="handleToggleDropdown" @closeDropdown="handleCloseDropdown" class="md:w-[286px] w-40  flex-shrink-0"  />
         </div>
     </div>
 
     <!-- Fulfilled Wishes -->
     <div class="mb-8">
-        <div class="text-2xl font-bold mb-4">Wishes You've Fulfilled for Your Friends...awww</div>
-        <div class="flex w-full overflow-x-auto space-x-6">
-            <WishCard v-for="(wish, index) in filteredWishes('fulfilled')" :key="index" :wish="wish" @preview = "preview" :openDropdownId="openDropdownId" @toggleDropdown="handleToggleDropdown" @closeDropdown="handleCloseDropdown" class="w-[286px] flex-shrink-0" />
+        <div class="text-[18px] lg:text-2xl font-bold mb-4">Wishes You've Fulfilled for Your Friends <span class=" hidden lg:inline">...awww</span></div>
+        <div class="flex w-full overflow-x-auto space-x-3 lg:space-x-6">
+            <WishCard v-for="(wish, index) in filteredWishes('fulfilled')" :key="index" :wish="wish" @preview = "preview" :openDropdownId="openDropdownId" @toggleDropdown="handleToggleDropdown" @closeDropdown="handleCloseDropdown" class="md:w-[286px] w-40  flex-shrink-0" />
         </div>
     </div>
 
     <!-- Received Wishes -->
     <div class="mb-8">
-        <div class="text-2xl font-bold mb-4">Wishes You've Received</div>
-        <div class="flex w-full overflow-x-auto space-x-6">
-            <WishCard v-for="(wish, index) in filteredWishes('received')" :key="index" :wish="wish" @preview = "preview" :openDropdownId="openDropdownId" @toggleDropdown="handleToggleDropdown" @closeDropdown="handleCloseDropdown" class="w-[286px] flex-shrink-0" />
+        <div class="text-[18px] lg:text-2xl font-bold mb-4">Wishes You've Received</div>
+        <div class="flex w-full overflow-x-auto space-x-3 lg:space-x-6">
+            <WishCard v-for="(wish, index) in filteredWishes('received')" :key="index" :wish="wish" @preview = "preview" :openDropdownId="openDropdownId" @toggleDropdown="handleToggleDropdown" @closeDropdown="handleCloseDropdown" class="md:w-[286px] w-40  flex-shrink-0" />
         </div>
     </div>
 
     <!-- My Wishes -->
     <div class="mb-8">
-        <div class="text-2xl font-bold mb-4">My Wishlist</div>
-        <div class="flex w-full overflow-x-auto space-x-6">
-            <WishCard v-for="(wish, index) in filteredWishes('myWishes')" :key="index" :wish="wish" @preview = "preview" :openDropdownId="openDropdownId" @toggleDropdown="handleToggleDropdown" @closeDropdown="handleCloseDropdown" class="w-[286px] flex-shrink-0" />
+        <div class="text-[18px] lg:text-2xl font-bold mb-4">My Wishlist</div>
+        <div class="flex w-full overflow-x-auto space-x-3 lg:space-x-6">
+            <WishCard v-for="(wish, index) in filteredWishes('myWishes')" :key="index" :wish="wish" @preview = "preview" :openDropdownId="openDropdownId" @toggleDropdown="handleToggleDropdown" @closeDropdown="handleCloseDropdown" class="md:w-[286px] w-40  flex-shrink-0" />
         </div>
     </div>
 

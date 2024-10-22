@@ -1,11 +1,11 @@
 <template>
-  <div class="px-12 bg-white">
+  <div class="lg:px-12 px-4 bg-white">
     <div class="flex justify-between items-center">
       <!-- Tabs -->
       <div class="flex">
         <!-- My Wishlist Tab -->
         <div class="flex flex-col items-center cursor-pointer" @click="switchTab('Wishes')">
-          <div :class="activeTab === 'Wishes' ? 'text-gray-900' : 'text-[#616874]'" class="text-lg px-8 font-medium">
+          <div :class="activeTab === 'Wishes' ? 'text-gray-900' : 'text-[#616874]'" class="lg:text-base text-base px-2 whitespace-nowrap lg:px-8 font-medium">
             Wishlist For You
           </div>
           <div :class="activeTab === 'Wishes' ? 'bg-black' : ''" class="w-full h-1 mt-2"></div>
@@ -13,7 +13,7 @@
 
         <!-- Reserved Wish Tab -->
         <div class="flex flex-col items-center cursor-pointer" @click="switchTab('Friends')">
-          <div :class="activeTab === 'Friends' ? 'text-gray-900' : 'text-[#616874]'" class="text-lg px-8 font-medium">
+          <div :class="activeTab === 'Friends' ? 'text-gray-900' : 'text-[#616874]'" class="lg:text-base text-base px-2 whitespace-nowrap lg:px-8 font-medium">
             Friends
           </div>
           <div :class="activeTab === 'Friends' ? 'bg-black' : ''" class="w-full h-1 mt-2"></div>

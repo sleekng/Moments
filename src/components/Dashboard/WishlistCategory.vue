@@ -1,11 +1,11 @@
 <template>
     <div class="flex flex-col items-center">
       <div
-        class="w-32 h-32 bg-gray-100 rounded-lg flex items-center justify-center mb-2"
+        class=" h-20 w-20 lg:w-32 lg:h-32 bg-gray-100 rounded-lg flex items-center overflow-hidden justify-center mb-2"
       >
-        <img :src="image" :alt="title" class=" object-cover" />
+        <img :src="image" :alt="title" class=" object-cover h-full" />
       </div>
-      <p class="text-gray-800 text-sm font-medium">{{ title }}</p>
+      <p class="text-gray-800 text-xs lg:text-sm font-medium">{{ title }}</p>
     </div>
   </template>
   

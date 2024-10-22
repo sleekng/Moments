@@ -1,72 +1,63 @@
 <template>
-    <div class="bg-gray-100">
-      <AppHeader />
-      <div class="container mx-auto pt-20">
-        <div class="flex justify-center items-center pt-20 mt-10 rounded-t-lg bg-white">
-          <SearchComponent @startSearch="startSearch" @selectOption="selectOption" :selectedOption="selectedOption"/>
+<div class="bg-gray-100">
+    <AppHeader @showCategoryModal="$emit('showCategoryModal')" />
+    <div class="container mx-auto lg:pt-20 lg:py-20">
+        <div class="flex justify-center items-center pt-20 mt-10 rounded-t-lg bg-black lg:bg-white">
+            <SearchComponent @startSearch="startSearch" @selectOption="selectOption" :selectedOption="selectedOption" />
         </div>
-        <TabNavigationsWishlist2 v-if="!isSearching" :activeTab="activeTab" @switchTab="setActiveTab" class="pt-20" />
+        <TabNavigationsWishlist2 v-if="!isSearching" :activeTab="activeTab" @switchTab="setActiveTab" class=" pt-4 lg:pt-20" />
         <FriendorWishlist v-if="!isSearching" :activeTab="activeTab" :wishlists="wishlists" @preview="prevWish" />
-        <SearchResultsComponent v-if="isSearching" :results="searchResults" :search="search" :selectedOption="selectedOption" />
-  
+         
+        <SearchResultsComponent  v-if="isSearching" :results="searchResults" :search="search" :selectedOption="selectedOption" />
+
+        
         <!-- Conditionally show the modals -->
-        <Popup v-if="showInitialModal" @close="closeInitialModal" />
         <CategoryPopup v-if="showCategoryModal" @close="closeCategoryModal" @showCreateWishlistModal="showCreateWishlistModal = true" />
-        <CreatedWishlistModal
-          v-if="showCreatedWishlistModal"
-          @close="closeCreatedWishlistModal"
-          title="New Wishlist Created! ✨"
-          description="Your wishlist is live and ready to shine! Start adding those dream wish items and share it with friends to get the gifts you’ve been wishing for."
-          viewWishlistText="View Wishlist"
-          makeAWishText="Make a Wish"
-        />
+        <CreatedWishlistModal v-if="showCreatedWishlistModal" @close="closeCreatedWishlistModal" title="New Wishlist Created! ✨" description="Your wishlist is live and ready to shine! Start adding those dream wish items and share it with friends to get the gifts you’ve been wishing for." viewWishlistText="View Wishlist" makeAWishText="Make a Wish" />
         <CreateWishlistModal @createWishList="createWishList" v-if="showCreateWishlistModal" @close="closeCreateWishlistModal" />
         <WishDetailView v-if="showWishDetailsModal" @close="closeWishDetailsModal" :wish="showPrevWish" />
-        <AnalyticsModal v-if="showAnalyticsModal" :wishlists="wishlists" @close="closeAnalyticsModal" />
-      </div>
     </div>
-  </template>
+</div>
+</template>
+
   
-  <script>
-  import AppHeader from '@/components/Dashboard/AppHeader.vue';
-  import TabNavigationsWishlist2 from '@/components/Dashboard/TabNavigationsWishlist2.vue';
-  import FriendorWishlist from '@/components/Dashboard/FriendorWishlist.vue';
-  import Popup from '@/components/Dashboard/Popup.vue';
-  import CategoryPopup from '@/components/Dashboard/CategoryPopup.vue';
-  import CreateWishlistModal from '@/components/Dashboard/CreateWishlistModal.vue';
-  import SearchComponent from '@/components/Dashboard/SearchComponent.vue';
-  import SearchResultsComponent from '@/components/Dashboard/SearchResultsComponent.vue';
-  import CreatedWishlistModal from '@/components/Dashboard/CreatedWishlistModal.vue';
-  import WishDetailView from '@/components/Dashboard/WishDetailView.vue';
-  import AnalyticsModal from '@/components/Dashboard/AnalyticsModal.vue';
-  
-  export default {
+<script>
+import AppHeader from '@/components/Dashboard/AppHeader.vue';
+import TabNavigationsWishlist2 from '@/components/Dashboard/TabNavigationsWishlist2.vue';
+import FriendorWishlist from '@/components/Dashboard/FriendorWishlist.vue';
+import Popup from '@/components/Dashboard/Popup.vue';
+import CategoryPopup from '@/components/Dashboard/CategoryPopup.vue';
+import CreateWishlistModal from '@/components/Dashboard/CreateWishlistModal.vue';
+import SearchComponent from '@/components/Dashboard/SearchComponent.vue';
+import SearchResultsComponent from '@/components/Dashboard/SearchResultsComponent.vue';
+import CreatedWishlistModal from '@/components/Dashboard/CreatedWishlistModal.vue';
+import WishDetailView from '@/components/Dashboard/WishDetailView.vue';
+
+export default {
     components: {
-      AppHeader,
-      TabNavigationsWishlist2,
-      FriendorWishlist,
-      Popup,
-      CategoryPopup,
-      CreateWishlistModal,
-      SearchComponent,
-      SearchResultsComponent,
-      CreatedWishlistModal,
-      WishDetailView,
-      AnalyticsModal,
+        AppHeader,
+        TabNavigationsWishlist2,
+        FriendorWishlist,
+        Popup,
+        CategoryPopup,
+        CreateWishlistModal,
+        SearchComponent,
+        SearchResultsComponent,
+        CreatedWishlistModal,
+        WishDetailView,
     },
     data() {
-      return {
-        search: null,
-        showAnalyticsModal: true,
-        showPrevWish: null,
-        showWishDetailsModal: false,
-        showCreatedWishlistModal: false,
-        showCategoryModal: false,
-        showInitialModal: true,
-        showCreateWishlistModal: false,
-        openDropdownId: null,
-        activeTab: 'Wishes',
-        wishlists: [{
+        return {
+            search: null,
+            showPrevWish: null,
+            showWishDetailsModal: false,
+            showCreatedWishlistModal: false,
+            showCategoryModal: false,
+            showInitialModal: true,
+            showCreateWishlistModal: false,
+            openDropdownId: null,
+            activeTab: 'Wishes',
+            wishlists: [{
                     id: 1,
                     title: 'My 25th Birthday',
                     imgSrc: '/assets/13-1.svg',
@@ -387,477 +378,472 @@
                     status: 'recently-added'
                 },
             ],
-        users: [
-  {
-    id: 1,
-    name: 'Ayomide Shotayo',
-    username: '@ayomide_sm',
-    imgSrc: '/assets/profile-7.svg',
-    wishlists: 10,
-    friends: '200k',
-    likes: 300,
-    friendStatus: 'not-friends',
-  },
-  {
-    id: 2,
-    name: 'Samuel Doe',
-    username: '@sam_doe',
-    imgSrc: '/assets/profile-7.svg',
-    wishlists: 8,
-    friends: '150k',
-    likes: 500,
-    friendStatus: 'friends',
-  },
-  {
-    id: 3,
-    name: 'Mia Johnson',
-    username: '@mia_j',
-    imgSrc: '/assets/profile-7.svg',
-    wishlists: 5,
-    friends: '100k',
-    likes: 450,
-    friendStatus: 'not-friends',
-  },
-  {
-    id: 4,
-    name: 'Elena Martin',
-    username: '@elena_m',
-    imgSrc: '/assets/profile-7.svg',
-    wishlists: 12,
-    friends: '250k',
-    likes: 600,
-    friendStatus: 'friends',
-  },
-  {
-    id: 5,
-    name: 'John Smith',
-    username: '@johnsmith',
-    imgSrc: '/assets/profile-7.svg',
-    wishlists: 7,
-    friends: '300k',
-    likes: 350,
-    friendStatus: 'not-friends',
-  },
-  {
-    id: 6,
-    name: 'Sophia Lee',
-    username: '@sophia_lee',
-    imgSrc: '/assets/profile-7.svg',
-    wishlists: 6,
-    friends: '190k',
-    likes: 270,
-    friendStatus: 'friends',
-  },
-  {
-    id: 7,
-    name: 'Oliver Brown',
-    username: '@oliverb',
-    imgSrc: '/assets/profile-7.svg',
-    wishlists: 10,
-    friends: '220k',
-    likes: 310,
-    friendStatus: 'friends',
-  },
-  {
-    id: 8,
-    name: 'Emma Davis',
-    username: '@emmad',
-    imgSrc: '/assets/profile-7.svg',
-    wishlists: 9,
-    friends: '180k',
-    likes: 290,
-    friendStatus: 'not-friends',
-  },
-  {
-    id: 9,
-    name: 'Liam Wilson',
-    username: '@liamwilson',
-    imgSrc: '/assets/profile-7.svg',
-    wishlists: 11,
-    friends: '210k',
-    likes: 410,
-    friendStatus: 'friends',
-  },
-  {
-    id: 10,
-    name: 'Chloe Nguyen',
-    username: '@chloen',
-    imgSrc: '/assets/profile-7.svg',
-    wishlists: 8,
-    friends: '170k',
-    likes: 370,
-    friendStatus: 'not-friends',
-  },
-  {
-    id: 11,
-    name: 'Ethan Garcia',
-    username: '@ethang',
-    imgSrc: '/assets/profile-7.svg',
-    wishlists: 7,
-    friends: '240k',
-    likes: 330,
-    friendStatus: 'friends',
-  },
-  {
-    id: 12,
-    name: 'Ava Taylor',
-    username: '@avataylor',
-    imgSrc: '/assets/profile-7.svg',
-    wishlists: 9,
-    friends: '260k',
-    likes: 350,
-    friendStatus: 'not-friends',
-  },
-  {
-    id: 13,
-    name: 'William Anderson',
-    username: '@william_a',
-    imgSrc: '/assets/profile-7.svg',
-    wishlists: 6,
-    friends: '160k',
-    likes: 250,
-    friendStatus: 'friends',
-  },
-  {
-    id: 14,
-    name: 'Amelia Clark',
-    username: '@amelia_c',
-    imgSrc: '/assets/profile-7.svg',
-    wishlists: 5,
-    friends: '140k',
-    likes: 280,
-    friendStatus: 'not-friends',
-  },
-  {
-    id: 15,
-    name: 'James Lee',
-    username: '@jameslee',
-    imgSrc: '/assets/profile-7.svg',
-    wishlists: 10,
-    friends: '230k',
-    likes: 320,
-    friendStatus: 'friends',
-  },
-  {
-    id: 16,
-    name: 'Lily Perez',
-    username: '@lilyp',
-    imgSrc: '/assets/profile-7.svg',
-    wishlists: 8,
-    friends: '210k',
-    likes: 270,
-    friendStatus: 'not-friends',
-  },
-  {
-    id: 17,
-    name: 'Henry Thompson',
-    username: '@henry_t',
-    imgSrc: '/assets/profile-7.svg',
-    wishlists: 6,
-    friends: '190k',
-    likes: 230,
-    friendStatus: 'friends',
-  },
-  {
-    id: 18,
-    name: 'Sophie Martinez',
-    username: '@sophiem',
-    imgSrc: '/assets/profile-7.svg',
-    wishlists: 7,
-    friends: '170k',
-    likes: 260,
-    friendStatus: 'not-friends',
-  },
-  {
-    id: 19,
-    name: 'Mason Robinson',
-    username: '@mason_r',
-    imgSrc: '/assets/profile-7.svg',
-    wishlists: 9,
-    friends: '220k',
-    likes: 310,
-    friendStatus: 'friends',
-  },
-  {
-    id: 20,
-    name: 'Isabella Lewis',
-    username: '@isabellal',
-    imgSrc: '/assets/profile-7.svg',
-    wishlists: 8,
-    friends: '180k',
-    likes: 290,
-    friendStatus: 'not-friends',
-  },
-  {
-    id: 21,
-    name: 'Logan White',
-    username: '@loganwhite',
-    imgSrc: '/assets/profile-7.svg',
-    wishlists: 7,
-    friends: '250k',
-    likes: 340,
-    friendStatus: 'friends',
-  },
-  {
-    id: 22,
-    name: 'Grace Walker',
-    username: '@gracew',
-    imgSrc: '/assets/profile-7.svg',
-    wishlists: 6,
-    friends: '230k',
-    likes: 270,
-    friendStatus: 'not-friends',
-  },
-  {
-    id: 23,
-    name: 'Lucas Young',
-    username: '@lucas_y',
-    imgSrc: '/assets/profile-7.svg',
-    wishlists: 11,
-    friends: '210k',
-    likes: 360,
-    friendStatus: 'friends',
-  },
-  {
-    id: 24,
-    name: 'Charlotte King',
-    username: '@charlottek',
-    imgSrc: '/assets/profile-7.svg',
-    wishlists: 5,
-    friends: '240k',
-    likes: 300,
-    friendStatus: 'not-friends',
-  },
-  {
-    id: 25,
-    name: 'Benjamin Scott',
-    username: '@benjamins',
-    imgSrc: '/assets/profile-7.svg',
-    wishlists: 9,
-    friends: '180k',
-    likes: 310,
-    friendStatus: 'friends',
-  },
-  {
-    id: 26,
-    name: 'Mila Harris',
-    username: '@mila_h',
-    imgSrc: '/assets/profile-7.svg',
-    wishlists: 6,
-    friends: '200k',
-    likes: 290,
-    friendStatus: 'not-friends',
-  },
-  {
-    id: 27,
-    name: 'Daniel Ramirez',
-    username: '@danielr',
-    imgSrc: '/assets/profile-7.svg',
-    wishlists: 8,
-    friends: '220k',
-    likes: 330,
-    friendStatus: 'friends',
-  },
-  {
-    id: 28,
-    name: 'Evelyn Carter',
-    username: '@evelync',
-    imgSrc: '/assets/profile-7.svg',
-    wishlists: 10,
-    friends: '210k',
-    likes: 310,
-    friendStatus: 'not-friends',
-  },
-  {
-    id: 29,
-    name: 'Matthew Gonzales',
-    username: '@mattgonz',
-    imgSrc: '/assets/profile-7.svg',
-    wishlists: 7,
-    friends: '230k',
-    likes: 350,
-    friendStatus: 'friends',
-  },
-  {
-    id: 30,
-    name: 'Harper Flores',
-    username: '@harperf',
-    imgSrc: '/assets/profile-7.svg',
-    wishlists: 5,
-    friends: '160k',
-    likes: 260,
-    friendStatus: 'not-friends',
-  },
-  {
-    id: 31,
-    name: 'Sebastian Powell',
-    username: '@sebastianp',
-    imgSrc: '/assets/profile-7.svg',
-    wishlists: 9,
-    friends: '250k',
-    likes: 370,
-    friendStatus: 'friends',
-  },
-  {
-    id: 32,
-    name: 'Ella Hughes',
-    username: '@ellah',
-    imgSrc: '/assets/profile-7.svg',
-    wishlists: 6,
-    friends: '180k',
-    likes: 270,
-    friendStatus: 'not-friends',
-  },
-  {
-    id: 33,
-    name: 'Jackson Ward',
-    username: '@jacksonw',
-    imgSrc: '/assets/profile-7.svg',
-    wishlists: 10,
-    friends: '220k',
-    likes: 340,
-    friendStatus: 'friends',
-  },
-  {
-    id: 34,
-    name: 'Avery Hall',
-    username: '@averyh',
-    imgSrc: '/assets/profile-7.svg',
-    wishlists: 7,
-    friends: '190k',
-    likes: 310,
-    friendStatus: 'not-friends',
-  },
-  {
-    id: 35,
-    name: 'Owen Allen',
-    username: '@owen_a',
-    imgSrc: '/assets/profile-7.svg',
-    wishlists: 8,
-    friends: '200k',
-    likes: 320,
-    friendStatus: 'friends',
-  },
-  {
-    id: 36,
-    name: 'Scarlett Howard',
-    username: '@scarlett_h',
-    imgSrc: '/assets/profile-7.svg',
-    wishlists: 6,
-    friends: '180k',
-    likes: 280,
-    friendStatus: 'not-friends',
-  },
-  {
-    id: 37,
-    name: 'Gabriel Phillips',
-    username: '@gabrielp',
-    imgSrc: '/assets/profile-7.svg',
-    wishlists: 9,
-    friends: '240k',
-    likes: 350,
-    friendStatus: 'friends',
-  },
-  {
-    id: 38,
-    name: 'Victoria Torres',
-    username: '@victoriat',
-    imgSrc: '/assets/profile-7.svg',
-    wishlists: 8,
-    friends: '170k',
-    likes: 300,
-    friendStatus: 'not-friends',
-  },
-  {
-    id: 39,
-    name: 'Dylan Brooks',
-    username: '@dylan_b',
-    imgSrc: '/assets/profile-7.svg',
-    wishlists: 7,
-    friends: '230k',
-    likes: 310,
-    friendStatus: 'friends',
-  },
-  {
-    id: 40,
-    name: 'Layla Sanders',
-    username: '@laylas',
-    imgSrc: '/assets/profile-7.svg',
-    wishlists: 6,
-    friends: '160k',
-    likes: 280,
-    friendStatus: 'not-friends',
-  }
-],
-        isSearching: false,
-        searchResults: [],
-        selectedOption: 'Friends', // 'Friends' or 'Wishlist'
-      };
+            users: [{
+                    id: 1,
+                    name: 'Ayomide Shotayo',
+                    username: '@ayomide_sm',
+                    imgSrc: '/assets/profile-7.svg',
+                    wishlists: 10,
+                    friends: '200k',
+                    likes: 300,
+                    friendStatus: 'not-friends',
+                },
+                {
+                    id: 2,
+                    name: 'Samuel Doe',
+                    username: '@sam_doe',
+                    imgSrc: '/assets/profile-7.svg',
+                    wishlists: 8,
+                    friends: '150k',
+                    likes: 500,
+                    friendStatus: 'friends',
+                },
+                {
+                    id: 3,
+                    name: 'Mia Johnson',
+                    username: '@mia_j',
+                    imgSrc: '/assets/profile-7.svg',
+                    wishlists: 5,
+                    friends: '100k',
+                    likes: 450,
+                    friendStatus: 'not-friends',
+                },
+                {
+                    id: 4,
+                    name: 'Elena Martin',
+                    username: '@elena_m',
+                    imgSrc: '/assets/profile-7.svg',
+                    wishlists: 12,
+                    friends: '250k',
+                    likes: 600,
+                    friendStatus: 'friends',
+                },
+                {
+                    id: 5,
+                    name: 'John Smith',
+                    username: '@johnsmith',
+                    imgSrc: '/assets/profile-7.svg',
+                    wishlists: 7,
+                    friends: '300k',
+                    likes: 350,
+                    friendStatus: 'not-friends',
+                },
+                {
+                    id: 6,
+                    name: 'Sophia Lee',
+                    username: '@sophia_lee',
+                    imgSrc: '/assets/profile-7.svg',
+                    wishlists: 6,
+                    friends: '190k',
+                    likes: 270,
+                    friendStatus: 'friends',
+                },
+                {
+                    id: 7,
+                    name: 'Oliver Brown',
+                    username: '@oliverb',
+                    imgSrc: '/assets/profile-7.svg',
+                    wishlists: 10,
+                    friends: '220k',
+                    likes: 310,
+                    friendStatus: 'friends',
+                },
+                {
+                    id: 8,
+                    name: 'Emma Davis',
+                    username: '@emmad',
+                    imgSrc: '/assets/profile-7.svg',
+                    wishlists: 9,
+                    friends: '180k',
+                    likes: 290,
+                    friendStatus: 'not-friends',
+                },
+                {
+                    id: 9,
+                    name: 'Liam Wilson',
+                    username: '@liamwilson',
+                    imgSrc: '/assets/profile-7.svg',
+                    wishlists: 11,
+                    friends: '210k',
+                    likes: 410,
+                    friendStatus: 'friends',
+                },
+                {
+                    id: 10,
+                    name: 'Chloe Nguyen',
+                    username: '@chloen',
+                    imgSrc: '/assets/profile-7.svg',
+                    wishlists: 8,
+                    friends: '170k',
+                    likes: 370,
+                    friendStatus: 'not-friends',
+                },
+                {
+                    id: 11,
+                    name: 'Ethan Garcia',
+                    username: '@ethang',
+                    imgSrc: '/assets/profile-7.svg',
+                    wishlists: 7,
+                    friends: '240k',
+                    likes: 330,
+                    friendStatus: 'friends',
+                },
+                {
+                    id: 12,
+                    name: 'Ava Taylor',
+                    username: '@avataylor',
+                    imgSrc: '/assets/profile-7.svg',
+                    wishlists: 9,
+                    friends: '260k',
+                    likes: 350,
+                    friendStatus: 'not-friends',
+                },
+                {
+                    id: 13,
+                    name: 'William Anderson',
+                    username: '@william_a',
+                    imgSrc: '/assets/profile-7.svg',
+                    wishlists: 6,
+                    friends: '160k',
+                    likes: 250,
+                    friendStatus: 'friends',
+                },
+                {
+                    id: 14,
+                    name: 'Amelia Clark',
+                    username: '@amelia_c',
+                    imgSrc: '/assets/profile-7.svg',
+                    wishlists: 5,
+                    friends: '140k',
+                    likes: 280,
+                    friendStatus: 'not-friends',
+                },
+                {
+                    id: 15,
+                    name: 'James Lee',
+                    username: '@jameslee',
+                    imgSrc: '/assets/profile-7.svg',
+                    wishlists: 10,
+                    friends: '230k',
+                    likes: 320,
+                    friendStatus: 'friends',
+                },
+                {
+                    id: 16,
+                    name: 'Lily Perez',
+                    username: '@lilyp',
+                    imgSrc: '/assets/profile-7.svg',
+                    wishlists: 8,
+                    friends: '210k',
+                    likes: 270,
+                    friendStatus: 'not-friends',
+                },
+                {
+                    id: 17,
+                    name: 'Henry Thompson',
+                    username: '@henry_t',
+                    imgSrc: '/assets/profile-7.svg',
+                    wishlists: 6,
+                    friends: '190k',
+                    likes: 230,
+                    friendStatus: 'friends',
+                },
+                {
+                    id: 18,
+                    name: 'Sophie Martinez',
+                    username: '@sophiem',
+                    imgSrc: '/assets/profile-7.svg',
+                    wishlists: 7,
+                    friends: '170k',
+                    likes: 260,
+                    friendStatus: 'not-friends',
+                },
+                {
+                    id: 19,
+                    name: 'Mason Robinson',
+                    username: '@mason_r',
+                    imgSrc: '/assets/profile-7.svg',
+                    wishlists: 9,
+                    friends: '220k',
+                    likes: 310,
+                    friendStatus: 'friends',
+                },
+                {
+                    id: 20,
+                    name: 'Isabella Lewis',
+                    username: '@isabellal',
+                    imgSrc: '/assets/profile-7.svg',
+                    wishlists: 8,
+                    friends: '180k',
+                    likes: 290,
+                    friendStatus: 'not-friends',
+                },
+                {
+                    id: 21,
+                    name: 'Logan White',
+                    username: '@loganwhite',
+                    imgSrc: '/assets/profile-7.svg',
+                    wishlists: 7,
+                    friends: '250k',
+                    likes: 340,
+                    friendStatus: 'friends',
+                },
+                {
+                    id: 22,
+                    name: 'Grace Walker',
+                    username: '@gracew',
+                    imgSrc: '/assets/profile-7.svg',
+                    wishlists: 6,
+                    friends: '230k',
+                    likes: 270,
+                    friendStatus: 'not-friends',
+                },
+                {
+                    id: 23,
+                    name: 'Lucas Young',
+                    username: '@lucas_y',
+                    imgSrc: '/assets/profile-7.svg',
+                    wishlists: 11,
+                    friends: '210k',
+                    likes: 360,
+                    friendStatus: 'friends',
+                },
+                {
+                    id: 24,
+                    name: 'Charlotte King',
+                    username: '@charlottek',
+                    imgSrc: '/assets/profile-7.svg',
+                    wishlists: 5,
+                    friends: '240k',
+                    likes: 300,
+                    friendStatus: 'not-friends',
+                },
+                {
+                    id: 25,
+                    name: 'Benjamin Scott',
+                    username: '@benjamins',
+                    imgSrc: '/assets/profile-7.svg',
+                    wishlists: 9,
+                    friends: '180k',
+                    likes: 310,
+                    friendStatus: 'friends',
+                },
+                {
+                    id: 26,
+                    name: 'Mila Harris',
+                    username: '@mila_h',
+                    imgSrc: '/assets/profile-7.svg',
+                    wishlists: 6,
+                    friends: '200k',
+                    likes: 290,
+                    friendStatus: 'not-friends',
+                },
+                {
+                    id: 27,
+                    name: 'Daniel Ramirez',
+                    username: '@danielr',
+                    imgSrc: '/assets/profile-7.svg',
+                    wishlists: 8,
+                    friends: '220k',
+                    likes: 330,
+                    friendStatus: 'friends',
+                },
+                {
+                    id: 28,
+                    name: 'Evelyn Carter',
+                    username: '@evelync',
+                    imgSrc: '/assets/profile-7.svg',
+                    wishlists: 10,
+                    friends: '210k',
+                    likes: 310,
+                    friendStatus: 'not-friends',
+                },
+                {
+                    id: 29,
+                    name: 'Matthew Gonzales',
+                    username: '@mattgonz',
+                    imgSrc: '/assets/profile-7.svg',
+                    wishlists: 7,
+                    friends: '230k',
+                    likes: 350,
+                    friendStatus: 'friends',
+                },
+                {
+                    id: 30,
+                    name: 'Harper Flores',
+                    username: '@harperf',
+                    imgSrc: '/assets/profile-7.svg',
+                    wishlists: 5,
+                    friends: '160k',
+                    likes: 260,
+                    friendStatus: 'not-friends',
+                },
+                {
+                    id: 31,
+                    name: 'Sebastian Powell',
+                    username: '@sebastianp',
+                    imgSrc: '/assets/profile-7.svg',
+                    wishlists: 9,
+                    friends: '250k',
+                    likes: 370,
+                    friendStatus: 'friends',
+                },
+                {
+                    id: 32,
+                    name: 'Ella Hughes',
+                    username: '@ellah',
+                    imgSrc: '/assets/profile-7.svg',
+                    wishlists: 6,
+                    friends: '180k',
+                    likes: 270,
+                    friendStatus: 'not-friends',
+                },
+                {
+                    id: 33,
+                    name: 'Jackson Ward',
+                    username: '@jacksonw',
+                    imgSrc: '/assets/profile-7.svg',
+                    wishlists: 10,
+                    friends: '220k',
+                    likes: 340,
+                    friendStatus: 'friends',
+                },
+                {
+                    id: 34,
+                    name: 'Avery Hall',
+                    username: '@averyh',
+                    imgSrc: '/assets/profile-7.svg',
+                    wishlists: 7,
+                    friends: '190k',
+                    likes: 310,
+                    friendStatus: 'not-friends',
+                },
+                {
+                    id: 35,
+                    name: 'Owen Allen',
+                    username: '@owen_a',
+                    imgSrc: '/assets/profile-7.svg',
+                    wishlists: 8,
+                    friends: '200k',
+                    likes: 320,
+                    friendStatus: 'friends',
+                },
+                {
+                    id: 36,
+                    name: 'Scarlett Howard',
+                    username: '@scarlett_h',
+                    imgSrc: '/assets/profile-7.svg',
+                    wishlists: 6,
+                    friends: '180k',
+                    likes: 280,
+                    friendStatus: 'not-friends',
+                },
+                {
+                    id: 37,
+                    name: 'Gabriel Phillips',
+                    username: '@gabrielp',
+                    imgSrc: '/assets/profile-7.svg',
+                    wishlists: 9,
+                    friends: '240k',
+                    likes: 350,
+                    friendStatus: 'friends',
+                },
+                {
+                    id: 38,
+                    name: 'Victoria Torres',
+                    username: '@victoriat',
+                    imgSrc: '/assets/profile-7.svg',
+                    wishlists: 8,
+                    friends: '170k',
+                    likes: 300,
+                    friendStatus: 'not-friends',
+                },
+                {
+                    id: 39,
+                    name: 'Dylan Brooks',
+                    username: '@dylan_b',
+                    imgSrc: '/assets/profile-7.svg',
+                    wishlists: 7,
+                    friends: '230k',
+                    likes: 310,
+                    friendStatus: 'friends',
+                },
+                {
+                    id: 40,
+                    name: 'Layla Sanders',
+                    username: '@laylas',
+                    imgSrc: '/assets/profile-7.svg',
+                    wishlists: 6,
+                    friends: '160k',
+                    likes: 280,
+                    friendStatus: 'not-friends',
+                }
+            ],
+            isSearching: false,
+            searchResults: [],
+            selectedOption: 'Friends', // 'Friends' or 'Wishlist'
+        };
     },
     methods: {
-      closeAnalyticsModal() {
-        this.showAnalyticsModal = false;
-      },
-      prevWish(wishId) {
-        this.showWishDetailsModal = true;
-        this.showPrevWish = this.showPrevWish === wishId ? null : wishId;
-      },
-      closeWishDetailsModal() {
-        this.showWishDetailsModal = false;
-        this.showPrevWish = null;
-      },
-      createWishList() {
-        this.showCreatedWishlistModal = true;
-        this.showCreateWishlistModal = false;
-      },
-      closeCreatedWishlistModal() {
-        this.showCreateWishlistModal = false;
-      },
-      addNewWishList() {
-        this.showCategoryModal = true;
-      },
-      closeCategoryModal() {
-        this.showCategoryModal = false;
-      },
-      setActiveTab(tab) {
-        this.activeTab = tab;
-      },
-      closeInitialModal() {
-        this.showInitialModal = false;
-      },
-      closeCreateWishlistModal() {
-        this.showCreateWishlistModal = false;
-      },
-      handleToggleDropdown(wishlistId) {
-        this.openDropdownId = this.openDropdownId === wishlistId ? null : wishlistId;
-      },
-      handleCloseDropdown() {
-        this.openDropdownId = null;
-      },
-      startSearch(query) {
-        this.search = query;
-        if (query) {
-          if (this.selectedOption === 'Friends') {
-            this.searchResults = this.users.filter(user => 
-              user.name.toLowerCase().includes(query.toLowerCase()) || 
-              user.username.toLowerCase().includes(query.toLowerCase())
-            );
-          } else {
-            this.searchResults = this.wishlists.filter(wishlist =>
-              wishlist.title.toLowerCase().includes(query.toLowerCase()) ||
-              wishlist.category.toLowerCase().includes(query.toLowerCase())
-            );
-          }
-          this.isSearching = true;
-        } else {
-          this.isSearching = false;
+        prevWish(wishId) {
+            this.showWishDetailsModal = true;
+            this.showPrevWish = this.showPrevWish === wishId ? null : wishId;
+        },
+        closeWishDetailsModal() {
+            this.showWishDetailsModal = false;
+            this.showPrevWish = null;
+        },
+        createWishList() {
+            this.showCreatedWishlistModal = true;
+            this.showCreateWishlistModal = false;
+        },
+        closeCreatedWishlistModal() {
+            this.showCreateWishlistModal = false;
+        },
+        addNewWishList() {
+            this.showCategoryModal = true;
+        },
+        closeCategoryModal() {
+            this.showCategoryModal = false;
+        },
+        setActiveTab(tab) {
+            this.activeTab = tab;
+        },
+        closeInitialModal() {
+            this.showInitialModal = false;
+        },
+        closeCreateWishlistModal() {
+            this.showCreateWishlistModal = false;
+        },
+        handleToggleDropdown(wishlistId) {
+            this.openDropdownId = this.openDropdownId === wishlistId ? null : wishlistId;
+        },
+        handleCloseDropdown() {
+            this.openDropdownId = null;
+        },
+        startSearch(query) {
+            this.search = query;
+            if (query) {
+                if (this.selectedOption === 'Friends') {
+                    this.searchResults = this.users.filter(user =>
+                        user.name.toLowerCase().includes(query.toLowerCase()) ||
+                        user.username.toLowerCase().includes(query.toLowerCase())
+                    );
+                } else {
+                    this.searchResults = this.wishlists.filter(wishlist =>
+                        wishlist.title.toLowerCase().includes(query.toLowerCase()) ||
+                        wishlist.category.toLowerCase().includes(query.toLowerCase())
+                    );
+                }
+                this.isSearching = true;
+            } else {
+                this.isSearching = false;
+            }
+        },
+        selectOption(option) {
+            this.selectedOption = option;
+            this.isSearching = false; // Reset search state when option changes
         }
-      },
-      selectOption(option) {
-        this.selectedOption = option;
-        this.isSearching = false; // Reset search state when option changes
-      }
     },
-  };
-  </script>
-  
+};
+</script>

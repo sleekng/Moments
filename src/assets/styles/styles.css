@@ -10,3 +10,6 @@ body {
 div:hover, span:hover {
         transition: all 0.2s linear;
 }
+div, span{
+        transition: all 0.2s linear;
+}

@@ -1,13 +1,13 @@
 <template>
-<div class="bg-gray-100">
-    <AppHeader />
-    <div class="container mx-auto pt-20">
+<div class="bg-white lg:bg-gray-100 py-10">
+    <AppHeader @showCategoryModal="$emit('showCategoryModal')" />
+    <div class="container mx-auto pt-10 px-4 lg:pt-20">
         <ProfileCover />
-        <ProfileDetails />
+        <ProfileDetails @showAnalyticsModal="ToggleAnalyticsModal" />
         <TabNavigationsWishlist :activeTab="activeTab" @switchTab="setActiveTab" />
 
-        <div v-if="activeTab == 'myWishes'" class="grid grid-cols-4 gap-6 px-12 bg-white" @mouseleave="handleCloseDropdown">
-            <div class="flex flex-col items-center justify-center bg-gray-100 rounded-lg p-4 my-8 cursor-pointer" @click=" addNewWishList">
+        <div v-if="activeTab == 'myWishes'" class="grid grid-cols-1 lg:grid-cols-4 gap-6  lg:px-12 py-8 rounded-b-lg bg-white">
+            <div class="flex flex-col items-center justify-center bg-gray-100 h-full rounded-lg p-4 py-8  cursor-pointer" @click="$emit('showCategoryModal')">
                 <div class="flex items-center justify-center w-12 h-12 bg-black rounded-full mb-4">
                     <img src="/assets/add.svg" alt="Add" class="h-5 w-5" />
                 </div>
@@ -16,7 +16,7 @@
                 </div>
             </div>
 
-            <WishlistCard v-for="wishlist in filteredWishlist" :key="wishlist.id" :wishlist="wishlist" :openDropdownId="openDropdownId" @toggleDropdown="handleToggleDropdown" @closeDropdown="handleCloseDropdown" />
+            <WishlistCard v-for="wishlist in filteredWishlist" :key="wishlist.id" :wishlist="wishlist" :openDropdownId="openDropdownId" @toggleDropdown="handleToggleDropdown" @closeDropdown="handleCloseDropdown" @deleteWishlist="handleDeleteWishlist" />
         </div>
 
         <ReservedWishes v-if="activeTab == 'reserved'" :wishes="wishes" @preview="prevWish" />
@@ -24,17 +24,10 @@
 
         <!-- Conditionally show the modals -->
         <Popup v-if="showInitialModal" @close="closeInitialModal" />
-
-        <CategoryPopup v-if="showCategoryModal" @close="closeCategoryModal" @showCreateWishlistModal="showCreateWishlistModal = true" />
-
-        <CreatedWishlistModal v-if="showCreatedWishlistModal" @close="closeCreatedWishlistModal" title=" New Wishlist Created! ✨" description=" Your wishlist is live and ready to shine! Start adding those dream wish items and share it with friends to get the gifts you’ve been wishing for." viewWishlistText="View Wishlist" makeAWishText="Make a Wish" />
-
-        <CreateWishlistModal @createWishList="createWishList" v-if="showCreateWishlistModal" @close="closeCreateWishlistModal" />
-
         <WishDetailView v-if="showWishDetailsModal" @close="closeWishDetailsModal" :wish="showPrevWish" />
-
-        <!-- New Analytics Modal -->
         <AnalyticsModal v-if="showAnalyticsModal" :wishlists="wishlists" @close="closeAnalyticsModal" />
+        <DeleteConfirmationModal v-if="showDeleteModal" @confirm="confirmDelete" @cancel="cancelDelete" />
+
     </div>
 </div>
 </template>
@@ -46,45 +39,38 @@ import ProfileDetails from '@/components/Dashboard/ProfileDetails.vue';
 import TabNavigationsWishlist from '@/components/Dashboard/TabNavigationsWishlist.vue';
 import WishlistCard from '@/components/Dashboard/WishlistCard.vue';
 import Popup from '@/components/Dashboard/Popup.vue';
-import CreateWishlistModal from '@/components/Dashboard/CreateWishlistModal.vue';
-import CategoryPopup from '@/components/Dashboard/CategoryPopup.vue';
 import ReservedWishes from '@/components/Dashboard/ReservedWishes.vue';
 import SavedWishes from '@/components/Dashboard/SavedWishes.vue';
-
-import CreatedWishlistModal from '@/components/Dashboard/CreatedWishlistModal.vue';
-
 import WishDetailView from '@/components/Dashboard/WishDetailView.vue';
-import AnalyticsModal from '@/components/Dashboard/AnalyticsModal.vue'; // import the new AnalyticsModal component
+import AnalyticsModal from '@/components/Dashboard/AnalyticsModal.vue';
+import DeleteConfirmationModal from '@/components/Dashboard/DeleteConfirmationModal.vue';
 
 export default {
     components: {
         AppHeader,
-        CreatedWishlistModal,
+        DeleteConfirmationModal,
         ProfileCover,
         ProfileDetails,
         TabNavigationsWishlist,
         WishlistCard,
         Popup,
-        CategoryPopup,
-        CreateWishlistModal,
         ReservedWishes,
         SavedWishes,
         WishDetailView,
-        AnalyticsModal // register the new component
+        AnalyticsModal,
     },
     data() {
         return {
-
-            showAnalyticsModal:true, 
+            showAnalyticsModal: false,
             showPrevWish: null,
             showWishDetailsModal: false,
 
-            showCreatedWishlistModal: false,
-            showCategoryModal: false, // Control modal visibility
             showInitialModal: true, // Control initial modal visibility
-            showCreateWishlistModal: false, // Control create wishlist modal visibility
             openDropdownId: null, // Track which dropdown is open by its ID
             activeTab: 'myWishes', // Track the active tab
+            showDeleteModal: false,
+            wishlistToDelete: null, // Store the wishlist to delete
+
             wishlists: [{
                     id: 1,
                     title: 'My 25th Birthday',
@@ -480,70 +466,60 @@ export default {
                     status: 'saved'
                 },
             ]
+
         };
     },
     computed: {
         filteredWishlist() {
-            // Filter wishes based on the active tab
             return this.wishlists.filter((wishlist) => wishlist.status === this.activeTab);
         },
         showPrevWish() {
             return this.wishes.find(wish => wish.id === this.showPrevWish);
         },
         filteredSavedWish() {
-            return this.wishes.filter((wishes) => wishes.status === this.activeTab);
+            return this.wishes.filter((wish) => wish.status === this.activeTab);
         },
     },
     methods: {
+        handleDeleteWishlist(wishlistId) {
+            this.wishlistToDelete = wishlistId;
+            this.showDeleteModal = true;
+        },
+        confirmDelete() {
+            this.wishlists = this.wishlists.filter(
+                wishlist => wishlist.id !== this.wishlistToDelete
+            );
+            this.showDeleteModal = false;
+        },
+        cancelDelete() {
+            this.showDeleteModal = false;
+        },
 
         closeAnalyticsModal() {
             this.showAnalyticsModal = false; // Hide the analytics modal
         },
-
+        ToggleAnalyticsModal() {
+            this.showAnalyticsModal = true;
+        },
         prevWish(wishId) {
-            this.showWishDetailsModal = true
-            this.showPrevWish = this.showPrevWish === wishId ? null : wishId
+            this.showWishDetailsModal = true;
+            this.showPrevWish = this.showPrevWish === wishId ? null : wishId;
         },
         closeWishDetailsModal() {
             this.showWishDetailsModal = false; // Hide the wish details modal
-            this.showPrevWish = null
-        },
-
-        createWishList() {
-            this.showCreatedWishlistModal = true
-
-            this.showCreateWishlistModal = false; // Hide the create wishlist modal
-
-        },
-
-        closeCreatedWishlistModal() {
-            this.showCreateWishlistModal = false;
-        },
-
-        addNewWishList() {
-            this.showCategoryModal = true
-        },
-        closeCategoryModal() {
-            this.showCategoryModal = false
-
-        },
-
-        setActiveTab(tab) {
-            this.activeTab = tab;
+            this.showPrevWish = null;
         },
         closeInitialModal() {
             this.showInitialModal = false; // Hide the initial modal
         },
-        closeCreateWishlistModal() {
-            this.showCreateWishlistModal = false; // Hide the create wishlist modal
-        },
         handleToggleDropdown(wishlistId) {
-            // If the clicked dropdown is already open, close it
             this.openDropdownId = this.openDropdownId === wishlistId ? null : wishlistId;
         },
         handleCloseDropdown() {
-            // If the clicked dropdown is already open, close it
             this.openDropdownId = null;
+        },
+        setActiveTab(tab) {
+            this.activeTab = tab;
         },
     },
 };
