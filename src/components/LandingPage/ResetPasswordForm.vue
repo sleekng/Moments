@@ -51,7 +51,7 @@
         </div>
     </div>
 
-    <button class="max-w-fit px-24 py-3 bg-primaryColor text-white font-semibold text-lg rounded-full shadow-lg">
+    <button class="max-w-fit px-24 py-3 mt-6 bg-primaryColor text-white transition-all font-semibold text-lg rounded-full hover:shadow-lg">
         Reset Password
     </button>
 

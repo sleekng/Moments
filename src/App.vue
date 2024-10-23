@@ -15,8 +15,8 @@
       @close="closeCreateWishlistModal"
     />
     
-    <CreatedWishlistModal v-if="showCreatedWishlistModal" @close="closeCreatedWishlistModal" title=" New Wishlist Created! ✨" description=" Your wishlist is live and ready to shine! Start adding those dream wish items and share it with friends to get the gifts you’ve been wishing for." viewWishlistText="View Wishlist" makeAWishText="Make a Wish" />
-    <UpdatedWishlistModal v-if="showUpdatedWishlistModal" @close="closeUpdatedWishlistModal" title=" Wishlist Updated! ✨" description=" Your wishlist is looking more fabulous already! Don’t forget to share your newly updated wishlist with your friends." viewWishlistText="Maybe Later" makeAWishText="Share with Friends" />
+<!--     <CreatedWishlistModal v-if="showCreatedWishlistModal" @close="closeCreatedWishlistModal" title=" New Wishlist Created! ✨" description=" Your wishlist is live and ready to shine! Start adding those dream wish items and share it with friends to get the gifts you’ve been wishing for." viewWishlistText="View Wishlist" makeAWishText="Make a Wish" />
+    <UpdatedWishlistModal v-if="showUpdatedWishlistModal" @close="closeUpdatedWishlistModal" title=" Wishlist Updated! ✨" description=" Your wishlist is looking more fabulous already! Don’t forget to share your newly updated wishlist with your friends." viewWishlistText="Maybe Later" makeAWishText="Share with Friends" /> -->
   </div>
 </template>
 

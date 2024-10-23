@@ -58,7 +58,7 @@ export default {
       type: String,
       default: 'Wishlist Created',
     },
-    viewWishlistText: {
+    viewWishlistText: { 
       type: String,
       default: 'View Wishlist',
     },
