@@ -51,7 +51,7 @@
     <!-- Image Section -->
     <div class="flex justify-center mb-6">
         <div class="w-36 h-36 bg-gray-100 rounded-full overflow-hidden">
-            <img src="./assets/wishlist-category-placeholder.svg" alt="Wishlist" class="object-cover w-full h-full">
+            <img src="/assets/wishlist-category-placeholder.svg" alt="Wishlist" class="object-cover w-full h-full">
         </div>
     </div>
 
@@ -75,7 +75,7 @@
     </div>
     <div class="flex justify-center items-center mb-6">
         <div class="flex items-center space-x-2 bg-green-100 text-green-600 px-4 py-2 rounded-full">
-            <img src="./assets/checkmark.svg" alt="Checkmark" class="w-4 h-4">
+            <img src="/assets/checkmark.svg" alt="Checkmark" class="w-4 h-4">
             <span class="text-sm">All birthday wishes have been fully granted!</span>
         </div>
     </div>
@@ -83,11 +83,11 @@
     <!-- Likes and Views -->
     <div class="flex justify-center space-x-8 mb-6">
         <div class="flex items-center space-x-1 text-gray-500">
-            <img src="./assets/heart.svg" alt="Likes" class="w-4 h-4">
+            <img src="/assets/heart.svg" alt="Likes" class="w-4 h-4">
             <span class="text-sm">200 Likes</span>
         </div>
         <div class="flex items-center space-x-1 text-gray-500">
-            <img src="./assets/eye.svg" alt="Views" class="w-4 h-4">
+            <img src="/assets/eye.svg" alt="Views" class="w-4 h-4">
             <span class="text-sm">200 Views</span>
         </div>
     </div>
@@ -95,7 +95,7 @@
     <!-- Menu -->
     <div class="absolute top-4 right-4">
         <button class="bg-gray-100 rounded-full p-2">
-            <img src="./assets/frame-1618868216.svg" alt="Menu" class="w-4 h-4">
+            <img src="/assets/frame-1618868216.svg" alt="Menu" class="w-4 h-4">
         </button>
     </div>
 </div>

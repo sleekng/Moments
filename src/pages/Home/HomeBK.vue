@@ -2,7 +2,7 @@
     <div class="bg-fef9f2">
       <!-- Header with Login and Signup buttons -->
       <header class="flex justify-between items-center p-4">
-        <img src="./assets/logo-2.svg" alt="Logo" class="w-28 h-10">
+        <img src="/assets/logo-2.svg" alt="Logo" class="w-28 h-10">
         <div class="flex space-x-4">
           <button class="bg-gray-900 text-white py-2 px-8 rounded-full">Log in</button>
           <button class="bg-pink-500 text-white py-2 px-8 rounded-full">Sign up</button>
@@ -43,7 +43,7 @@
         <!-- Number -->
         <div class="flex items-center space-x-2">
           <div class="relative w-16 h-16">
-            <img src="./assets/star-4-5.svg" alt="Star" class="w-full h-full">
+            <img src="/assets/star-4-5.svg" alt="Star" class="w-full h-full">
             <span class="absolute inset-0 flex items-center justify-center text-5xl font-semibold text-white">2</span>
           </div>
         </div>
@@ -56,13 +56,13 @@
 
       <!-- Right Column: Image -->
       <div class="relative flex justify-center w-1/2">
-        <img src="./assets/group-856.svg" alt="Wishlist Image" class="w-3/4 h-3/4">
+        <img src="/assets/group-856.svg" alt="Wishlist Image" class="w-3/4 h-3/4">
         <!-- Overlay Image: Mobile Wishlist card -->
         <div class="absolute top-0 right-0 transform translate-x-1/4 -translate-y-1/4 w-1/3 rounded-lg shadow-lg bg-white p-2">
-          <img src="./assets/img-2.svg" alt="Wishlist" class="rounded-md mb-2">
+          <img src="/assets/img-2.svg" alt="Wishlist" class="rounded-md mb-2">
           <div class="space-y-2">
             <div class="flex items-center space-x-2">
-              <img src="./assets/box-gift.svg" alt="Gift" class="w-3 h-3">
+              <img src="/assets/box-gift.svg" alt="Gift" class="w-3 h-3">
               <span class="text-sm text-gray-700">10 Wishes</span>
             </div>
             <h3 class="text-sm font-semibold text-gray-900">My personal wishlist</h3>
@@ -75,7 +75,7 @@
       <!-- Footer Section -->
       <footer class="bg-gray-900 text-white py-16">
         <div class="container mx-auto text-center">
-          <img src="./assets/logo.svg" alt="Logo" class="mx-auto mb-4 w-32 h-10">
+          <img src="/assets/logo.svg" alt="Logo" class="mx-auto mb-4 w-32 h-10">
           <p class="text-xl">Where wishlists come alive!</p>
           <div class="flex justify-center space-x-8 mt-8">
             <a href="#" class="bg-blue-500 py-2 px-6 rounded-full">Facebook</a>

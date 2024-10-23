@@ -4,7 +4,7 @@
   
         <div class="flex items-center space-x-3 mb-4">
           <div class="bg-red-100 p-2 rounded-full">
-            <img src="./assets/alert-circle.svg" alt="Alert" class="w-6 h-6">
+            <img src="/assets/alert-circle.svg" alt="Alert" class="w-6 h-6">
           </div>
           <h3 class="text-lg font-semibold text-gray-900">Delete Wishlist</h3>
         </div>

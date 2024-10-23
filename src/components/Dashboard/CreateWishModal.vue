@@ -6,10 +6,10 @@
             <div class="bg-white rounded-lg shadow-xl transform transition-all overflow-hidden max-w-sm md:max-w-3xl w-full">
                 <div class="flex justify-between items-center mb-4 p-4 bg-gray-100">
                     <div class="flex items-center">
-                        <img src="./assets/box-gift.svg" alt="Gift Box" class="h-6 w-6 mr-1" />
+                        <img src="/assets/box-gift.svg" alt="Gift Box" class="h-6 w-6 mr-1" />
                         <h3 class="text-2xl font-bold text-gray-900">Make a Wish</h3>
                     </div>
-                    <img src="./assets/close.svg" alt="Close" class="h-6 w-6 cursor-pointer" @click="close" />
+                    <img src="/assets/close.svg" alt="Close" class="h-6 w-6 cursor-pointer" @click="close" />
                 </div>
 
                 <div class="grid md:grid-cols-3 gap-4 p-6">
@@ -90,7 +90,7 @@
                         <div>
                             <label class="text-gray-700 mb-2 flex " for="nominate">
                                 Nominate someone or multiple people to get you this item
-                                <img src="./assets/help-circle.svg" class="w-4 h-4 ml-1" alt="Help" />
+                                <img src="/assets/help-circle.svg" class="w-4 h-4 ml-1" alt="Help" />
                             </label>
                             <div class="w-full p-4 bg-white border border-gray-300 rounded-md grid grid-cols-2 lg:grid-cols-3 gap-2 overflow-x-auto">
                                 <div v-for="person in form.nominatedPeople" :key="person" class="bg-gray-200 p-1 w-full rounded-full flex items-center">

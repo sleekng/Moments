@@ -10,7 +10,7 @@
             <span :class="{ 'text-gray-900': currentPage === item.page, 'text-gray-700': currentPage !== item.page }" style="font-family: Mukta;">
                 {{ item.label }}
             </span>
-            <img src="./assets/arrow-right.svg" class="w-4 h-4" alt="arrow" />
+            <img src="/assets/arrow-right.svg" class="w-4 h-4" alt="arrow" />
         </div>
     </nav>
 </div>

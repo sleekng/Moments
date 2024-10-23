@@ -6,7 +6,7 @@
             <div class="bg-white rounded-lg shadow-xl transform transition-all   overflow-hidden  lg:max-w-[750]">
                 <div class="flex justify-between items-center mb-4 p-4 bg-gray-100">
                     <div class="flex items-center">
-                        <img src="./assets/box-gift.svg" alt="Gift Box" class="h-6 w-6 mr-1" />
+                        <img src="/assets/box-gift.svg" alt="Gift Box" class="h-6 w-6 mr-1" />
                         <h3 class="text-2xl font-bold text-gray-900">Create a new wishlist</h3>
                     </div>
                     <img src="/assets/close.svg" alt="Close" class="h-6 w-6 cursor-pointer" @click="close" />

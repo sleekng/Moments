@@ -49,7 +49,7 @@
                 <button @click="toggleDropdown" class="flex justify-between items-center space-x-2  md:w-32 pl-3 pr-2 border-r border-gray-300 bg-gray-100 h-full rounded-l-full">
                     <div class="flex items-center space-x-2">
                         <img v-if="selectedOption == 'Friends'" src="/assets/people.svg" alt="People" class="w-4 h-4" />
-                        <img v-if="selectedOption == 'Wishlist'" src="./assets/box-gift.svg" alt="People" class="w-4 h-4" />
+                        <img v-if="selectedOption == 'Wishlist'" src="/assets/box-gift.svg" alt="People" class="w-4 h-4" />
                     </div>
                     <img src="/assets/dropdown.svg" alt="Dropdown" class="w-4 h-4" />
                 </button>
@@ -61,7 +61,7 @@
                             <img v-if="selectedOption === 'Friends'" src="/assets/check.svg" alt="Check" class="w-4 h-4" />
                         </div>
                         <div class="flex items-center p-2 rounded-lg hover:bg-gray-200 cursor-pointer" @click="selectOption('Wishlist')">
-                            <img src="./assets/box-gift.svg" alt="Wishlist" class="w-4 h-4" />
+                            <img src="/assets/box-gift.svg" alt="Wishlist" class="w-4 h-4" />
                             <span class="ml-2 text-gray-800 text-sm" style="font-family: Mukta;">Wishlist</span>
                             <img v-if="selectedOption === 'Wishlist'" src="/assets/check.svg" alt="Check" class="w-4 h-4" />
                         </div>

@@ -5,7 +5,7 @@
         <div class=" flex lg:block justify-between w-full lg:w-auto items-center">
 
             <!-- Avatar -->
-            <img src="./assets/avatar.svg" alt="Avatar" class="h-16 w-16 md:h-32 md:w-32 rounded-full mb-4 md:mb-0 md:mr-6" />
+            <img src="/assets/avatar.svg" alt="Avatar" class="h-16 w-16 md:h-32 md:w-32 rounded-full mb-4 md:mb-0 md:mr-6" />
 
             <!-- Action Buttons Mobile-->
             <div class="flex justify-center md:justify-start lg:mt-4 md:mt-0 space-x-4 lg:hidden ">
@@ -13,7 +13,7 @@
                     View analytics
                 </button>
                 <button class=" text-[#2D3036] py-2  md:px-6  rounded-full">
-                    <img src="./assets/share-arrow-svgrepo-com-1.svg" alt="Share">
+                    <img src="/assets/share-arrow-svgrepo-com-1.svg" alt="Share">
                 </button>
             </div>
         </div>
@@ -27,7 +27,7 @@
             <div class="flex items-center justify-start text-[#616874] mb-4">
                 <span class="mr-2">🎂 Birthday, April 20</span>
                 <span class="flex items-center">
-                    <img src="./assets/frame-1618868316.svg" alt="Location" class="h-2.5 w-2.5 md:h-5 md:w-5 mr-1" />
+                    <img src="/assets/frame-1618868316.svg" alt="Location" class="h-2.5 w-2.5 md:h-5 md:w-5 mr-1" />
                     Lagos, Nigeria
                 </span>
             </div>
