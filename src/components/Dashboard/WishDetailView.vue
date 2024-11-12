@@ -1,7 +1,7 @@
 <template>
   <div class="fixed overflow-y-auto inset-0 flex items-center justify-center bg-gray-800 p-4 bg-opacity-50 z-50"
     @click.self="closeModal">
-    <div class="bg-white rela rounded-2xl max-w-4xl w-full h-[98vh] lg:h-auto shadow-lg p-6 mx-auto relative">
+    <div class="bg-white  rounded-2xl max-w-4xl  h-[98vh] lg:h-auto shadow-lg p-6 mx-auto relative">
       <button @click="closeModal" class="bg-gray-100 rounded-full p-2 hover:bg-gray-200 absolute top-4 z-50 left-4">
         <img src="/assets/close.svg" alt="Close" class="w-6 h-6" />
       </button>
@@ -355,9 +355,7 @@
     </div>
   </div>
 
-{{ isWishOwner }} check
-{{ wish.wishlist.user?.username }}
-{{ wish }}
+
 
   <!-- Conditional Action Buttons -->
   <div class="absolute bottom-0 left-0 right-0 ">
@@ -529,9 +527,13 @@ export default {
     },
     async reserveWish() {
       try {
-        await this.$axios.put(`${this.$baseURL}/wishes/40`, { status: 'reserved' }, {
+     const response =  await this.$axios.put(`${this.$baseURL}/wishes/40`, { status: 'reserved' }, {
           headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` },
         });
+
+        console.log(response);
+     
+
         this.wish.status = 'reserved';
 
          // Show success message to user
