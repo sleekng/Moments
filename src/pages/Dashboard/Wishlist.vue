@@ -211,6 +211,7 @@ export default {
       this.$router.push({ name: 'Wishlist', params: { id: this.createdWishlistId } });
       this.wishCreated = false;
       this.wishUpdated = false;
+      this.loadData();
     },
     createdWish(wishData) {
       this.createdWishId = wishData.id;
