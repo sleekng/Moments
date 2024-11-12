@@ -6,7 +6,7 @@
         <!-- My Wishlist Tab -->
         <div class="flex flex-col items-center cursor-pointer" @click="switchTab('myWishes')">
           <div :class="activeTab === 'myWishes' ? 'text-gray-900' : 'text-[#616874]'" class="lg:text-base text-[12px] px-2 whitespace-nowrap lg:px-8 font-medium">
-            My Wishes <span class="text-[16px]">{{ myWishesCount ? myWishesCount : '' }}</span>
+            My Wishes <span class="text-[16px]">{{ myWishesCount ? myWishesCount : 0 }}</span>
           </div>
           <div :class="activeTab === 'myWishes' ? 'bg-black' : ''" class="w-full h-1 mt-2"></div>
         </div>
