@@ -6,7 +6,7 @@
       <WishlistDetails  @editWishlist="handleEditWishlist" :selectedWishlist="currentWishlist" />
 
       <TabNavigationsWish 
-        :myWishesCount="AllWishes.length" 
+        :myWishesCount="wishes.length" 
         :reservedCount="reservedWishes.length"
         :activeTab="activeTab" 
         @switchTab="setActiveTab" 
@@ -14,7 +14,7 @@
       
       <div  class="grid grid-cols-2 w-full lg:grid-cols-4 gap-4 lg:gap-6 px-4 lg:px-12 py-6 pb-12 bg-white rounded-b-lg" @mouseleave="handleCloseDropdown">
         <!-- Empty State Centered -->
-        <div v-if="activeTab === 'myWishes' && AllWishes.length === 0" class="col-span-2 lg:col-span-4 flex justify-center">
+        <div v-if="activeTab === 'myWishes' && wishes.length === 0" class="col-span-2 lg:col-span-4 flex justify-center">
           <EmptyState 
             title="No wishes yet" 
             message="Start adding items to your wishlist."
@@ -23,7 +23,7 @@
             @button-click="openCreateWishModal"
           />
         </div>
-        <div v-if="activeTab == 'myWishes' && AllWishes.length > 0" class="flex flex-col items-center justify-center bg-gray-100 h-full rounded-lg p-4 py-8  cursor-pointer" @click="showCreateWishModal = true">
+        <div v-if="activeTab == 'myWishes' && wishes.length > 0" class="flex flex-col items-center justify-center bg-gray-100 h-full rounded-lg p-4 py-8  cursor-pointer" @click="showCreateWishModal = true">
                 <div class="flex items-center justify-center w-12 h-12 bg-black rounded-full mb-4">
                     <img src="/assets/add.svg" alt="Add" class="h-5 w-5">
                 </div>
@@ -45,7 +45,6 @@
         </div>
         
         <WishCard 
-        
           v-for="wish in filteredWishes" 
           :key="wish.id" 
           :wish="wish" 
@@ -147,7 +146,6 @@ export default {
       editingWish: null,
       reservedWishes: [],
       wishes: [],
-      AllWishes:[],
       wishUpdated: false,
       wishCreated: false,
       createdWishId: null,
@@ -159,9 +157,8 @@ export default {
     filteredWishes() {
       if (this.activeTab === 'reserved') {
         return this.wishes.filter(wish => wish.status === 'reserved');
-      } else if(this.activeTab === 'mywishes') {
-        this.AllWishes = this.wishes.filter(wish => wish.status === null);
-        return this.AllWishes
+      } else {
+        return this.wishes;
       }
     },
     wishmodalTitle() {
