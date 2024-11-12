@@ -290,7 +290,7 @@
           </div>
           <!-- Link -->
           <div v-if="wish.link" class="text-sm flex items-center space-x-2">
-            <span class="text-gray-600">Buy it here: </span>
+            <span class="text-gray-600 whitespace-nowrap">Buy it here: </span>
             <a :href="wish.link" class="text-blue-600" target="_blank">{{ wish.link }}</a>
           </div>
 
