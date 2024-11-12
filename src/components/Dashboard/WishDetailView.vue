@@ -355,9 +355,7 @@
     </div>
   </div>
 
-{{ isWishOwner }} check
-{{ wish.wishlist.user?.username }}
-{{ wish }}
+
 
   <!-- Conditional Action Buttons -->
   <div class="absolute bottom-0 left-0 right-0 ">
