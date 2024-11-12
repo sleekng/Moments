@@ -15,9 +15,10 @@
 </template>
 
 <script>
+import { eventBus } from '@/eventBus.js';
 export default {
   name: "PrivacySection",
-  props: ['title', 'options', 'selected'],
+  props: ['title', 'options', 'selected', 'settingId'],
   data() {
     return {
       selectedOption: this.selected,
@@ -26,8 +27,35 @@ export default {
   methods: {
     selectOption(index) {
       this.selectedOption = index;
-      this.$emit('update', index);  // Emit event to parent
+      this.$emit('update', index);
+      this.updatePrivacySetting(index);
+    },
+    async updatePrivacySetting(index) {
+      const settingValue = this.options[index].toLowerCase();
+      try {
+        eventBus.setLoading(true);
+        await fetch(`${this.$baseURL}/user-privacy/${this.settingId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${this.getAuthToken()}`
+          },
+          body: JSON.stringify({ value: settingValue })
+        });
+      } catch (error) {
+        const errorMsg = error.response ?.data ?.message || 'An error occurred. Please try again.';
+        eventBus.onError(errorMsg); // Trigger the alert
+        console.error('Error updating privacy setting:', error);
+      }
+      finally {
+    eventBus.setLoading(false);
+  }
+    },
+    getAuthToken() {
+      return localStorage.getItem('authToken') || '';
     },
   },
+
 };
 </script>

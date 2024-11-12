@@ -1,15 +1,17 @@
 <template>
-<div class="bg-gray-100 py-10  pt-32">
+<div class="bg-gray-100 py-10   pt-32">
     <AppHeader  @showCategoryModal="$emit('showCategoryModal')" />
-    <div class="container mx-auto  rounded-lg  bg-white">
+    <div class="px-4 lg:px-16 ">
+        <div class="container mx-auto  rounded-lg  bg-white">
 
-        <div class="text-2xl px-12 py-10 font-bold">
-            Archived Wishlists
-        </div>
-        <div class="grid grid-cols-1 lg:grid-cols-4 gap-4 lg:gap-6 px-4 lg:px-12  pb-12 bg-white rounded-b-lg" >
+<div class="text-2xl px-12 py-10 font-bold">
+    Archived Wishlists
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-4 gap-4 lg:gap-6 px-4 lg:px-12  pb-12 bg-white rounded-b-lg" >
 
-         <WishlistCard v-for="wishlist in wishlists" :key="wishlist.id" :wishlist="wishlist" :openDropdownId="openDropdownId" @toggleDropdown="handleToggleDropdown" @closeDropdown="handleCloseDropdown" />
-        </div>
+ <WishlistCard v-for="wishlist in wishlists" :key="wishlist.id" :wishlist="wishlist" :openDropdownId="openDropdownId" @toggleDropdown="handleToggleDropdown" @closeDropdown="handleCloseDropdown" />
+</div>
+</div>
     </div>
 </div>
 </template>

@@ -6,15 +6,15 @@
         <!-- My Wishlist Tab -->
         <div class="flex flex-col items-center cursor-pointer" @click="switchTab('myWishes')">
           <div :class="activeTab === 'myWishes' ? 'text-gray-900' : 'text-[#616874]'" class="lg:text-base text-[12px] px-2 whitespace-nowrap lg:px-8 font-medium">
-            My Wishlist <span class="text-[16px]">10</span>
+            My Wishes <span class="text-[16px]">{{ myWishesCount ? myWishesCount : '' }}</span>
           </div>
           <div :class="activeTab === 'myWishes' ? 'bg-black' : ''" class="w-full h-1 mt-2"></div>
         </div>
 
-        <!-- Reserved Wish Tab -->
-        <div class="flex flex-col items-center cursor-pointer" @click="switchTab('reserved')">
+               <!-- Reserved Wish Tab -->
+               <div class="flex flex-col items-center cursor-pointer" @click="switchTab('reserved')">
           <div :class="activeTab === 'reserved' ? 'text-gray-900' : 'text-[#616874]'" class="lg:text-base text-[12px] px-2 whitespace-nowrap lg:px-8 font-medium">
-            Reserved Wish <span class="text-[16px]">10</span>
+            Reserved Wish <span class="text-[16px]">{{ reservedCount }}</span>
           </div>
           <div :class="activeTab === 'reserved' ? 'bg-black' : ''" class="w-full h-1 mt-2"></div>
         </div>
@@ -85,6 +85,14 @@ export default {
     activeTab: {
       type: String,
       required: true
+    },
+   
+    myWishesCount: {
+      required: true
+    },
+    reservedCount: {
+      type: Number,
+      default: 0
     }
   },
   data() {

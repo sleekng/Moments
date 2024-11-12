@@ -1,17 +1,18 @@
+
+
 <template>
-<div class="flex flex-col lg:justify-center lg:flex-row lg:items-center items-start min-h-screen lg:bg-gray-100 bg-white lg:p-8">
-    <!-- Header -->
-    <Header />
-
-    <div class="w-full lg:max-w-6xl lg:min-h-[80vh] flex bg-white rounded-2xl lg:shadow-lg overflow-hidden">
-        <!-- Left Side: Login Form -->
+    <div class="flex flex-col lg:justify-center lg:flex-row lg:items-center items-center h-screen  bg-white lg:p-8">
+      <!-- Header -->
+      <Header />
+  
+      <div class="w-full  h-[95vh] flex space-x-10 bg-white rounded-2xl  overflow-hidden">
         <SignUpForm1 />
-
+  
         <!-- Right Side: Image -->
         <RightSideImage3 />
+      </div>
     </div>
-</div>
-</template>
+  </template>
 
    
 <script>

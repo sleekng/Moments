@@ -1,33 +1,31 @@
 <template>
   <div class="lg:px-12 px-4 bg-white">
     <div class="flex justify-between items-center">
-      <!-- Tabs -->
       <div class="flex">
-        <!-- My Wishlist Tab -->
-        <div class="flex flex-col items-center cursor-pointer" @click="switchTab('Wishes')">
-          <div :class="activeTab === 'Wishes' ? 'text-gray-900' : 'text-[#616874]'" class="lg:text-base text-base px-2 whitespace-nowrap lg:px-8 font-medium">
-            Wishlist For You
+        <div class="flex flex-col items-center cursor-pointer" 
+             @click="switchTab('Wishes')">
+          <div :class="tabClass('Wishes')" 
+               class="lg:text-base text-base px-2 whitespace-nowrap lg:px-8 font-medium">
+            Wishlists For You
           </div>
-          <div :class="activeTab === 'Wishes' ? 'bg-black' : ''" class="w-full h-1 mt-2"></div>
+          <div :class="{'bg-black': activeTab === 'Wishes'}" 
+               class="w-full h-1 mt-2"></div>
         </div>
 
-        <!-- Reserved Wish Tab -->
-        <div class="flex flex-col items-center cursor-pointer" @click="switchTab('Friends')">
-          <div :class="activeTab === 'Friends' ? 'text-gray-900' : 'text-[#616874]'" class="lg:text-base text-base px-2 whitespace-nowrap lg:px-8 font-medium">
+        <div class="flex flex-col items-center cursor-pointer" 
+             @click="switchTab('Friends')">
+          <div :class="tabClass('Friends')" 
+               class="lg:text-base text-base px-2 whitespace-nowrap lg:px-8 font-medium">
             Friends
           </div>
-          <div :class="activeTab === 'Friends' ? 'bg-black' : ''" class="w-full h-1 mt-2"></div>
+          <div :class="{'bg-black': activeTab === 'Friends'}" 
+               class="w-full h-1 mt-2"></div>
         </div>
-
       </div>
-      
-
     </div>
-    <!-- Horizontal Line -->
     <div class="border-t border-gray-300"></div>
   </div>
 </template>
-
 
 <script>
 export default {
@@ -38,28 +36,15 @@ export default {
       required: true
     }
   },
-  data() {
-    return {
-      selectedTab: 'Wishes',
-      isDropdownOpen: false, // Track the dropdown visibility
-    };
-  },
   methods: {
     switchTab(tab) {
-      this.$emit('switchTab', tab); // Emit event to parent
-      this.selectedTab = tab; // Update the selected tab
+      this.$emit('switchTab', tab);
     },
-    toggleDropdown() {
-      this.isDropdownOpen = !this.isDropdownOpen;
-    },
-    closeDropdown() {
-      this.isDropdownOpen = false;
-    },
-    hover(event) {
-      event.currentTarget.classList.add('bg-primaryMainBright');
-    },
-    unhover(event) {
-      event.currentTarget.classList.remove('bg-primaryMainBright');
+    tabClass(tabName) {
+      return {
+        'text-gray-900': this.activeTab === tabName,
+        'text-[#616874]': this.activeTab !== tabName
+      };
     },
   },
 };

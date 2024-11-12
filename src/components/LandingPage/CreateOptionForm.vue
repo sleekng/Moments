@@ -1,23 +1,21 @@
 <!-- LoginForm.vue -->
 <template>
-<div class="w-full lg:w-1/2 p-4 py-8 lg:p-8 flex flex-col justify-center items-center">
+   <div class="w-full lg:w-1/2 p-4 py-8 lg:p-8 flex overflow-y-auto flex-col justify-start items-center">
     <!-- Logo -->
-    <div class="lg:flex justify-start w-full hidden">
-        <div class="w-16 h-16 mb-8  ">
-            <img src="/assets/Logo-single.svg" alt="Logo" />
-        </div>
-    </div>
+    <OptinLogo />
 
-    <h2 class="text-2xl font-bold mb-4 text-gray-800">Create your Account on Moments Hub today!</h2>
-    <p class="text-gray-600 mb-8">
+    <h2 class="text-2xl font-bold mb-4 text-gray-800 self-start">Create your Account on Moments Hub today!</h2>
+    <p class="text-gray-600 mb-8 self-start">
         Create, share, and explore wishlists with friends and family. Turn every occasion into a celebration with your wishlist. Sign up now and start exploring.
     </p>
-
+ 
     <!-- Sign Up Buttons -->
     <div class="w-full space-y-4">
         <button class="w-full flex items-center justify-center p-3 bg-gray-200 rounded-full shadow-sm">
             <img src="/assets/mail.svg" class="w-4 h-4 mr-2" alt="Email Icon" />
-            <span class="text-gray-800 font-medium">Sign up with email</span>
+            <router-link to="/register" class="text-gray-800 font-medium">
+                Sign up with email
+            </router-link>
         </button>
 
         <button class="w-full flex items-center justify-center p-3 bg-gray-200 rounded-full shadow-sm">
@@ -41,13 +39,19 @@
     </div>
 
     <div class="text-gray-600">
-        Already have an account? <a href="#" class="text-primaryColor font-medium">Log in</a>
+        Already have an account?<router-link to="/login" class="text-primaryColor font-medium"> Login
+        </router-link>
     </div>
 </div>
 </template>
 
 <script>
+import OptinLogo from '../Dashboard/OptinLogo.vue';
+
 export default {
+    components:{
+        OptinLogo
+    },
     name: 'SignUp',
 
 };

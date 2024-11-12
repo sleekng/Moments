@@ -1,6 +1,6 @@
 <template>
   <div
-    class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 p-4"
+    class="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center bg-gray-800 bg-opacity-50 p-4"
     @click.self="closeModal"
   >
     <div class="bg-white rounded-xl shadow-lg max-w-md w-full overflow-hidden">
@@ -23,7 +23,7 @@
         <div class="flex justify-between">
           <button
             @click="viewWishlist"
-            class="flex-1  text-gray-800 bg-[#F0F1F2] hover:shadow-lg transition-all font-medium py-3 px-4 rounded-full text-center focus:outline-none"
+            class="flex-1 text-gray-800 bg-[#F0F1F2] hover:shadow-lg transition-all font-medium py-3 px-4 rounded-full text-center focus:outline-none"
           >
             {{ viewWishlistText }}
           </button>
@@ -38,7 +38,6 @@
     </div>
   </div>
 </template>
-
 <script>
 export default {
   props: {
@@ -48,7 +47,7 @@ export default {
     },
     description: {
       type: String,
-      default: 'Your wishlist is live and ready to shine! Start adding those dream wish items and share it with friends to get the gifts you’ve been wishing for.',
+      default: 'Your wishlist is live and ready to shine!',
     },
     imageSrc: {
       type: String,
@@ -66,25 +65,22 @@ export default {
       type: String,
       default: 'Make a Wish',
     },
+    createdWishlistId: {
+      type: String,
+    },
   },
   methods: {
     closeModal() {
       this.$emit('close');
     },
     viewWishlist() {
-      // Add your custom code for viewing the wishlist
-      console.log('View Wishlist');
+      this.$emit('viewWishlist', this.createdWishlistId);
       this.closeModal();
     },
     makeAWish() {
-      // Add your custom code for making a wish
-      console.log('Make a Wish');
+      this.$emit('makeAWish', this.createdWishlistId);
       this.closeModal();
-    },
-  },
+    }
+  }
 };
 </script>
-
-<style scoped>
-/* Add custom styles if needed */
-</style>

@@ -57,8 +57,8 @@
         </div>
       </div>
       <div class="justify-end flex">
-        <button @click="updatePassword" class="mt-8 bg-primaryColor text-white px-10 py-3 rounded-full">
-          Update
+        <button @click="updatePassword" :disabled="isSaving" :class="{ 'opacity-40 cursor-not-allowed': isSaving }" class="mt-8 bg-primaryColor transition-all hover:shadow text-white px-10 py-3 rounded-full">
+          {{ isSaving ? 'updating...' : 'Update' }}
         </button>
       </div>
     </div>
@@ -66,6 +66,7 @@
 </template>
 
 <script>
+import { eventBus } from '@/eventBus.js';
 export default {
   name: "PasswordSettings",
   data() {
@@ -75,16 +76,50 @@ export default {
         newPassword: '',
         reEnterPassword: ''
       },
+      isSaving: false,
       showCurrentPassword: false,
       showNewPassword: false,
       showReEnterPassword: false,
     };
   },
   methods: {
-    updatePassword() {
-      // Add logic to handle password update
-      console.log('Password data submitted:', this.passwordData);
+
+    async updatePassword() {
+      this.isSaving = true;
+      try {
+        eventBus.setLoading(true);
+        const response = await fetch(`${this.$baseURL}/profile`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${this.getAuthToken()}`
+          },
+          body: JSON.stringify(this.passwordData)
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to update profile');
+        }
+        const result = await response.json();
+        const user = result.data;
+        localStorage.setItem('user', JSON.stringify(user));
+        console.log('Profile updated:', user);
+      } catch (error) {
+        const errorMsg = error.response ?.data ?.message || 'An error occurred. Please try again.';
+        eventBus.onError(errorMsg); // Trigger the alert
+        console.error('Error updating profile:', error);
+      } finally {
+        this.isSaving = false;
+        eventBus.setLoading(false);
+      }
+
+
     },
+    getAuthToken() {
+      return localStorage.getItem('authToken') || '';
+    },
+
     toggleCurrentPassword() {
       this.showCurrentPassword = !this.showCurrentPassword;
     },

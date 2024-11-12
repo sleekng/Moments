@@ -1,15 +1,13 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import Home from '@/pages/Home/Home.vue'
-
-
+import { createRouter, createWebHistory } from 'vue-router';
+import Home from '@/pages/Home/Home.vue';
+import { eventBus } from '@/eventBus.js';
 
 import UserDashboard from '@/pages/Dashboard/UserDashboard.vue';
 import UserExplore from '@/pages/Dashboard/UserExplore.vue';
 import Account from '@/pages/Dashboard/Account.vue';
 import Archived from '@/pages/Dashboard/Archived.vue';
 import ArchivedView from '@/pages/Dashboard/ArchivedView.vue';
-import AllMyWishes from '@/pages/Dashboard/AllMyWishes.vue';
-import Wishlist from '@/pages/Wishlist.vue';
+import Wishlist from '@/pages/Dashboard/Wishlist.vue';
 import Friends from '@/pages/Friends.vue';
 import Profile from '@/pages/Profile.vue';
 import Login from '@/pages/Auth/Login.vue';
@@ -22,120 +20,75 @@ import SignUp from '@/pages/Auth/SignUp.vue';
 import SignUp2 from '@/pages/Auth/SignUp2.vue';
 import NotFound from '@/pages/NotFound.vue';
 
+const routes = [
+  { path: '/', name: 'Home', component: Home },
+  { path: '/explore', name: 'explore', component: UserExplore },
+  { path: '/account', name: 'Account', component: Account },
+  { path: '/archived', name: 'Archived', component: Archived },
+  { path: '/view-archived', name: 'ArchivedView', component: ArchivedView },
+  { path: '/dashboard', name: 'dashboard', component: UserDashboard },
+  { path: '/wishlist/:id', name: 'Wishlist', component: Wishlist, props: true },
+/*   { path: '/wishlist', name: 'Wishlist', component: Wishlist }, */
+  { path: '/friends', name: 'Friends', component: Friends },
+  { path: '/profile', name: 'Profile', component: Profile },
+  { path: '/login', name: 'Login', component: Login },
+  { path: '/register', name: 'Register', component: Register },
+  { path: '/create-option', name: 'Create Option', component: CreateOption },
+  { path: '/forgot-password', name: 'Forgot Password', component: ForgotPassword },
+  { path: '/password-reset/:token', name: 'Reset Password', component: ResetPassword, props: (route) => ({ token: route.params.token, email: route.query.email }) },
+  { path: '/verification-sent', name: 'Verification Sent', component: VerificationSent },
+  { path: '/basic-info', name: 'Sign Up', component: SignUp },
+  { path: '/additional-info', name: 'Sign Up 2', component: SignUp2 },
+  { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound },
+];
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [
-    {
-      path: '/',
-      name: 'Home',
-      component: Home
-    },
-/*     {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue')
-    },
- */
+  routes
+});
 
+function isTokenExpired() {
+  const token = localStorage.getItem('authToken');
+  const user = localStorage.getItem('user');
+  const tokenExpiration = localStorage.getItem('tokenExpiration');
+  
+  if (!token || !tokenExpiration || !user) {
+    return true;
+  }
 
-    {
-      path: '/explore',
-      name: 'explore',
-      component:UserExplore,
-    },
-    {
-      path: '/account',
-      name: 'Account',
-      component:Account,
-    },
-    {
-      path: '/archived',
-      name: 'Archived',
-      component:Archived,
-    },
-    {
-      path: '/view-archived',
-      name: 'ArchivedView',
-      component:ArchivedView,
-    },
-    {
-      path: '/dashboard',
-      name: 'dashboard',
-      component:UserDashboard,
-    },
-    {
-      path: '/all-wishes',
-      name: 'AllMyWishes',
-      component: AllMyWishes,
-    },
-    {
-      path: '/wishlist',
-      name: 'Wishlist',
-      component: Wishlist,
-    },
-    {
-      path: '/friends',
-      name: 'Friends',
-      component: Friends,
-    },
-    {
-      path: '/profile',
-      name: 'Profile',
-      component: Profile,
-    },
-    {
-      path: '/login',
-      name: 'Login',
-      component: Login,
-    },
-    {
-      path: '/register',
-      name: 'Register',
-      component: Register,
-    },
-    {
-      path: '/create-option',
-      name: 'Create Option',
-      component: CreateOption,
-    },
-    {
-      path: '/forgot-password',
-      name: 'Forgot Password',
-      component: ForgotPassword,
-    },
-    {
-      path: '/reset-password',
-      name: 'Reset Password',
-      component: ResetPassword,
-    },
-    {
-      path: '/verification-sent',
-      name: 'Verification Sent',
-      component: VerificationSent, 
-    },
-    {
-      path: '/sign-up',
-      name: 'Sign Up',
-      component: SignUp, 
-    },
-    {
-      path: '/sign-up-2',
-      name: 'Sign Up 2',
-      component: SignUp2, 
-    },
+  return Date.now() >= parseInt(tokenExpiration);
+}
 
-     // Catch-all route for 404 Not Found
-  {
-    path: '/:pathMatch(.*)*',
-    name: 'NotFound',
-    component: NotFound,
-  },
+function clearAuthData() {
+  localStorage.removeItem('authToken');
+  localStorage.removeItem('tokenExpiration');
+  localStorage.removeItem('user');
+}
 
-  ]
-})
+router.beforeEach((to, from, next) => {
+  const publicPages = ['Home', 'Login', 'Register', 'Create Option', 'Forgot Password', 'Reset Password', 'Verification Sent'];
+  const authRequired = !publicPages.includes(to.name);
 
-export default router
+  eventBus.setLoading(true);
+
+  // Check if route requires authentication
+  if (authRequired) {
+    // Check if token is expired
+    if (isTokenExpired()) {
+      // Clear auth data if token is expired
+      clearAuthData();
+      return next({ 
+        name: 'Login',
+        query: { redirect: to.fullPath } // Optional: Save the path user was trying to access
+      });
+    }
+  }
+
+  next();
+});
+
+router.afterEach(() => {
+  eventBus.setLoading(false);
+});
+
+export default router;

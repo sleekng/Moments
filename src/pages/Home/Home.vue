@@ -4,31 +4,31 @@
     <section class=" w-full">
         <div class=" h-[100vh] md:h-[920px] lg:h-[100vh] overflow-hidden relative w-full  ">
             <!-- Header with Login and Signup buttons -->
-            <header class="flex justify-between items-center p-4">
-                <img src="/assets/Logo-1.svg" alt="Logo" class="w-28 h-10">
+            <header class="flex justify-between items-center p-4 lg:px-8">
+                <img src="/assets/Logo-1.svg" alt="Logo" class="w-24 h-10">
                 <div class="flex space-x-4">
-                    <RouterLink to="/Login" class="bg-secondaryColor text-white py-2 px-4 sm:px-8 rounded-full text-sm sm:text-base">Log in</RouterLink>
-                    <RouterLink to="/create-option3gt" class="bg-primaryColor text-white py-2 px-4 sm:px-8 rounded-full text-sm sm:text-base">Sign up</RouterLink>
+                    <RouterLink to="/Login" class="bg-secondaryColor hover:shadow-lg text-white py-2 px-4 sm:px-4 rounded-full text-sm sm:text-base">Log in</RouterLink>
+                    <RouterLink to="/create-option" class="bg-primaryColor hover:shadow-lg text-white py-2 px-4 sm:px-4 rounded-full text-sm sm:text-base">Sign up</RouterLink>
                 </div>
             </header>
 
-            <div class="flex flex-col items-center py-32">
-                <div class="text-center max-w-xl mx-auto mb-10 space-y-4 relative">
-                    <h1 class="text-4xl md:text-6xl font-semibold text-gray-900  leading-none relative">
+            <div class="flex flex-col items-center  py-28 md:py-8 2xl:py-10">
+                <div class="text-center flex justify-center flex-col items-center  mx-auto mb-4 space-y-2 relative">
+                    <h1 class="2xl:text-4xl max-w-lg  font-semibold text-gray-900  leading-none relative">
                         <img class=" particle-7" src="/assets/balloon-svgrepo-com1.svg" alt="particle-7">
                         Make Every Moment Memorable
-                        <span class="text-primaryColor">.</span>
+                        <span class="text-primaryColor absolute">.</span>
                     </h1>
-                    <p class="text-base md:text-lg text-gray-600">Connect with loved ones through heartfelt wishes and gifts. Create, share, and discover wishlists to make your dreams come true.</p>
+                    <p class="text-base  max-w-xl lg:text-[14px] text-gray-600">Connect with loved ones through heartfelt wishes and gifts. Create, share, and discover wishlists to make your dreams come true.</p>
                 </div>
-                <button class="bg-primaryColor text-white font-medium text-lg py-3 px-10 rounded-full flex items-center space-x-2 transition-transform transform hover:scale-105">
-                    <span>Start wishing now</span>
+                <button class="bg-primaryColor text-white font-medium  py-2 lg:py-1 px-12 rounded-full flex items-center space-x-2 transition-transform transform hover:scale-105">
+                    <span class="text-4xl">Start wishing now</span>
                     <img src="/assets/frame-1618868561.svg" alt="Arrow Icon" class="w-4 h-auto" />
                 </button>
 
-                <div class="relative w-full max-w-4xl mx-auto mt-20 flex justify-center">
+                <div class="relative w-full max-w-4xl mx-auto mt-20 lg:mt-16 flex justify-center">
                     <!-- Rotated Images Section -->
-                    <div class="relative w-[867.52px] h-[867.52px] flex justify-center">
+                    <div class="relative w-[867.52px] h-[867.52px] lg:w-[700.52px] lg:h-[700.52px] flex justify-center">
                         <img src="/assets/home-rotate.png" alt="Image 1" class="absolute smooth-rotate" />
                     </div>
                 </div>
@@ -38,16 +38,16 @@
             <!-- Particles -->
             <div>
                 <img class=" particle-1 z-50" src="/assets/Star1.svg" alt="particle-1">
-                <img class=" particle-2 z-50" src="/assets/Star4.svg" alt="particle-2">
+                <img class=" particle-2 top-[356px] left-[1058px] 2xl:left-[1208px]  z-50" src="/assets/Star4.svg" alt="particle-2">
                 <img class=" particle-3 z-50" src="/assets/Star3.svg" alt="particle-3">
-                <img class=" particle-4 z-50" src="/assets/Ellipse2.svg" alt="particle-4">
+                <img class=" particle-4 top-[305px] right-[369px] 2xl:right-[469px] z-50" src="/assets/Ellipse2.svg" alt="particle-4">
                 <img class=" particle-5 z-50" src="/assets/Ellipse1.svg" alt="particle-5">
-                <img class=" particle-6 z-50" src="/assets/Star5.svg" alt="particle-6">
+                <img class=" particle-6 2xl:top-[360px] top-[300px] z-50" src="/assets/Star5.svg" alt="particle-6">
             </div>
         </div>
     </section>
 
-    <section class="py-32 px-4 md:px-32">
+    <section class="py-24 px-4 md:px-24">
         <div class="text-center max-w-full mx-auto mb-10 space-y-4">
             <h2 class="text-5xl md:text-5xl font-semibold text-gray-900 leading-tight">
                 Explore endless <br> possibilities <span class="text-pink-500">.</span>
@@ -55,80 +55,101 @@
         </div>
 
         <!-- Grid with 12 columns layout -->
-        <div class="md:px-24 mx-auto">
-            <div class="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-12 gap-5 mt-8  md:auto-rows-fr">
+        <div class=" mx-auto ">
+            <div class="grid  grid-cols-1 md:grid-cols-1 lg:grid-cols-12 gap-4 mt-8  md:auto-rows-fr">
                 <!-- Tag Friends Section -->
-                <div class="bg-[#9CB2FC] p-8 md:p-8 rounded-2xl flex flex-col w-full items-center col-span-1  lg:col-span-3">
-                    <div class="flex-grow">
-                        <div class="space-y-4">
-                            <h2 class="text-2xl font-semibold text-gray-900">Tag Friends</h2>
+                <div class="bg-[#9CB2FC] p-8 md:p-4 rounded-2xl flex flex-col w-full items-center col-span-1  lg:col-span-3 group">
+
+                    <div class="flex-grow lg:hidden block">
+                        <div class="space-y-1">
+                            <h2 class="text-lg font-semibold text-gray-900">Tag Friends</h2>
                             <p class="text-gray-900">Value thoughtful gift-giving and seek a convenient platform to</p>
                         </div>
                     </div>
-                    <div class="flex-shrink-0 relative w-full h-full">
-                        <img src="/assets/female-memojis-3.svg" alt="Profile" class="absolute w-11 h-11" style="top:83px; left:110px;">
-                        <img src="/assets/star-4-2.svg" alt="Star" class="absolute w-16 h-16" style="top:75.42px; left:101.26px;">
+
+                    <div class="flex-shrink-0 relative w-fulltransform transition-transform duration-300 group-hover:scale-105 ">
+                        <img src="/assets/tag.png" class=" w-full" alt="Profile">
+
                     </div>
+                    <div class="flex-grow hidden lg:block">
+                        <div class="space-y-1">
+                            <h2 class="text-lg font-semibold text-gray-900">Tag Friends</h2>
+                            <p class="text-gray-900">Value thoughtful gift-giving and seek a convenient platform to</p>
+                        </div>
+                    </div>
+
                 </div>
 
                 <!-- Categorize Wishlist Section -->
-                <div class="bg-[#C4B1E8] p-8 md:p-8 rounded-2xl col-span-1  lg:col-span-6">
-                    <div class="flex flex-row md:flex-col lg:flex-row items-center">
-                        <div class="space-y-4">
-                            <h2 class="text-2xl font-semibold text-gray-900">Categorize Wishlist</h2>
-                            <p class="text-gray-900  w-4/5">Value thoughtful gift-giving and seek a convenient platform to share and discover gift ideas</p>
+                <div class="bg-[#C4B1E8] p-4 md:p-4 rounded-2xl col-span-1 h-full flex items-center lg:col-span-6 relative overflow-hidden">
+                    <div class="flex flex-col lg:flex-row items-center">
+                        <div class="space-y-2 lg:w-8/12">
+                            <h2 class="text-lg font-semibold text-gray-900">Categorize Wishlist</h2>
+                            <p class="text-gray-900 w-4/5">Value thoughtful gift-giving and seek a convenient platform to share and discover gift ideas</p>
                         </div>
-                        <div class="h-full">
-                            <img src="/assets/2102-i-402-030-birthday-flat-background-1.svg" alt="Send Gifts" class=" w-80 h-auto" />
+                        <div class="flex my-10 h-[150px] w-full lg:w-6/12 pt-4 justify-center lg:justify-start items-center space-y-1 text-center lg:text-left animate-carousel relative">
+                            <div class="whitespace-nowrap text-4xl font-bold absolute flex items-center lg:justify-start justify-center">Baby Shower</div>
+                            <div class="whitespace-nowrap text-4xl font-bold absolute flex items-center lg:justify-start justify-center">Wedding</div>
+                            <div class="whitespace-nowrap text-4xl font-bold absolute flex items-center lg:justify-start justify-center">Birthday</div>
+                            <div class="whitespace-nowrap text-4xl font-bold absolute flex items-center lg:justify-start justify-center">Personal</div>
+                            <div class="whitespace-nowrap text-4xl font-bold absolute flex items-center lg:justify-start justify-center">Fashion</div>
+                            <div class="whitespace-nowrap text-4xl font-bold absolute flex items-center lg:justify-start justify-center">Graduation</div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Send Gifts Section -->
-                <div class="bg-[#F7A374] text-[#602606] px-8 pt-8 md:px-8 lg:py-0 rounded-2xl col-span-1 lg:col-span-6 lg:row-start-2 h-full">
-                    <div class="flex flex-col md:flex-row md:items-center h-full">
-                        <div class="flex-grow flex items-center  h-full">
-                            <div class="space-y-4">
-                                <h2 class="text-2xl font-semibold">Send Gifts</h2>
+                <div class="bg-[#F7A374] text-[#602606] overflow-hidden px-4 md:px-4 lg:py-0 rounded-2xl col-span-1 lg:col-span-6 lg:row-start-2 group">
+                    <div class="flex flex-col justify-end md:flex-row md:items-center h-full">
+                        <div class="flex-grow flex items-center h-auto">
+                            <div class="space-y-1">
+                                <h2 class="text-lg font-semibold mt-4">Send Gifts</h2>
                                 <p>Value thoughtful gift-giving and seek a convenient platform to share and discover gift ideas</p>
                             </div>
                         </div>
-                        <div class="flex flex-col justify-end items-center h-full pt-2">
-                            <img src="/assets/2102-i-402-030-birthday-flat-background-1.svg" alt="Send Gifts" class=" md:w-[680px] w-64 h-auto " />
+                        <div class="flex flex-col justify-end items-end h-full pt-2">
+                            <img src="/assets/2102-i-402-030-birthday-flat-background-1.svg" alt="Send Gifts" class="md:w-[460px] w-64 h-auto self-center lg:self-end transform transition-transform duration-300 group-hover:scale-105" />
                         </div>
                     </div>
                 </div>
 
                 <!-- Reminder Section -->
-                <div class="bg-[#72C6EB] p-8 rounded-2xl col-span-1  lg:col-span-3 lg:row-start-2">
-                    <div class="flex flex-col items-end">
-                    </div>
-                    <div class="space-y-4">
-                        <h2 class="text-2xl font-semibold text-gray-900">Reminder</h2>
+                <div class="bg-[#72C6EB] flex flex-col h-auto space-y-2 p-4 rounded-2xl col-span-1 lg:col-span-3 lg:row-start-2 group">
+                    <div class="space-y-1">
+                        <h2 class="text-lg font-semibold text-gray-900">Reminder</h2>
                         <p class="text-gray-700">Value thoughtful gift-giving and seek a convenient platform to</p>
                     </div>
-                    <img src="/assets/Notifiction2.svg" alt="Track Wishes" class="w-64 h-auto" />
+                    <img src="/assets/Notifiction2.svg" alt="Track Wishes" class="w-64 h-auto transform transition-transform duration-300 group-hover:scale-105" />
                 </div>
 
                 <!-- Track Wishes Section -->
-                <div class="bg-[#FBA4C1] text-[#69112E] overflow-hidden  rounded-2xl col-span-1  lg:col-span-3 lg:row-span-2 ">
-                    <div class="flex flex-col items-end pb-8">
-                        <div class="flex-grow p-8">
-                            <div class="space-y-4">
-                                <h2 class="text-2xl font-semibold ">Track Wishes</h2>
+                <div class="bg-[#FBA4C1] text-[#69112E] overflow-hidden rounded-2xl col-span-1 lg:col-span-3 lg:row-span-2 h-auto group">
+                    <div class="flex flex-col justify-between items-end space-y-4 pt-10">
+
+                        <div class="flex-grow p-4 lg:hidden block">
+                            <div class="space-y-1">
+                                <h2 class="text-lg font-semibold ">Track Wishes</h2>
                                 <p class="">Value thoughtful gift-giving and seek a convenient platform to share and discover gift ideas</p>
                             </div>
                         </div>
-                        <img src="/assets/Notification.svg" alt="Track Wishes" class="w-64 h-auto" />
-                        <img src="/assets/2306-i-402-030-f-m-004-c-9-people-with-boxes-flat-background-1.svg" alt="Track Wishes" class="w-64 h-auto" />
+
+                        <img src="/assets/Notification.svg" alt="Track Wishes" class="w-64 2xl:w-72 h-auto transform transition-transform duration-300 self-center group-hover:scale-105" />
+                        <img src="/assets/2306-i-402-030-f-m-004-c-9-people-with-boxes-flat-background-1.svg" alt="Track Wishes" class="lg:w-48 w-52 pb-4 lg:pb-0  h-auto transform transition-transform duration-300 group-hover:scale-105" />
+                        <div class="flex-grow p-4 hidden lg:block">
+                            <div class="space-y-1">
+                                <h2 class="text-lg font-semibold ">Track Wishes</h2>
+                                <p class="">Value thoughtful gift-giving and seek a convenient platform to share and discover gift ideas</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </section>
 
     <!-- Main section containing multiple flexbox layouts with custom spacing -->
-    <section class="flex flex-col px-4 space-y-8">
+    <section class="flex flex-col  space-y-8 px-4 lg:px-8">
 
         <!-- Title Section with centered heading -->
         <div class="text-center max-w-full mx-auto mb-10 space-y-4">
@@ -138,7 +159,7 @@
         </div>
 
         <!-- Step 1: Create Your Profile -->
-        <div class="bg-[#dcd3f0] shadow-xl card sticky top-1 md:top-10 p-10 md:p-8 rounded-2xl flex flex-col lg:flex-row items-center justify-between space-y-8 md:space-y-0 md:space-x-8 container mx-auto md:px-24">
+        <div class="bg-[#dcd3f0]  card sticky top-1 md:top-10 p-4 md:py-2 rounded-2xl flex flex-col lg:flex-row items-center justify-between space-y-8 md:space-y-0 md:space-x-8 container mx-auto md:px-24">
             <!-- Content description section -->
             <div class="flex flex-col md:items-start md:text-left space-y-4 max-w-xl">
                 <!-- Numbered step with star icon -->
@@ -157,12 +178,12 @@
             </div>
             <!-- Image corresponding to the step -->
             <div class="flex-shrink-0">
-                <img src="/assets/frame-1618868558.svg" alt="Profile Image" class="w-full max-w-xl mx-auto md:mx-0">
+                <img src="/assets/frame-1618868558.svg" alt="Profile Image" class="w-full max-w-sm mx-auto md:mx-0">
             </div>
         </div>
 
         <!-- Step 2: Curate Your Wishlists -->
-        <div class="bg-[#EEF5CC] card sticky top-20 md:top-20 p-10 md:p-8 rounded-2xl flex flex-col lg:flex-row items-center justify-between space-y-8 md:space-y-0 md:space-x-8 container mx-auto md:px-24">
+        <div class="bg-[#EEF5CC] card sticky top-20 md:top-20 p-4 md:py-2 rounded-2xl flex flex-col lg:flex-row items-center justify-between space-y-8 md:space-y-0 md:space-x-8 container mx-auto md:px-24">
             <!-- Content description section -->
             <div class="flex flex-col md:items-start md:text-left space-y-4 max-w-xl">
                 <!-- Numbered step with star icon -->
@@ -181,12 +202,12 @@
             </div>
             <!-- Image corresponding to the step -->
             <div class="flex-shrink-0">
-                <img src="/assets/Frame-11618868558.svg" alt="Profile Image" class="w-full max-w-xl mx-auto md:mx-0">
+                <img src="/assets/Frame-11618868558.svg" alt="Profile Image" class="w-full max-w-sm mx-auto md:mx-0">
             </div>
         </div>
 
         <!-- Step 3: Explore & Discover -->
-        <div class="bg-[#E4EBFF] card sticky top-40 md:top-32 p-10 md:p-8 rounded-2xl flex flex-col lg:flex-row items-center justify-between space-y-8 md:space-y-0 md:space-x-8 container mx-auto md:px-24">
+        <div class="bg-[#E4EBFF] card sticky top-40 md:top-32 p-4 md:py-2 rounded-2xl flex flex-col lg:flex-row items-center justify-between space-y-8 md:space-y-0 md:space-x-8 container mx-auto md:px-24">
             <!-- Content description section -->
             <div class="flex flex-col md:items-start md:text-left space-y-4 max-w-xl">
                 <!-- Numbered step with star icon -->
@@ -205,12 +226,12 @@
             </div>
             <!-- Image corresponding to the step -->
             <div class="flex-shrink-0">
-                <img src="/assets/Frame-161886855.svg" alt="Profile Image" class="w-full max-w-xl mx-auto md:mx-0">
+                <img src="/assets/Frame-161886855.svg" alt="Profile Image" class="w-full max-w-sm mx-auto md:mx-0">
             </div>
         </div>
 
         <!-- Step 4: Connect & Share -->
-        <div class="bg-[#FADDFC] card sticky top-1 md:top-40 p-10 md:p-8 rounded-2xl flex flex-col lg:flex-row items-center justify-between space-y-8 md:space-y-0 md:space-x-8 container mx-auto md:px-24">
+        <div class="bg-[#FADDFC] card sticky top-1 md:top-44 p-4 md:py-2 rounded-2xl flex flex-col lg:flex-row items-center justify-between space-y-8 md:space-y-0 md:space-x-8 container mx-auto md:px-24">
             <!-- Content description section -->
             <div class="flex flex-col md:items-start md:text-left space-y-4 max-w-xl">
                 <!-- Numbered step with star icon -->
@@ -230,12 +251,12 @@
             </div>
             <!-- Image corresponding to the step -->
             <div class="flex-shrink-0">
-                <img src="/assets/Frame-618868558.svg" alt="Profile Image" class="w-full max-w-xl mx-auto md:mx-0">
+                <img src="/assets/Frame-618868558.svg" alt="Profile Image" class="w-full max-w-sm mx-auto md:mx-0">
             </div>
         </div>
 
         <!-- Final Call to Action: Join the Community -->
-        <div class="bg-[#FCEEE9] card sticky top-10 md:top-80 p-10 md:p-8 rounded-2xl flex flex-col lg:flex-row items-center justify-between space-y-8 md:space-y-0 md:space-x-8 container mx-auto md:px-24">
+        <div class="bg-[#FCEEE9] card sticky top-10 md:top-80 p-4 md:p-8 rounded-2xl flex flex-col lg:flex-row items-center justify-between space-y-8 md:space-y-0 md:space-x-8 container mx-auto md:px-24">
             <!-- Content description section -->
             <div class="flex flex-col md:items-start md:text-left space-y-4 max-w-xl">
                 <!-- Custom star with an image instead of a number -->
@@ -258,7 +279,7 @@
             </div>
             <!-- Image corresponding to the final step -->
             <div class="flex-shrink-0">
-                <img src="/assets/Frame-18868558.svg" alt="Profile Image" class="w-full max-w-xl mx-auto md:mx-0">
+                <img src="/assets/Frame-18868558.svg" alt="Profile Image" class="w-full max-w-sm mx-auto md:mx-0">
             </div>
         </div>
     </section>
@@ -274,12 +295,12 @@
                         Privacy policy <img src="/assets/arrow-right.svg" alt="Arrow" class="ml-2 w-4 h-4">
                     </a>
                 </div>
-                <div class="relative w-full flex justify-center mt-8 lg:mt-0 ">
+                <div class="relative w-full flex justify-center mt-8 lg:mt-0 scale-75 2xl:scale-90 ">
                     <div class="">
-                        <img src="/assets/social-4.svg" class="social-4 social w-auto" alt="">
-                        <img src="/assets/social-3.svg" class="social-3 social w-auto" alt="">
-                        <img src="/assets/social-2.svg" class="social-2 social w-auto" alt="">
-                        <img src="/assets/social-1.svg" class="social-1 social w-auto" alt="">
+                        <a class=" " href="#"> <img src="/assets/social-4.svg" class="social-4 social transition-all hover:scale-125 ease-in-out  w-auto" alt=""></a>
+                        <a class=" " href="#"><img src="/assets/social-3.svg" class="social-3 social transition-all hover:scale-125 ease-in-out  w-auto" alt=""></a>
+                        <a class=" " href="#"><img src="/assets/social-2.svg" class="social-2 social transition-all hover:scale-125 ease-in-out   -top-[99.7px] left-[1159px] 2xl:-top-[53.7px] 2xl:left-[1202px] w-auto " alt=""></a>
+                        <a class=" " href="#"><img src="/assets/social-1.svg" class="social-1 social transition-all hover:scale-125 ease-in-out  w-auto" alt=""></a>
                     </div>
                 </div>
             </div>
@@ -292,6 +313,7 @@
 <script>
 export default {
     name: 'HeroSection',
+
 };
 </script>
 
@@ -300,18 +322,18 @@ export default {
 
 h1 {
     font-family: 'Mukta', sans-serif;
-    font-size: 64px;
+    font-size: 46px;
     letter-spacing: -0.02em;
 }
 
 p {
     font-family: 'Mukta', sans-serif;
-    font-size: 20px;
+    font-size: 16px;
 }
 
 button span {
     font-family: 'Mukta', sans-serif;
-    font-size: 20px;
+    font-size: 16px;
 }
 
 .smooth-rotate {
@@ -331,10 +353,10 @@ button span {
 }
 
 .particle-1 {
-    width: 53px;
+    width: 32px;
     height: 49.6px;
-    top: 211px;
-    left: 1613px;
+    top: 130px;
+    left: 1170px;
     gap: 0px;
     opacity: 0px;
     position: absolute;
@@ -342,10 +364,9 @@ button span {
 }
 
 .particle-2 {
-    width: 96px;
-    height: 96px;
-    top: 506px;
-    left: 1458px;
+    width: 60px;
+    height: 60px;
+
     gap: 0px;
     opacity: 0px;
     position: absolute;
@@ -353,10 +374,10 @@ button span {
 }
 
 .particle-3 {
-    width: 90px;
-    height: 90px;
-    top: 156px;
-    left: 350px;
+    width: 60px;
+    height: 60px;
+    top: 129px;
+    left: 90px;
     gap: 0px;
     opacity: 0px;
 
@@ -365,10 +386,9 @@ button span {
 }
 
 .particle-4 {
-    width: 16px;
-    height: 16px;
-    top: 476px;
-    left: 1304px;
+    width: 10px;
+    height: 10px;
+
     gap: 0px;
     opacity: 0px;
     position: absolute;
@@ -376,10 +396,10 @@ button span {
 }
 
 .particle-5 {
-    width: 16px;
-    height: 16px;
-    top: 314px;
-    left: 544px;
+    width: 10px;
+    height: 10px;
+    top: 200px;
+    left: 246px;
     gap: 0px;
     opacity: 0px;
 
@@ -388,9 +408,9 @@ button span {
 }
 
 .particle-6 {
-    width: 321px;
+    width: 100px;
     height: 321px;
-    top: 643px;
+
     left: 0px;
     gap: 0px;
     opacity: 0px;
@@ -401,7 +421,7 @@ button span {
     width: 56px;
     height: 56px;
     top: -40px;
-    right: 1px;
+    right: 24px;
     gap: 0px;
     opacity: 0px;
 
@@ -418,8 +438,6 @@ button span {
 
 .social-2 {
 
-    top: -53.7px;
-    left: 1202px;
     position: absolute;
 }
 
@@ -437,9 +455,13 @@ button span {
     position: absolute;
 }
 
-
-
 @media (orientation: portrait) {
+
+    h1 {
+        font-family: 'Mukta', sans-serif;
+        font-size: 64px;
+        letter-spacing: -0.02em;
+    }
 
     .particle-3 {
         width: 40px;
@@ -541,5 +563,57 @@ button span {
         margin-left: -20px;
     }
 
+}
+
+@keyframes carousel {
+    0% {
+        transform: translateY(500%);
+        opacity: 0;
+    }
+
+    25% {
+        transform: translateY(500%);
+        opacity: 0.2;
+    }
+
+    50% {
+        transform: translateY(25%);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(-300%);
+        opacity: 0;
+    }
+}
+
+.animate-carousel div {
+    animation: carousel 6s linear infinite;
+    animation-delay: 2s;
+    opacity: 0;
+}
+
+.animate-carousel div:nth-child(1) {
+    animation-delay: 0s;
+}
+
+.animate-carousel div:nth-child(2) {
+    animation-delay: 1s;
+}
+
+.animate-carousel div:nth-child(3) {
+    animation-delay: 2s;
+}
+
+.animate-carousel div:nth-child(4) {
+    animation-delay: 3s;
+}
+
+.animate-carousel div:nth-child(5) {
+    animation-delay: 4s;
+}
+
+.animate-carousel div:nth-child(6) {
+    animation-delay: 5s;
 }
 </style>

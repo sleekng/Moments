@@ -1,6 +1,6 @@
 <!-- RightSideImage.vue -->
 <template>
-    <div class="hidden lg:flex w-4/6 relative justify-center p-4 items-end bg-gradient-to-r from-pink-300 to-blue-300 rounded-2xl" style="background-position: center center; background-size: cover;">
+    <div class="hidden lg:flex w-4/6 relative justify-center p-4 items-end bg-gradient-to-r from-pink-300 to-blue-300 rounded-2xl" style="background-position: center -200px; background-size: cover;">
       <div class="relative z-10 login-side-advert">
         <p class="text-black font-bold text-2xl">
           Turn your dreams into reality and start curating your ultimate wishlist experience

@@ -1,9 +1,11 @@
-<!-- LoginForm.vue -->
 <template>
     <div class="w-full lg:w-1/2 p-4 py-8 lg:p-8 flex flex-col justify-center items-center">
     <!-- Logo -->
     <div class="hidden lg:block mb-8">
-        <img src="/assets/Logo.svg" alt="Logo" class="w-full" />
+        <router-link to="/">
+            <img src="/assets/Logo.svg" alt="Logo" class="w-full" />
+            </router-link>
+
     </div>
 
     <div class="flex justify-center w-full mt-20 lg:mt-0">
@@ -17,7 +19,7 @@
 
     <div class="text-center text-sm text-gray-600 mt-4">
         Didn’t get a code?
-        <span v-if=" countdown > 0" class="text-red-600 resend-count-down">Resend in {{ countdown }}s</span>
+        <span v-if="countdown > 0" class="text-red-600 resend-count-down">Resend in {{ countdown }}s</span>
     </div>
 
     <button class="max-w-fit px-24 py-3 mt-8 bg-primaryColor text-white font-semibold text-lg rounded-full shadow-lg" :class="opacity" :disabled="countdown > 0" @click="resendCode">
@@ -26,8 +28,9 @@
 </div>
 </template>
 
-  
 <script>
+import axios from 'axios';
+
 export default {
     data() {
         return {
@@ -41,28 +44,46 @@ export default {
     methods: {
         startCountdown() {
             const interval = setInterval(() => {
-                if (this.countdown == 0) {
-                    this.opacity = 'opacity-100'
-                }
                 if (this.countdown > 0) {
-                    this.opacity = 'opacity-40'
                     this.countdown -= 1;
-                } else {
+                }
+
+                if (this.countdown == 0) {
+                    this.opacity = 'opacity-100';
                     clearInterval(interval); // Stop countdown when it reaches zero
+                } else {
+                    this.opacity = 'opacity-40';
                 }
             }, 1000); // Decrease every 1 second
         },
-        resendCode() {
-            // Logic for resending the verification code goes here.
-            alert("Verification code resent!");
-            this.countdown = 30; // Reset countdown
+        async resendCode() {
+            try {
+                const response = await this.$axios.post(`${this.$baseURL}/verify-email`, {}, {
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('authToken')}` // Assuming token is stored here
+                    }
+                });
+
+                if (response.data.success) {
+                    alert("Verification code resent!");
+                } else {
+                    alert("Failed to resend verification code. Please try again.");
+                }
+            } catch (error) {
+                const errorMsg = error.response?.data?.message || 'An error occurred. Please try again.';
+                eventBus.onError(errorMsg); // Trigger the alert
+
+                alert(error.response?.data?.message || 'An error occurred. Please try again.');
+            }
+            this.countdown = 30; // Reset countdown after attempt
             this.startCountdown(); // Restart the countdown
-        },
-    },
+        }
+    }
 };
 </script>
 
-  
 <style scoped>
 /* Add specific styles here if needed */
 </style>

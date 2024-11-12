@@ -8,7 +8,7 @@
       <li><router-link to="/account">Account</router-link></li>
       <li><router-link to="/archived">Archived</router-link></li>
       <li><router-link to="/view-archived">View Archived</router-link></li>
-      <li><router-link to="/all-wishes">All My Wishes</router-link></li>
+      <li><router-link to="/wishlist">All My Wishes</router-link></li>
       <li><router-link to="/wishlist">Wishlist</router-link></li>
       <li><router-link to="/friends">Friends</router-link></li>
       <li><router-link to="/profile">Profile</router-link></li>
@@ -16,10 +16,10 @@
       <li><router-link to="/register">Register</router-link></li>
       <li><router-link to="/create-option">Create Option</router-link></li>
       <li><router-link to="/forgot-password">Forgot Password</router-link></li>
-      <li><router-link to="/reset-password">Reset Password</router-link></li>
+      <li><router-link to="/password-reset">Reset Password</router-link></li>
       <li><router-link to="/verification-sent">Verification Sent</router-link></li>
-      <li><router-link to="/sign-up">Sign Up</router-link></li>
-      <li><router-link to="/sign-up-2">Sign Up 2</router-link></li>
+      <li><router-link to="/basic-info">Sign Up</router-link></li>
+      <li><router-link to="/additional-info">Sign Up 2</router-link></li>
       <!-- Optional: Not Found Link -->
       <li><router-link to="/not-found">Not Found</router-link></li>
     </ul>

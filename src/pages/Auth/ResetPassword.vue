@@ -1,17 +1,17 @@
 <template>
-    <div class="flex flex-col lg:justify-center lg:flex-row lg:items-center items-start min-h-screen lg:bg-gray-100 bg-white lg:p-8">
-       <!-- Header -->
-       <Header />
+  <div class="flex flex-col lg:justify-center lg:flex-row lg:items-center items-center h-screen  bg-white lg:p-8">
+    <!-- Header -->
+    <Header />
+
+    <div class="w-full  h-[95vh] flex space-x-10 bg-white rounded-2xl  overflow-hidden">
    
-       <div class="w-full lg:max-w-6xl lg:min-h-[80vh] flex bg-white rounded-2xl lg:shadow-lg overflow-hidden">
-         <!-- Left Side: Login Form -->
-         <ResetPasswordForm />
-   
-         <!-- Right Side: Image -->
-         <RightSideImage1 />
-       </div>
-     </div>
-   </template>
+      <ResetPasswordForm :token="token" :email="email" />
+
+      <!-- Right Side: Image -->
+      <RightSideImage1 />
+    </div>
+  </div>
+</template>
    
    <script>
    import Header from '@/components/LandingPage/Header.vue';
@@ -23,6 +23,17 @@ import ResetPasswordForm from '@/components/LandingPage/ResetPasswordForm.vue';
        ResetPasswordForm,
        RightSideImage1,
      },
+
+     props: {
+    token: {
+      type: String,
+      required: true
+    },
+    email: {
+      type: String,
+      required: true
+    }
+  },
 
    };
    </script>

@@ -1,99 +1,83 @@
 <template>
-  <h1 class=" font-bold text-2xl mb-4 lg:hidden block">Privacy and safety</h1>
-  <div class="w-3/4 space-y-8">
+  <h1 class="font-bold text-2xl mb-4 lg:hidden block">Privacy and safety</h1>
+  <div v-if="!loading" class="w-3/4 space-y-8">
     <PrivacySection 
-      title="Who can see my profile" 
-      :options="profileVisibilityOptions" 
-      :selected="selectedProfileVisibility"
-      @update="updateProfileVisibility"
-    />
-    <PrivacySection 
-      title="Who can see my reserved and received wishes" 
-      :options="wishVisibilityOptions" 
-      :selected="selectedWishVisibility"
-      @update="updateWishVisibility"
-    />
-    <PrivacySection 
-      title="Who can send me friend request" 
-      :options="friendRequestOptions" 
-      :selected="selectedFriendRequest"
-      @update="updateFriendRequest"
-    />
-    <PrivacySection 
-      title="Who can tag me to a wishlist" 
-      :options="tagWishlistOptions" 
-      :selected="selectedTagWishlist"
-      @update="updateTagWishlist"
-    />
-    <PrivacySection 
-      title="Who can nominate me for a wish" 
-      :options="nominateWishOptions" 
-      :selected="selectedNominateWish"
-      @update="updateNominateWish"
-    />
-    <PrivacySection 
-      title="Who can reserve my wish" 
-      :options="reserveWishOptions" 
-      :selected="selectedReserveWish"
-      @update="updateReserveWish"
-    />
-    <PrivacySection 
-      title="Who can see my birthday" 
-      :options="birthdayVisibilityOptions" 
-      :selected="selectedBirthdayVisibility"
-      @update="updateBirthdayVisibility"
+      v-for="(setting, index) in privacySettings" 
+      :key="setting.id"
+      :title="setting.title" 
+      :options="setting.options"
+      :selected="getSelectedIndex(setting.value, setting.options)"
+      :settingId="setting.id"
+      @update="updatePrivacySelection(index, $event)"
     />
   </div>
+  <Loader :show="loading" />
 </template>
 
 <script>
 import PrivacySection from '@/components/Dashboard/PrivacySection.vue';
-
+import Loader from '@/components/Loader.vue';
 export default {
   name: "PrivacySettings",
   components: {
     PrivacySection,
+    Loader
   },
   data() {
     return {
-      profileVisibilityOptions: ["Everyone", "Friends only", "No one"],
-      selectedProfileVisibility: 0,  // Initial index for selected
-      wishVisibilityOptions: ["Everyone", "Friends only", "No one"],
-      selectedWishVisibility: 0,
-      friendRequestOptions: ["Anyone", "Friends only"],
-      selectedFriendRequest: 0,
-      tagWishlistOptions: ["Everyone", "Friends only", "No one"],
-      selectedTagWishlist: 0,
-      nominateWishOptions: ["Everyone", "Friends only", "No one"],
-      selectedNominateWish: 0,
-      reserveWishOptions: ["Everyone", "Friends only"],
-      selectedReserveWish: 0,
-      birthdayVisibilityOptions: ["Everyone", "Friends only", "No one"],
-      selectedBirthdayVisibility: 0,
+      privacySettings: [],
+      loading:false
     };
   },
-  methods: {
-    updateProfileVisibility(index) {
-      this.selectedProfileVisibility = index;
-    },
-    updateWishVisibility(index) {
-      this.selectedWishVisibility = index;
-    },
-    updateFriendRequest(index) {
-      this.selectedFriendRequest = index;
-    },
-    updateTagWishlist(index) {
-      this.selectedTagWishlist = index;
-    },
-    updateNominateWish(index) {
-      this.selectedNominateWish = index;
-    },
-    updateReserveWish(index) {
-      this.selectedReserveWish = index;
-    },
-    updateBirthdayVisibility(index) {
-      this.selectedBirthdayVisibility = index;
-    },
+  async created() {
+    this.loadData();
   },
+  methods: {
+
+    async loadData() {
+      this.loading = true;  // Start loading
+      try {
+        await Promise.all([
+        this.fetchPrivacySettings()
+        ]);
+      } catch (error) {
+        console.error('Failed to load data:', error);
+      } finally {
+        this.loading = false;  // Stop loading
+      }
+    },
+
+
+
+    async fetchPrivacySettings() {
+      try {
+        const response = await fetch(`${this.$baseURL}/user-privacy`, {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${this.getAuthToken()}`
+          }
+        });
+
+        const { data } = await response.json();
+        this.privacySettings = data;
+      } catch (error) {
+        console.error('Failed to fetch privacy settings:', error);
+      }
+    },
+    updatePrivacySelection(index, selectedIndex) {
+      // Update the settings array with new selection if additional handling is needed
+      const setting = this.privacySettings[index];
+      const newValue = setting.options[selectedIndex].toLowerCase();
+      setting.value = newValue;
+    },
+    getAuthToken() {
+      return localStorage.getItem('authToken') || '';
+    },
+    getSelectedIndex(currentValue, options) {
+      return options.findIndex(option => option.toLowerCase() === currentValue);
+    }
+  },
+
 };
 </script>

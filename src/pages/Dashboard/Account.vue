@@ -4,7 +4,8 @@
     <div class="container mx-auto py-20 hidden lg:block">
       <div class="max-w-screen-lg mx-auto rounded-lg bg-white shadow-lg p-10 mt-12">
         <div class="flex gap-8 items-start mb-10">
-          <img src="/assets/profile.svg" alt="Profile" class="w-20 h-20">
+          <!-- Users profile image -->
+          <img :src="avatar" alt="Profile" class="lg:w-20 lg:h-20 w-24 h-24 rounded-full" />
           <div>
             <h1 class="text-2xl font-medium text-gray-900">Your Account</h1>
             <p class="text-gray-600 mt-1">Update your username and manage your account</p>
@@ -13,7 +14,7 @@
 
         <div class="flex gap-28">
           <Sidebar @pageSelected="setCurrentPage" :currentPage="currentPage" class="" />
-          <component :is="currentPageComponent" :userData="userData" @update="updateUserData" />
+          <component :is="currentPageComponent" @avatarUpdated="updateAvatar"  />
         </div>
       </div>
     </div>
@@ -23,12 +24,13 @@
       </div>
       <MobileSidebar v-if="currentPage == 'home'" @pageSelected="setCurrentPage" :currentPage="currentPage" class="" />
       
-      <component v-else :is="currentPageComponent" :userData="userData" @update="updateUserData" class=" w-full" />
+      <component v-else :is="currentPageComponent" @avatarUpdated="updateAvatar"   class=" w-full" />
     </div>
   </div>
 </template>
 
 <script>
+
 
 import AppHeader from '@/components/Dashboard/AppHeader.vue';
 import Sidebar from '@/components/Dashboard/Sidebar.vue';
@@ -42,6 +44,7 @@ import MobileSidebar from '@/components/Dashboard/MobileSidebar.vue';
 
 export default {
   name: "Account",
+
   components: {
     AppHeader,
     Sidebar,
@@ -55,11 +58,8 @@ export default {
   },
   data() {
     return {
-      userData: {
-        username: 'Ayomide_sm',
-        birthday: '16/04',
-        email: 'email@email.com',
-      },
+ 
+      avatar: JSON.parse(localStorage.getItem('user')).avatar == null ? '/assets/profile.svg' : JSON.parse(localStorage.getItem('user')).avatar, // Add avatar field
       currentPage: localStorage.getItem('currentPage') || 'account'
     };
   },
@@ -81,14 +81,16 @@ export default {
       }
     }
   },
+  
   methods: {
+
     setCurrentPage(page) {
       this.currentPage = page;
       localStorage.setItem('currentPage', page);
     },
-    updateUserData(updatedData) {
-      this.userData = { ...this.userData, ...updatedData };
-      console.log('User data updated:', this.userData);
+    updateAvatar(newAvatarSrc) {
+      console.log('updateAvatar triggered with:', newAvatarSrc);
+      this.avatar = newAvatarSrc;
     }
   }
 };

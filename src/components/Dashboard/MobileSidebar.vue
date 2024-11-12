@@ -20,6 +20,7 @@
 <script>
 export default {
     name: "Sidebar",
+    emits: ['pageSelected'],  // Declare emitted events
     props: ['currentPage'],
     data() {
         return {

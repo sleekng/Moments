@@ -6,7 +6,7 @@
         <!-- My Wishlist Tab -->
         <div class="flex flex-col items-center cursor-pointer" @click="switchTab('myWishes')">
           <div :class="activeTab === 'myWishes' ? 'text-gray-900' : 'text-[#616874]'" class="lg:text-base text-[12px] px-2 whitespace-nowrap lg:px-8 font-medium">
-            My Wishlist <span class="text-[16px]">10</span>
+            My Wishlist <span class="text-[16px]">{{ myWishlistCount }}</span>
           </div>
           <div :class="activeTab === 'myWishes' ? 'bg-black' : ''" class="w-full h-1 lg:mt-2"></div>
         </div>
@@ -14,7 +14,7 @@
         <!-- Reserved Wish Tab -->
         <div class="flex flex-col items-center cursor-pointer" @click="switchTab('reserved')">
           <div :class="activeTab === 'reserved' ? 'text-gray-900' : 'text-[#616874]'" class="lg:text-base text-[12px] px-2 whitespace-nowrap lg:px-8 font-medium">
-            Reserved Wish <span class="text-[16px]">10</span>
+            Reserved Wish <span class="text-[16px]">{{ reservedWishesCount }}</span>
           </div>
           <div :class="activeTab === 'reserved' ? 'bg-black' : ''" class="w-full h-1 lg:mt-2"></div>
         </div>
@@ -22,7 +22,7 @@
         <!-- Received Wish Tab -->
         <div class="flex flex-col items-center cursor-pointer" @click="switchTab('saved')">
           <div :class="activeTab === 'saved' ? 'text-gray-900' : 'text-[#616874]'" class="lg:text-base text-[12px] px-2 whitespace-nowrap lg:px-8 font-medium">
-            Saved Wish <span class="text-[16px]">10</span>
+            Saved Wish <span class="text-[16px]">{{ savedwishesCount }}</span>
           </div>
           <div :class="activeTab === 'saved' ? 'bg-black' : ''" class="w-full h-1 lg:mt-2"></div>
         </div>
@@ -30,12 +30,13 @@
       
       <!-- Sort By Dropdown -->
       <div class="relative flex items-center space-x-2 z-30" @mouseleave="isDropdownOpen = false">
-        <img src="/assets/sort-vertical-svgrepo-com-1.svg" alt="Sort Icon" class="lg:h-4 lg:w-4 h-8 w-8 mr-2 lg:mr-auto" @click="toggleDropdown">
+        
+        <i class="fa-regular text-gray-600 fa-arrow-up-arrow-down" @click="toggleDropdown"></i>
         <span class="text-base hidden lg:inline font-medium text-[#616874] cursor-pointer" @click="toggleDropdown">Sort by</span>
-        <img src="/assets/dropdown.svg" alt="Dropdown Icon" class="h-4 w-4 hidden lg:inline" @click="toggleDropdown">
+        <i class="fa-regular text-gray-600 fa-angles-up-down" @click="toggleDropdown"></i>
         
         <!-- Dropdown  MyWishList -->
-         <template v-if="selectedTab == 'myWishes'">
+         <template v-if="selectedTab == 'myWishes' ">
             <div v-if="isDropdownOpen"  class="w-52 absolute top-6 -right-5 bg-white rounded-lg shadow-lg p-2 border border-gray-200">
               <div class="flex items-center my-1 p-2 rounded-lg cursor-pointer bg-purple-50" @mouseover="hover($event)" @mouseout="unhover($event)">
                 <span class="ml-2 text-primaryColor hover:text-primaryColor w-full font-medium">Name</span>
@@ -137,6 +138,18 @@ export default {
   props: {
     activeTab: {
       type: String,
+      required: true
+    },
+    myWishlistCount: {
+      type: Number,
+      required: true
+    },
+    reservedWishesCount: {
+      type: Number,
+      required: true
+    },
+    savedwishesCount: {
+      type: Number,
       required: true
     }
   },

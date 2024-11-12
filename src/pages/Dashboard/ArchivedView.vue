@@ -44,7 +44,7 @@
                 activeTab: 'myWishes', // Track the active tab
                 wishes: [{
                         id: 1,
-                        image: './assets/wishlist-category-placeholder.svg',
+                        image: '/assets/wishlist-category-placeholder.svg',
                         title: 'Hermes Birkin Bag',
                         price: '$400',
                         likes: 200,
@@ -52,7 +52,7 @@
                     },
                     {
                         id: 2,
-                        image: './assets/wishlist-category-placeholder.svg',
+                        image: '/assets/wishlist-category-placeholder.svg',
                         title: 'Apple Watch',
                         price: '$350',
                         likes: 150,
@@ -60,7 +60,7 @@
                     },
                     {
                         id: 3,
-                        image: './assets/wishlist-category-placeholder.svg',
+                        image: '/assets/wishlist-category-placeholder.svg',
                         title: 'Diamond Ring',
                         price: '$2000',
                         likes: 1000,
@@ -68,7 +68,7 @@
                     },
                     {
                         id: 4,
-                        image: './assets/wishlist-category-placeholder.svg',
+                        image: '/assets/wishlist-category-placeholder.svg',
                         title: 'MacBook Pro',
                         price: '$2500',
                         likes: 800,
@@ -76,14 +76,14 @@
                     },
                     {
                         id: 5,
-                        image: './assets/wishlist-category-placeholder.svg',
+                        image: '/assets/wishlist-category-placeholder.svg',
                         title: 'iPhone 14',
                         price: '$1000',
                         likes: 600,
                     },
                     {
                         id: 6,
-                        image: './assets/wishlist-category-placeholder.svg',
+                        image: '/assets/wishlist-category-placeholder.svg',
                         title: 'Seiko Watch',
                         price: '$500',
                         likes: 250,
@@ -91,7 +91,7 @@
                     },
                     {
                         id: 7,
-                        image: './assets/wishlist-category-placeholder.svg',
+                        image: '/assets/wishlist-category-placeholder.svg',
                         title: 'Luxury Handbag',
                         price: '$1500',
                         likes: 300,
@@ -99,7 +99,7 @@
                     },
                     {
                         id: 8,
-                        image: './assets/wishlist-category-placeholder.svg',
+                        image: '/assets/wishlist-category-placeholder.svg',
                         title: 'Nike Sneakers',
                         price: '$200',
                         likes: 450,
@@ -107,7 +107,7 @@
                     },
                     {
                         id: 9,
-                        image: './assets/wishlist-category-placeholder.svg',
+                        image: '/assets/wishlist-category-placeholder.svg',
                         title: 'GoPro Camera',
                         price: '$450',
                         likes: 670,
@@ -115,7 +115,7 @@
                     },
                     {
                         id: 10,
-                        image: './assets/wishlist-category-placeholder.svg',
+                        image: '/assets/wishlist-category-placeholder.svg',
                         title: 'Samsung Galaxy S21',
                         price: '$900',
                         likes: 500,
@@ -123,7 +123,7 @@
                     },
                     {
                         id: 11,
-                        image: './assets/wishlist-category-placeholder.svg',
+                        image: '/assets/wishlist-category-placeholder.svg',
                         title: 'PlayStation 5',
                         price: '$500',
                         likes: 800,
@@ -131,7 +131,7 @@
                     },
                     {
                         id: 12,
-                        image: './assets/wishlist-category-placeholder.svg',
+                        image: '/assets/wishlist-category-placeholder.svg',
                         title: 'Canon DSLR Camera',
                         price: '$1200',
                         likes: 950,
@@ -139,7 +139,7 @@
                     },
                     {
                         id: 13,
-                        image: './assets/wishlist-category-placeholder.svg',
+                        image: '/assets/wishlist-category-placeholder.svg',
                         title: 'Chanel Perfume',
                         price: '$300',
                         likes: 400,
@@ -147,7 +147,7 @@
                     },
                     {
                         id: 14,
-                        image: './assets/wishlist-category-placeholder.svg',
+                        image: '/assets/wishlist-category-placeholder.svg',
                         title: 'Gucci Belt',
                         price: '$450',
                         likes: 380,
@@ -155,7 +155,7 @@
                     },
                     {
                         id: 15,
-                        image: './assets/wishlist-category-placeholder.svg',
+                        image: '/assets/wishlist-category-placeholder.svg',
                         title: 'AirPods Pro',
                         price: '$250',
                         likes: 720,
@@ -163,7 +163,7 @@
                     },
                     {
                         id: 16,
-                        image: './assets/wishlist-category-placeholder.svg',
+                        image: '/assets/wishlist-category-placeholder.svg',
                         title: 'Sony Headphones',
                         price: '$350',
                         likes: 620,
@@ -171,7 +171,7 @@
                     },
                     {
                         id: 17,
-                        image: './assets/wishlist-category-placeholder.svg',
+                        image: '/assets/wishlist-category-placeholder.svg',
                         title: 'Rolex Watch',
                         price: '$8000',
                         likes: 1200,
@@ -179,7 +179,7 @@
                     },
                     {
                         id: 18,
-                        image: './assets/wishlist-category-placeholder.svg',
+                        image: '/assets/wishlist-category-placeholder.svg',
                         title: 'Tesla Model 3',
                         price: '$35000',
                         likes: 4500,
@@ -187,7 +187,7 @@
                     },
                     {
                         id: 19,
-                        image: './assets/wishlist-category-placeholder.svg',
+                        image: '/assets/wishlist-category-placeholder.svg',
                         title: 'Louis Vuitton Shoes',
                         price: '$1100',
                         likes: 850,
@@ -195,7 +195,7 @@
                     },
                     {
                         id: 20,
-                        image: './assets/wishlist-category-placeholder.svg',
+                        image: '/assets/wishlist-category-placeholder.svg',
                         title: 'Oculus VR Headset',
                         price: '$400',
                         likes: 950,

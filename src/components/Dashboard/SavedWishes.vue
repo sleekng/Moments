@@ -1,7 +1,7 @@
 <template>
 <!-- Wishes Grid -->
 <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 px-4 lg:px-12 py-6 pb-12 bg-white rounded-b-lg" @mouseleave="handleCloseDropdown">
-    <WishCard v-for="(wish, index) in wishes" :key="index" :wish="wish" @preview = "preview" :openDropdownId="openDropdownId" @toggleDropdown="handleToggleDropdown" @closeDropdown="handleCloseDropdown" />
+    <WishCard v-for="(wish, index) in wishes" :status="'saved'" :key="index" :wish="wish" @preview="preview" :openDropdownId="openDropdownId" @toggleDropdown="handleToggleDropdown" @closeDropdown="handleCloseDropdown" />
 </div>
 </template>
 
@@ -15,11 +15,10 @@ export default {
 
     props: {
 
-wishes: {
-    type: Object,
-    required: true,
-},
-
+        wishes: {
+    type: Array, // Ensure it's expected to be an array
+    default: () => [] // Default to an empty array if not provided
+  }
 },
 
 
@@ -32,6 +31,7 @@ wishes: {
     methods: {
         preview(wishId) {
         this.$emit('preview', wishId)
+        console.log(wishId)
         },
         handleToggleDropdown(wishId) {
             this.openDropdownId = this.openDropdownId === wishId ? null : wishId;
