@@ -45,7 +45,7 @@
         </div>
         
         <WishCard 
-          v-for="wish in filteredWishes" 
+          v-for="wish in filteredReservedWishes" 
           :key="wish.id" 
           :wish="wish" 
           @preview="prevWish" 
@@ -158,11 +158,6 @@ export default {
       if (this.activeTab === 'reserved') {
         return this.wishes.filter(wish => wish.status === 'reserved');
       }
-      
-      if (this.activeTab === 'myWishes') {
-          return this.wishes.filter(wish => wish.status === null);
-          
-       }
        
     },
   
