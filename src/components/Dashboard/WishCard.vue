@@ -3,11 +3,17 @@
     <div @click="preview" class="bg-white cursor-pointer rounded-lg shadow-lg overflow-hidden relative card group flex-shrink-0 md:w-auto">
       <div class="relative">
         <img :src="wish.photo || '/assets/wishlist-category-placeholder.svg'" alt="Wish Item" class="w-full h-[200px] md:h-[360px] object-cover">
-        <button @click.stop="toggleMenu" v-if="status != 'saved'" class="absolute z-30 top-3 right-2 p-1 bg-gray-200 rounded-full toggle-menu-button transition-opacity opacity-0 group-hover:opacity-100">
+        <button @click.stop="toggleMenu" v-if="isWishOwner && wish.status === null && !wish.delivery_address" class="absolute z-30 top-3 right-2 p-1 bg-gray-200 rounded-full toggle-menu-button transition-opacity opacity-0 group-hover:opacity-100">
           <img src="/assets/frame-1618868216.svg" alt="Menu" class="h-6 w-6" />
         </button>
 
-        <template v-if="!isDashboard" >
+        <div v-if="!isWishOwner && wish.status === null && !wish.delivery_address" class="absolute z-30 top-3 right-2 w-full inline-flex justify-end toggle-menu-button transition-opacity opacity-0 group-hover:opacity-100">
+              <button @click.stop="reserveWish" class="px-8 py-3 bg-primaryColor text-white rounded-full hover:shadow-lg">
+                Reserve Wish
+              </button>
+          </div>
+
+        <template v-if="isWishOwner && wish.status === null && !wish.delivery_address" >
           <div v-if="isDropdownOpen" class="w-60 bg-white rounded-lg shadow-lg p-2 border border-gray-200 absolute top-8 z-40 right-4">
             <div @click.stop="$emit('editWish', wish)" class="flex items-center p-2 hover:bg-primaryMainBright cursor-pointer">
               <img src="/assets/edit.svg" class="w-4 h-4" alt="Edit" />
@@ -19,6 +25,12 @@
             </div>
           </div> 
         </template>
+
+         <!-- Status is null -->
+       
+          
+       
+
 
                     <!-- DropdownMenu Received-->
              <template v-if="wish.status == 'received'">
@@ -69,7 +81,7 @@
             </template>
 
             <!-- DropdownMenu myWishes -->
-            <template v-if="wish.status == 'myWishes'">
+            <!-- <template v-if="wish.status == null">
                 <div v-if="isDropdownOpen" @mouseleave="closeMenu" class="w-60 bg-white rounded-lg shadow-lg p-2 border border-gray-200 absolute top-8 z-40 right-4">
                     <div class="flex items-center p-2 hover:bg-primaryMainBright cursor-pointer">
                         <img src="/assets/share.svg" class="w-4 h-4" alt="Share" />
@@ -84,10 +96,14 @@
                         <span class="ml-2 text-gray-800 w-full hover:text-primaryColor font-medium">Delete</span>
                     </div>
                 </div>
-            </template>
+            </template> -->
 
 
       </div>
+
+       
+
+        
 
         <!-- Received Indicator -->
         <div v-if="wish.status == 'received'" class="absolute top-4 left-2 lg:left-4 bg-green-100 text-green-800 py-1 px-2 lg:px-4 rounded-full flex items-center">
@@ -153,16 +169,33 @@
         </div>
     </div> -->
   </div>
+
+  <div v-if="showGiftReservedModal" class="fixed overflow-y-auto inset-0 flex items-center justify-center bg-gray-800 p-4 bg-opacity-50 z-50"
+       @click.self="closeModal">
+    <!-- Existing modal content -->
+    <GiftReservedModal
+      
+      @close="showGiftReservedModal = false"
+      @requestAddress="handleRequestAddress"
+    />
+  </div>
 </template>
 
 <script>
 import DateFormat from './DateFormat.vue';
+import GiftReservedModal from '@/components/GiftReservedModal.vue';
+import { eventBus } from '@/eventBus.js';
 export default {
   name: 'WishCard',
   components:{
-    DateFormat
+    DateFormat,
+    GiftReservedModal
   },
   props: {
+    loggedInUser: {
+      type: [String, Number], // Accept both string and number since ID might be either
+      required: true,
+    },
     wish: {
       type: Object,
       required: true,
@@ -174,7 +207,17 @@ export default {
       required: true,
     },
   },
+  data() {
+    return {
+      showGiftReservedModal: false,
+    }
+    },
   computed: {
+    isWishOwner() {
+      if(this.wish.wishlist.user?.username){
+      return this.wish.wishlist.user?.username === this.loggedInUser;
+      }
+    },
     isDashboard() {
       return this.$route.path === '/dashboard';
     },
@@ -185,6 +228,19 @@ export default {
   methods: {
     toggleMenu() {
       this.$emit('toggleDropdown', this.wish.id);
+    },
+    async reserveWish() {
+      try {
+        await this.$axios.put(`${this.$baseURL}/wishes/${this.wish.id}`, { status: 'reserved' }, {
+          headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+        });
+        this.wish.status = 'reserved';
+        this.showGiftReservedModal = true;
+        
+        eventBus.onSuccess('Wish has been reserved');
+      } catch (error) {
+        console.error('Error reserving wish:', error);
+      }
     },
     preview() {
       this.$emit('preview', this.wish.id);

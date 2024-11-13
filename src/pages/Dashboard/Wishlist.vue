@@ -6,7 +6,7 @@
       <WishlistDetails  @editWishlist="handleEditWishlist" :selectedWishlist="currentWishlist" />
 
       <TabNavigationsWish 
-        :myWishesCount="wishes.length" 
+        :myWishesCount="myWishes.length" 
         :reservedCount="reservedWishes.length"
         :activeTab="activeTab" 
         @switchTab="setActiveTab" 
@@ -14,16 +14,19 @@
       
       <div  class="grid grid-cols-2 w-full lg:grid-cols-4 gap-4 lg:gap-6 px-4 lg:px-12 py-6 pb-12 bg-white rounded-b-lg" @mouseleave="handleCloseDropdown">
         <!-- Empty State Centered -->
-        <div v-if="activeTab === 'myWishes' && wishes.length === 0" class="col-span-2 lg:col-span-4 flex justify-center">
+        <div v-if="activeTab === 'myWishes' && myWishes.length === 0" class="col-span-2 lg:col-span-4 flex justify-center">
           <EmptyState 
             title="No wishes yet" 
-            message="Start adding items to your wishlist."
-            :showButton="true" 
+            :message="currentUser?.username === currentWishlist?.user.username ? 'Start adding items to your wishlist.' :  'hasn\'t added any wish.'"
+            :showButton="true"
+            :currentUserUsername="currentWishlist?.user.username"
             buttonText="Add wish"
+            :userOwnsWishlist="currentUser?.username === currentWishlist?.user.username"
             @button-click="openCreateWishModal"
           />
         </div>
-        <div v-if="activeTab == 'myWishes' && wishes.length > 0" class="flex flex-col items-center justify-center bg-gray-100 h-full rounded-lg p-4 py-8  cursor-pointer" @click="showCreateWishModal = true">
+
+        <div v-if="activeTab == 'myWishes' && currentUser?.username === currentWishlist?.user.username" class="flex flex-col items-center justify-center bg-gray-100  rounded-lg p-4 py-8  cursor-pointer min-h-[360px]" @click="showCreateWishModal = true">
                 <div class="flex items-center justify-center w-12 h-12 bg-black rounded-full mb-4">
                     <img src="/assets/add.svg" alt="Add" class="h-5 w-5">
                 </div>
@@ -31,24 +34,25 @@
         </div>
         <div v-if="activeTab === 'reserved' && reservedWishes.length === 0" class="col-span-2 lg:col-span-4 flex justify-center">
           <EmptyState 
-            title="No wishes reserved"
-            message="Your friends haven't reserved any wishes for you yet. Keep sharing your wishlist!"
+            :title="currentUser?.username === currentWishlist?.user.username ? 'No wishes reserved' : 'No wishes reserved Yet'"
+             :message="currentUser?.username === currentWishlist?.user.username ? 'Your friends haven\'t reserved any wishes for you yet. Keep sharing your wishlist!' :  'It looks like no one has reserved a wish for '+currentWishlist?.user.username  + ' yet. Be the first to surprise them!'"
             :showButton="false"
           />
         </div>
         <div v-if="activeTab === 'received' && receivedWishes.length === 0" class="col-span-2 lg:col-span-4 flex justify-center">
           <EmptyState 
             title="No wishes received"
-            message="You haven't received any wishes from your friends yet. Share your wishlist with them."
+            :message="currentUser?.username === currentWishlist?.user.username ? 'You haven\'t received any wishes from your friends yet. Share your wishlist with them.' :  'hasn\'t added any wish.'"
             :showButton="false"
           />
         </div>
         
         <WishCard 
-          v-for="wish in filteredReservedWishes" 
+        v-for="wish in filteredWishes"  
           :key="wish.id" 
           :wish="wish" 
           @preview="prevWish" 
+           :loggedInUser="currentUser.username"
           :openDropdownId="openDropdownId" 
           @deleteWish="handleDeleteWish"
           @toggleDropdown="handleToggleDropdown" 
@@ -154,11 +158,20 @@ export default {
     };
   },
   computed: {
-    filteredReservedWishes() {
-      if (this.activeTab === 'reserved') {
-        return this.wishes.filter(wish => wish.status === 'reserved');
+    myWishes() {
+      return this.wishes.filter(wish => wish.status === null);
+    },
+    reservedWishes() {
+      return this.wishes.filter(wish => wish.status === 'reserved');
+    },
+    filteredWishes() {
+      if (this.activeTab === 'myWishes') {
+        return this.myWishes;
+      } else if (this.activeTab === 'reserved') {
+        return this.reservedWishes;
+      } else {
+        return this.wishes;
       }
-       
     },
   
 
@@ -220,6 +233,7 @@ export default {
       this.updateType = 'created';
       this.showCreateWishModal = false;
       this.wishCreated = true;
+      this.loadData();
     },
     updatedWish(wishData) { 
       this.createdWishId = wishData.id;
@@ -227,6 +241,7 @@ export default {
       this.updateType = 'updated';
       this.showCreateWishModal = false;
       this.wishUpdated = true;
+      this.loadData();
 
     },
     handleWishUpdate(updatedWish) {

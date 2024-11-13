@@ -397,7 +397,7 @@
                 Mark as Fulfilled
               </button>
             </div>
-            <div v-if="!isWishOwner && wish.status === null && !wish.delivery_address" class=" inline-flex justify-end">
+            <div v-if="!isWishOwner && wish.status === null && !wish.delivery_address" class=" w-full inline-flex justify-end">
               <button @click="reserveWish" class="px-8 py-3 bg-primaryColor text-white rounded-full hover:shadow-lg">
                 Reserve Wish
               </button>
@@ -418,8 +418,18 @@
       </div>
     </div>
   </div>
+  <div v-if="showGiftReservedModal" class="fixed overflow-y-auto inset-0 flex items-center justify-center bg-gray-800 p-4 bg-opacity-50 z-50"
+       @click.self="closeModal">
+    <!-- Existing modal content -->
+    <GiftReservedModal
+      
+      @close="showGiftReservedModal = false"
+      @requestAddress="handleRequestAddress"
+    />
+  </div>
 </template>
 <script>
+import GiftReservedModal from '@/components/GiftReservedModal.vue';
 import DateFormat from '@/components/Dashboard/DateFormat.vue';
 import { wishOwnerMixin } from '@/mixins/wishOwnerMixin.js';
 import { eventBus } from '@/eventBus.js';
@@ -428,6 +438,7 @@ export default {
   name: 'WishDetailView',
   components: {
     DateFormat,
+    GiftReservedModal
   },
   props: {
     wish: {
@@ -444,6 +455,7 @@ export default {
     return {
       isShareMenuOpen: false,
       isDropdownOpen: false,
+      showGiftReservedModal: false,
     };
   },
   computed: {
@@ -527,17 +539,13 @@ export default {
     },
     async reserveWish() {
       try {
-     const response =  await this.$axios.put(`${this.$baseURL}/wishes/${this.wish.id}`, { status: 'reserved' }, {
-          headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` },
+        await this.$axios.put(`${this.$baseURL}/wishes/${this.wish.id}`, { status: 'reserved' }, {
+          headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
         });
-
-        console.log(response);
-     
-
         this.wish.status = 'reserved';
-
-         // Show success message to user
-         eventBus.onSuccess('Wish has been reserved');
+        this.showGiftReservedModal = true;
+        this.closeModal();
+        eventBus.onSuccess('Wish has been reserved');
       } catch (error) {
         console.error('Error reserving wish:', error);
       }
