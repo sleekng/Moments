@@ -21,10 +21,10 @@
                     </h1>
                     <p class="text-base  max-w-xl lg:text-[14px] text-gray-600">Connect with loved ones through heartfelt wishes and gifts. Create, share, and discover wishlists to make your dreams come true.</p>
                 </div>
-                <button class="bg-primaryColor text-white font-medium  py-2 lg:py-1 px-12 rounded-full flex items-center space-x-2 transition-transform transform hover:scale-105">
-                    <span class="text-4xl">Start wishing now</span>
+                <RouterLink to="/Login" class="bg-primaryColor text-white font-medium  py-2 lg:py-3 px-12 rounded-full flex items-center space-x-2  transition-all transform hover:scale-105">
+                    <span class="">Start wishing now</span>
                     <img src="/assets/frame-1618868561.svg" alt="Arrow Icon" class="w-4 h-auto" />
-                </button>
+                </RouterLink>
 
                 <div class="relative w-full max-w-4xl mx-auto mt-20 lg:mt-16 flex justify-center">
                     <!-- Rotated Images Section -->

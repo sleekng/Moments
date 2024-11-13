@@ -26,7 +26,7 @@
           />
         </div>
 
-        <div v-if="activeTab == 'myWishes' && currentUser?.username === currentWishlist?.user.username" class="flex flex-col items-center justify-center bg-gray-100  rounded-lg p-4 py-8  cursor-pointer min-h-[360px]" @click="showCreateWishModal = true">
+        <div v-if="activeTab == 'myWishes' && myWishes.length > 0 && currentUser?.username === currentWishlist?.user.username " class="flex flex-col items-center justify-center bg-gray-100  rounded-lg p-4 py-8  cursor-pointer min-h-[360px]" @click="showCreateWishModal = true">
                 <div class="flex items-center justify-center w-12 h-12 bg-black rounded-full mb-4">
                     <img src="/assets/add.svg" alt="Add" class="h-5 w-5">
                 </div>
