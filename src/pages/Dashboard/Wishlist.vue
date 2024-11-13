@@ -47,6 +47,7 @@
           />
         </div>
         
+        
         <WishCard 
         v-for="wish in filteredWishes"  
           :key="wish.id" 

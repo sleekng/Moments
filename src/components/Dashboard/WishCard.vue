@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div @click="preview" class="bg-white cursor-pointer rounded-lg shadow-lg overflow-hidden relative card group flex-shrink-0 md:w-auto">
+    <div @click="preview" class="bg-white cursor-pointer rounded-lg shadow-lg overflow-hidden relative card group flex-shrink-0 md:w-auto   min-w-[286px]">
       <div class="relative">
         <img :src="wish.photo || '/assets/wishlist-category-placeholder.svg'" alt="Wish Item" class="w-full h-[200px] md:h-[360px] object-cover">
         <button @click.stop="toggleMenu" v-if="isWishOwner && wish.status === null && !wish.delivery_address" class="absolute z-30 top-3 right-2 p-1 bg-gray-200 rounded-full toggle-menu-button transition-opacity opacity-0 group-hover:opacity-100">
@@ -133,6 +133,31 @@
 
 
       <div class="absolute bottom-0 left-0 p-2 lg:p-4 bg-gradient-to-t from-black to-transparent w-full text-white">
+        <div class="w-auto">
+             
+          <!-- priority check Low -->
+
+            <div v-if="wish.priority == 'low'" class="inline-flex items-center bg-[#FAFFFF] border border-[#37B1B5] text-[#37B1B5] text-sm font-medium py-1 px-2 rounded-full">
+                {{wish.priority}} priority 
+                <img src="/assets/gift.svg" alt="Fire" class="ml-2 w-4 h-4" />
+            </div>
+
+            <!-- priority check Medium -->
+
+            <div v-if="wish.priority == 'medium'" class="inline-flex items-center bg-[#FCF8EE] border border-[#DAA520] text-[#DAA520] text-sm font-medium py-1 px-2 rounded-full">
+                {{wish.priority}} priority
+                <img src="/assets/star.svg" alt="Fire" class="ml-2 w-4 h-4" />
+            </div>
+
+            <!-- priority check High -->
+
+            <div v-if="wish.priority == 'high'" class="inline-flex items-center bg-red-100 border border-red-600 text-red-600 text-sm font-medium py-1 px-2 rounded-full">
+                {{wish.priority}} priority
+                <img src="/assets/frame-1618868307.svg" alt="Fire" class="ml-2 w-4 h-4" />
+            </div>
+      </div>
+
+
         <h2 class="text-sm md:text-lg font-semibold">{{ wish.name }}</h2>
         <p class="text-sm md:text-lg">{{ wish.amount }} {{ wish.currency }}</p>
         <div class="flex justify-between items-center mt-2">

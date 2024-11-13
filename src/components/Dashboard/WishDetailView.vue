@@ -15,14 +15,30 @@
 
           <div class="absolute bottom-4 left-4 text-white">
             <div class="w-auto">
-              <div
-                class="inline-flex items-center bg-red-100 border border-red-600 text-red-600 text-sm font-medium py-1 px-2 rounded-full">
-                High priority
-                <img src="/assets/frame-1618868307.svg" alt="Fire" class="ml-2 w-4 h-4" />
-              </div>
-            </div>
+             
+             <!-- priority check Low -->
+   
+               <div v-if="wish.priority == 'low'" class="inline-flex items-center bg-[#FAFFFF] border border-[#37B1B5] text-[#37B1B5] text-sm font-medium py-1 px-2 rounded-full">
+                   {{wish.priority}} priority 
+                   <img src="/assets/gift.svg" alt="Fire" class="ml-2 w-4 h-4" />
+               </div>
+   
+               <!-- priority check Medium -->
+   
+               <div v-if="wish.priority == 'medium'" class="inline-flex items-center bg-[#FCF8EE] border border-[#DAA520] text-[#DAA520] text-sm font-medium py-1 px-2 rounded-full">
+                   {{wish.priority}} priority
+                   <img src="/assets/star.svg" alt="Fire" class="ml-2 w-4 h-4" />
+               </div>
+   
+               <!-- priority check High -->
+   
+               <div v-if="wish.priority == 'high'" class="inline-flex items-center bg-red-100 border border-red-600 text-red-600 text-sm font-medium py-1 px-2 rounded-full">
+                   {{wish.priority}} priority
+                   <img src="/assets/frame-1618868307.svg" alt="Fire" class="ml-2 w-4 h-4" />
+               </div>
+         </div>
 
-            <div class="mb-1 mt-8 text-2xl font-bold">{{ wish.name }}</div>
+            <div class="mb-1 mt-4 text-2xl font-bold">{{ wish.name }}</div>
             <div class="flex items-center space-x-2">
               <span class="text-xl font-semibold">{{ wish.amount }}</span>
               <img src="/assets/ellipse-18.svg" alt="Separator" class="w-1 h-1">
@@ -38,8 +54,8 @@
               <div class="flex items-center space-x-2 text-sm text-gray-600">
                 <img src="/assets/calendar.svg" alt="Event Date" class="w-4 h-4" />
                 <span>Event date: </span>
-                <span class="font-medium text-gray-800">
-                  <DateFormat :date="wish.created_at" :classList="'text-[14px]'" />
+                <span class="font-bold text-black">
+                  <DateFormat :date="wish.created_at" :classList="'text-[16px] font-bold text-black'" />
                 </span>
               </div>
             </div>
@@ -301,6 +317,8 @@
             <span class="text-green-600 font-medium">Received by </span>
             <img src="/assets/avatar.svg" alt="Avatar" class="w-5 h-5 rounded-full" />
             <span class="text-primaryColor">@ayomide_sm</span>
+
+            <div v-if="wish.status != 'saved'" class="text-sm text-gray-500">2 minutes ago</div>
           </div>
 
           <!-- Reserved Indicator -->
@@ -310,6 +328,8 @@
             <span class="text-[#DE900B] font-medium">Reserved by </span>
             <img src="/assets/avatar.svg" alt="Avatar" class="w-5 h-5 rounded-full" />
             <span class="text-primaryColor">@ayomide_sm</span>
+
+            <div v-if="wish.status != 'saved'" class="text-sm text-gray-500">2 minutes ago</div>
           </div>
           
           <!-- Reserved Indicator -->
@@ -319,6 +339,8 @@
             <span class="text-[#DE900B] font-medium">Reserved by </span>
             <img src="/assets/avatar.svg" alt="Avatar" class="w-5 h-5 rounded-full" />
             <span class="text-primaryColor">@ayomide_sm</span>
+
+            <div v-if="wish.status != 'saved'" class="text-sm text-gray-500">2 minutes ago</div>
           </div>
 
 
@@ -331,15 +353,17 @@
             <span class="text-green-600 font-medium">Fulfilled by </span>
             <img src="/assets/avatar.svg" alt="Avatar" class="w-5 h-5 rounded-full" />
             <span class="text-primaryColor">@ayomide_sm</span>
+
+            <div v-if="wish.status != 'saved'" class="text-sm text-gray-500">2 minutes ago</div>
           </div>
 
-          <div v-if="wish.status != 'saved'" class="text-sm text-gray-500">2 minutes ago</div>
+          
           <div class="flex items-center space-x-2 text-gray-600">
             <img src="/assets/heart-outline.svg" alt="Likes" class="w-5 h-5" />
             <span>{{ wish.likes_count }} Likes</span>
           </div>
 
-          <div class="bg-[#f8f9f9] rounded-md border border-[#9ca1aa] p-2.5 w-full" style="width: 407.04px;">
+  <div  class="bg-[#f8f9f9] rounded-md border border-[#9ca1aa] p-2.5 w-full" style="width: 407.04px;">
     <div class="flex items-center gap-1.5 px-3">
       <img src="/assets/location.svg" alt="Location" class="w-3.5 h-3.5" />
       <span class="text-[#2d3036] font-medium text-sm leading-tight">Delivery location</span>
@@ -374,12 +398,12 @@
                 Mark as Received
               </button>
             </div>
-            <div v-if="isWishOwner && wish.status === 'fulfilled' && wish.received">
+            <div v-if="isWishOwner && wish.status === 'fulfiled' && wish.received">
               <button @click="markAsUnreceived" class="px-8 py-3 bg-gray-200 text-gray-800 rounded-full hover:bg-gray-300">
                 Mark as Unreceived
               </button>
             </div>
-            <div v-if="isWishOwner && wish.status === 'fulfilled' && !wish.received">
+            <div v-if="isWishOwner && wish.status === 'fulfiled' && !wish.received">
               <button @click.stop="$emit('editWish', wish)" class="px-8 py-3 bg-gray-200 text-gray-800 rounded-full hover:bg-gray-300">
                 Edit
               </button>
@@ -529,12 +553,12 @@ export default {
     },
     async markAsFulfilled() {
       try {
-        await this.$axios.put(`${this.$baseURL}/wishes/${this.wish.id}`, { status: 'fulfilled' }, {
+        await this.$axios.put(`${this.$baseURL}/wishes/${this.wish.id}`, { status: 'fulfiled' }, {
           headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` },
         });
-        this.wish.status = 'fulfilled';
+        this.wish.status = 'fulfiled';
       } catch (error) {
-        console.error('Error marking as fulfilled:', error);
+        console.error('Error marking as fulfiled:', error);
       }
     },
     async reserveWish() {
