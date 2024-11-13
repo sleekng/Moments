@@ -497,7 +497,7 @@ export default {
     },
     async markAsReceived() {
       try {
-        await this.$axios.put(`${this.$baseURL}/wishes/40`, { received: true }, {
+        await this.$axios.put(`${this.$baseURL}/wishes/${this.wish.id}`, { received: true }, {
           headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` },
         });
         this.wish.received = true;
@@ -507,7 +507,7 @@ export default {
     },
     async markAsUnreceived() {
       try {
-        await this.$axios.put(`${this.$baseURL}/wishes/40`, { received: false }, {
+        await this.$axios.put(`${this.$baseURL}/wishes/${this.wish.id}`, { received: false }, {
           headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` },
         });
         this.wish.received = false;
@@ -517,7 +517,7 @@ export default {
     },
     async markAsFulfilled() {
       try {
-        await this.$axios.put(`${this.$baseURL}/wishes/40`, { status: 'fulfilled' }, {
+        await this.$axios.put(`${this.$baseURL}/wishes/${this.wish.id}`, { status: 'fulfilled' }, {
           headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` },
         });
         this.wish.status = 'fulfilled';
@@ -527,7 +527,7 @@ export default {
     },
     async reserveWish() {
       try {
-     const response =  await this.$axios.put(`${this.$baseURL}/wishes/40`, { status: 'reserved' }, {
+     const response =  await this.$axios.put(`${this.$baseURL}/wishes/${this.wish.id}`, { status: 'reserved' }, {
           headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` },
         });
 
@@ -544,7 +544,7 @@ export default {
     },
     async cancelReservation() {
       try {
-        await this.$axios.put(`${this.$baseURL}/wishes/40`, { status: null }, {
+        await this.$axios.put(`${this.$baseURL}/wishes/${this.wish.id}`, { status: null }, {
           headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` },
         });
         this.wish.status = null;

@@ -154,13 +154,19 @@ export default {
     };
   },
   computed: {
-    filteredWishes() {
+    filteredReservedWishes() {
       if (this.activeTab === 'reserved') {
         return this.wishes.filter(wish => wish.status === 'reserved');
-      } else {
-        return this.wishes;
       }
+      
+      if (this.activeTab === 'myWishes') {
+          return this.wishes.filter(wish => wish.status === null);
+          
+       }
+       
     },
+  
+
     wishmodalTitle() {
       return this.wishCreated ? 'Wish Added! 🥳' : 'Wish Updated! 🥳';
     },
