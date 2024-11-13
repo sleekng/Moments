@@ -1,7 +1,7 @@
 <template>
   <div class="fixed overflow-y-auto inset-0 flex items-center justify-center bg-gray-800 p-4 bg-opacity-50 z-50"
     @click.self="closeModal">
-    <div class="bg-white  rounded-2xl max-w-4xl  h-[98vh] lg:h-auto shadow-lg p-6 mx-auto relative">
+    <div class="bg-white  rounded-2xl min-w-[850px]  h-[98vh] lg:h-auto shadow-lg p-6 mx-auto relative">
       <button @click="closeModal" class="bg-gray-100 rounded-full p-2 hover:bg-gray-200 absolute top-4 z-50 left-4">
         <img src="/assets/close.svg" alt="Close" class="w-6 h-6" />
       </button>
@@ -363,7 +363,7 @@
             <span>{{ wish.likes_count }} Likes</span>
           </div>
 
-  <div  class="bg-[#f8f9f9] rounded-md border border-[#9ca1aa] p-2.5 w-full" style="width: 407.04px;">
+  <div v-if="wish.delivery_address"  class="bg-[#f8f9f9] rounded-md border border-[#9ca1aa] p-2.5 w-full" style="width: 407.04px;">
     <div class="flex items-center gap-1.5 px-3">
       <img src="/assets/location.svg" alt="Location" class="w-3.5 h-3.5" />
       <span class="text-[#2d3036] font-medium text-sm leading-tight">Delivery location</span>
