@@ -3,7 +3,7 @@
     <AppHeader @showCategoryModal="$emit('showCategoryModal')" />
 
     <div v-if="!loading" class="container mx-auto pt-20">
-      <WishlistDetails  @editWishlist="handleEditWishlist" :selectedWishlist="currentWishlist" />
+      <WishlistDetails @editWishlist="handleEditWishlist" :selectedWishlist="currentWishlist" />
 
       <TabNavigationsWish 
         :myWishesCount="myWishes.length" 
@@ -11,8 +11,8 @@
         :activeTab="activeTab" 
         @switchTab="setActiveTab" 
       />
-      
-      <div  class="grid grid-cols-2 w-full lg:grid-cols-4 gap-4 lg:gap-6 px-4 lg:px-12 py-6 pb-12 bg-white rounded-b-lg" @mouseleave="handleCloseDropdown">
+
+      <div class="grid grid-cols-2 w-full lg:grid-cols-4 gap-4 lg:gap-6 px-4 lg:px-12 py-6 pb-12 bg-white rounded-b-lg" @mouseleave="handleCloseDropdown">
         <!-- Empty State Centered -->
         <div v-if="activeTab === 'myWishes' && myWishes.length === 0" class="col-span-2 lg:col-span-4 flex justify-center">
           <EmptyState 
@@ -26,39 +26,47 @@
           />
         </div>
 
-        <div v-if="activeTab == 'myWishes' && myWishes.length > 0 && currentUser?.username === currentWishlist?.user.username " class="flex flex-col items-center justify-center bg-gray-100  rounded-lg p-4 py-8  cursor-pointer min-h-[360px]" @click="showCreateWishModal = true">
-                <div class="flex items-center justify-center w-12 h-12 bg-black rounded-full mb-4">
-                    <img src="/assets/add.svg" alt="Add" class="h-5 w-5">
-                </div>
-                <div class="text-lg font-medium text-center text-gray-800 leading-relaxed">Make a Wish</div>
+        <div v-if="activeTab === 'myWishes' && myWishes.length > 0 && currentUser?.username === currentWishlist?.user.username" 
+             class="flex flex-col items-center justify-center bg-gray-100 rounded-lg p-4 py-8 cursor-pointer min-h-[360px]" 
+             @click="showCreateWishModal = true">
+          <div class="flex items-center justify-center w-12 h-12 bg-black rounded-full mb-4">
+            <img src="/assets/add.svg" alt="Add" class="h-5 w-5">
+          </div>
+          <div class="text-lg font-medium text-center text-gray-800 leading-relaxed">Make a Wish</div>
         </div>
+
         <div v-if="activeTab === 'reserved' && reservedWishes.length === 0" class="col-span-2 lg:col-span-4 flex justify-center">
           <EmptyState 
             :title="currentUser?.username === currentWishlist?.user.username ? 'No wishes reserved' : 'No wishes reserved Yet'"
-             :message="currentUser?.username === currentWishlist?.user.username ? 'Your friends haven\'t reserved any wishes for you yet. Keep sharing your wishlist!' :  'It looks like no one has reserved a wish for '+currentWishlist?.user.username  + ' yet. Be the first to surprise them!'"
+            :message="currentUser?.username === currentWishlist?.user.username ? 
+                      'Your friends haven\'t reserved any wishes for you yet. Keep sharing your wishlist!' :  
+                      'It looks like no one has reserved a wish for ' + currentWishlist?.user.username  + ' yet. Be the first to surprise them!'"
             :showButton="false"
           />
         </div>
+
         <div v-if="activeTab === 'received' && receivedWishes.length === 0" class="col-span-2 lg:col-span-4 flex justify-center">
           <EmptyState 
             title="No wishes received"
-            :message="currentUser?.username === currentWishlist?.user.username ? 'You haven\'t received any wishes from your friends yet. Share your wishlist with them.' :  'hasn\'t added any wish.'"
+            :message="currentUser?.username === currentWishlist?.user.username ? 
+                      'You haven\'t received any wishes from your friends yet. Share your wishlist with them.' :  
+                      'hasn\'t added any wish.'"
             :showButton="false"
           />
         </div>
-        
-        
+
         <WishCard 
-        v-for="wish in filteredWishes"  
+          v-for="wish in filteredWishes"  
           :key="wish.id" 
           :wish="wish" 
           @preview="prevWish" 
-           :loggedInUser="currentUser.username"
+          :loggedInUser="currentUser.username"
           :openDropdownId="openDropdownId" 
           @deleteWish="handleDeleteWish"
           @toggleDropdown="handleToggleDropdown" 
           @closeDropdown="handleCloseDropdown" 
           @editWish="openEditWishModal"
+          @reserved="showGiftReservedModal=true"
         />
       </div>
     </div>
@@ -72,6 +80,7 @@
       @close="closeWishDetailsModal" 
       :wish="showPrevWish"
       :loggedInUser="currentUser.username"
+         @reserved="showGiftReservedModal=true"
     />
 
     <CreateWishModal  
@@ -86,8 +95,8 @@
 
     <DeleteConfirmationModal 
       v-if="showDeleteModal" 
-      :title="'Wish'" 
-      :description="'Are you sure you want to delete this wish? This action cannot be undone.'" 
+      title="Wish"
+      description="Are you sure you want to delete this wish? This action cannot be undone." 
       @confirm="confirmDelete" 
       @cancel="cancelDelete" 
     />
@@ -102,6 +111,12 @@
       @viewWish="viewCreatedWish" 
       @makeAWish="openCreateWishModal"
       :updateType="updateType"
+    />
+
+    <GiftReservedModal
+      v-if="showGiftReservedModal"
+      @close="showGiftReservedModal = false"
+      @requestAddress="handleRequestAddress"
     />
   </div>
   <Loader :show="loading" />
@@ -120,11 +135,13 @@ import WishDetailView from '@/components/Dashboard/WishDetailView.vue';
 import DeleteConfirmationModal from '@/components/Dashboard/DeleteConfirmationModal.vue';
 import { eventBus } from '@/eventBus.js';
 import EmptyState from '@/components/Dashboard/EmptyState.vue';
+import GiftReservedModal from '@/components/GiftReservedModal.vue';
 
 export default {
   name: "Wishlist",
   emits: ['showCategoryModal', 'showCreateWishlistModal'],
   components: {
+    GiftReservedModal,
     Loader,
     EmptyState,
     AppHeader,
@@ -138,6 +155,7 @@ export default {
   },
   data() {
     return {
+      showGiftReservedModal: false,
       updateType: null,
       showPrevWish: null,
       openDropdownId: null,
@@ -149,13 +167,13 @@ export default {
       currentWishlist: null,
       showDeleteModal: false,
       editingWish: null,
-      reservedWishes: [],
       wishes: [],
       wishUpdated: false,
       wishCreated: false,
       createdWishId: null,
-      loading:false,
-      currentUser: null, // Add currentUser to data
+      loading: false,
+      currentUser: null,
+      successMessage: '' // Initialize successMessage
     };
   },
   computed: {
@@ -174,8 +192,6 @@ export default {
         return this.wishes;
       }
     },
-  
-
     wishmodalTitle() {
       return this.wishCreated ? 'Wish Added! 🥳' : 'Wish Updated! 🥳';
     },
@@ -190,34 +206,29 @@ export default {
     this.loadData();
   },
   methods: {
-
     loadCurrentUser() {
       const userData = JSON.parse(localStorage.getItem('user'));
       if (userData) {
         this.currentUser = userData;
       }
     },
-
     async loadData() {
-
-      this.loading = true;  // Start loading
+      this.loading = true; 
       try {
         const wishlistId = this.$route.params.id;
         await Promise.all([
-        await this.fetchWishlistDetails(wishlistId),
-        await this.fetchWishes(wishlistId),
+          this.fetchWishlistDetails(wishlistId),
+          this.fetchWishes(wishlistId),
         ]);
       } catch (error) {
         console.error('Failed to load data:', error);
       } finally {
-        this.loading = false;  // Stop loading
+        this.loading = false;
       }
     },
-
     handleEditWishlist(wishlist) {
       this.$emit('showCreateWishlistModal', wishlist.category, wishlist);
     },
-
     closeCreatedModal() {
       this.wishCreated = this.wishUpdated = false;
       this.loadData();
@@ -236,14 +247,13 @@ export default {
       this.wishCreated = true;
       this.loadData();
     },
-    updatedWish(wishData) { 
+    updatedWish(wishData) {
       this.createdWishId = wishData.id;
       this.editingWish = null;
       this.updateType = 'updated';
       this.showCreateWishModal = false;
       this.wishUpdated = true;
       this.loadData();
-
     },
     handleWishUpdate(updatedWish) {
       const index = this.wishes.findIndex(w => w.id === updatedWish.id);
@@ -262,7 +272,7 @@ export default {
           headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
         });
         this.wishes = this.wishes.filter(wish => wish.id !== this.wishToDelete);
-        eventBus.onSuccess('Wish deleted successfully.');
+        this.successMessage = 'Wish deleted successfully.'; // Update successMessage
       } catch (error) {
         console.error('Error deleting wish:', error.response?.data?.message || error.message);
       } finally {
@@ -284,7 +294,7 @@ export default {
       this.showCreateWishModal = true;
     },
     openEditWishModal(wish) {
-      this.editingWish = { ...wish }; // Ensure you're passing a copy of the wish to avoid direct mutations
+      this.editingWish = { ...wish };
       this.showWishDetailsModal = false;
       this.showCreateWishModal = true;
     },
@@ -298,9 +308,6 @@ export default {
     },
     setActiveTab(tab) {
       this.activeTab = tab;
-      if (tab === 'reserved') {
-        this.reservedWishes = this.wishes.filter(wish => wish.status === 'reserved');
-      }
     },
     handleToggleDropdown(wishId) {
       this.openDropdownId = this.openDropdownId === wishId ? null : wishId;
@@ -324,7 +331,6 @@ export default {
           headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
         });
         this.wishes = response.data.data;
-        this.reservedWishes = this.wishes.filter(wish => wish.status === 'reserved');
       } catch (error) {
         console.error('Error fetching wishes:', error);
       }

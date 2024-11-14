@@ -1,6 +1,6 @@
 <template>
     <div
-      class="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center bg-gray-800 bg-opacity-50 p-4"
+      class="fixed overflow-y-auto inset-0 flex items-center justify-center bg-gray-800 p-4 bg-opacity-50 z-50"
       @click.self="closeModal"
     >
       <div class="bg-white rounded-xl shadow-lg max-w-md w-full overflow-hidden">
@@ -80,12 +80,7 @@
         default: 'Wish Created',
       },
 
-      currentWishlistId: {
-        type: Number,
-      },
-      createdWishId: {
-        type: Number,
-      },
+
     },
     emits: ['close', 'requestAddress'],
   };

@@ -7,9 +7,16 @@
           <img src="/assets/frame-1618868216.svg" alt="Menu" class="h-6 w-6" />
         </button>
 
+
+      
+
         <div v-if="!isWishOwner && wish.status === null && !wish.delivery_address" class="absolute z-30 top-3 right-2 w-full inline-flex justify-end toggle-menu-button transition-opacity opacity-0 group-hover:opacity-100">
-              <button @click.stop="reserveWish" class="px-8 py-3 bg-primaryColor text-white rounded-full hover:shadow-lg">
-                Reserve Wish
+              <button @click.stop="reserveWish" :disabled="isReserving" :class="['px-8 py-3 rounded-full', isReserving ? 'bg-primaryColor text-white hover:shadow-lg cursor-not-allowed' : 'bg-primaryColor text-white hover:shadow-lg']">
+                <span v-if="isReserving">
+                  <i class="fas fa-spinner fa-spin"></i>
+                </span>
+                
+                <span v-else>Reserve Wish</span>
               </button>
           </div>
 
@@ -195,26 +202,19 @@
     </div> -->
   </div>
 
-  <div v-if="showGiftReservedModal" class="fixed overflow-y-auto inset-0 flex items-center justify-center bg-gray-800 p-4 bg-opacity-50 z-50"
-       @click.self="closeModal">
-    <!-- Existing modal content -->
-    <GiftReservedModal
-      
-      @close="showGiftReservedModal = false"
-      @requestAddress="handleRequestAddress"
-    />
-  </div>
+
+ 
+
 </template>
 
 <script>
 import DateFormat from './DateFormat.vue';
-import GiftReservedModal from '@/components/GiftReservedModal.vue';
-import { eventBus } from '@/eventBus.js';
+
 export default {
   name: 'WishCard',
   components:{
     DateFormat,
-    GiftReservedModal
+
   },
   props: {
     loggedInUser: {
@@ -232,9 +232,11 @@ export default {
       required: true,
     },
   },
+  emits: ['preview', 'deleteWish', 'toggleDropdown', 'closeDropdown', 'editWish'], // Declare emits
   data() {
     return {
-      showGiftReservedModal: false,
+      
+      isReserving: false, // New data property to track reservation state
     }
     },
   computed: {
@@ -255,16 +257,18 @@ export default {
       this.$emit('toggleDropdown', this.wish.id);
     },
     async reserveWish() {
+      this.isReserving = true; // Start loading state
       try {
         await this.$axios.put(`${this.$baseURL}/wishes/${this.wish.id}`, { status: 'reserved' }, {
           headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
         });
         this.wish.status = 'reserved';
-        this.showGiftReservedModal = true;
-        
-        eventBus.onSuccess('Wish has been reserved');
+        this.$emit('reserved')
+ 
       } catch (error) {
         console.error('Error reserving wish:', error);
+      }  finally {
+        this.isReserving = false; // End loading state    
       }
     },
     preview() {
@@ -280,5 +284,20 @@ export default {
 <style scoped>
 .group:hover .toggle-menu-button {
   opacity: 1;
+}
+
+.loader {
+  border: 2px solid transparent;
+  border-top: 2px solid white;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  animation: spin 1s linear infinite;
+  display: inline-block;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 </style>
