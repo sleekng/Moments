@@ -22,7 +22,7 @@
         <!-- Received Wish Tab -->
         <div class="flex flex-col items-center cursor-pointer" @click="switchTab('received')">
           <div :class="activeTab === 'received' ? 'text-gray-900' : 'text-[#616874]'" class="lg:text-base text-[12px] px-2 whitespace-nowrap lg:px-8 font-medium">
-            Received Wish <span class="text-[16px]">10</span>
+            Received Wish <span class="text-[16px]">{{ receivedCount }}</span>
           </div>
           <div :class="activeTab === 'received' ? 'bg-black' : ''" class="w-full h-1 mt-2"></div>
         </div>
@@ -91,6 +91,10 @@ export default {
       required: true
     },
     reservedCount: {
+      type: Number,
+      default: 0
+    },
+    receivedCount: {
       type: Number,
       default: 0
     }

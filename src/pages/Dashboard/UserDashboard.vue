@@ -2,8 +2,9 @@
   <div class="bg-white lg:bg-gray-100 py-10">
     <AppHeader @showCategoryModal="$emit('showCategoryModal')" />
     <div v-if="!loading" class="px-4 lg:px-16 pt-10 lg:pt-20">
+      <ShareAddressModal :fetchAddresses="fetchAddresses" :wishID="selectedWishID" />
       <ProfileCover />
-      <ProfileDetails @showAnalyticsModal="ToggleAnalyticsModal" :myWishlistCount="wishlists.length" />
+      <ProfileDetails :user="user" @showAnalyticsModal="ToggleAnalyticsModal" :myWishlistCount="wishlists.length" />
       <TabNavigationsWishlist :myWishlistCount="wishlists.length" :savedwishesCount="savedwishes.length" :reservedWishesCount="reservedWishes.length" :activeTab="activeTab" @switchTab="setActiveTab" />
 
 
@@ -66,7 +67,15 @@
 
       <!-- Modals -->
       <Congratulations v-if="showInitialModal" @close="closeInitialModal" />
-      <WishDetailView @editWish="openEditWishModal" v-if="showWishDetailsModal" @close="closeWishDetailsModal" :wish="showPrevWish ? showPrevWish : showSavedPrevWish" />
+      <WishDetailView  :isRequestingAddress="isRequestingAddress"     @requestAddress="requestAddress" @editWish="openEditWishModal" v-if="showWishDetailsModal" @close="closeWishDetailsModal" :wish="showPrevWish ? showPrevWish : showSavedPrevWish" />
+
+
+     
+
+
+
+
+
       <AnalyticsModal
         v-if="showAnalyticsModal"
         :analyticsData="analyticsData"
@@ -83,6 +92,7 @@
 <script>
 import EmptyState from '@/components/Dashboard/EmptyState.vue';
 import Loader from '@/components/Loader.vue';
+import ShareAddressModal from '@/components/ShareAddressModal.vue';
 import { eventBus } from '@/eventBus.js';
 import CreateWishModal from '@/components/Dashboard/CreateWishModal.vue';
 import AppHeader from '@/components/Dashboard/AppHeader.vue';
@@ -99,6 +109,7 @@ import DeleteConfirmationModal from '@/components/Dashboard/DeleteConfirmationMo
 
 export default {
   components: {
+    ShareAddressModal,
     Loader,
     EmptyState,
     CreateWishModal,
@@ -117,7 +128,25 @@ export default {
   
   data() {
     return {
-     user: null,
+      isRequestingAddress:false,
+      user: {
+        username: '',
+        first_name: '',
+        last_name: '',
+        email: '',
+        avatar: '',
+        gender: '',
+        dob: '',
+        country: '',
+        state: '',
+        verified: false,
+        friends_count: 0,
+        likes_count: 0,
+        wishlists_count: 0,
+        friendship_id: null,
+        friendship_status: null,
+        token: ''
+      },
       showCreateWishModal: false,
       analyticsData: null,
       showAnalyticsModal: false,
@@ -166,6 +195,40 @@ export default {
 
   methods: {
 
+    async fetchAddresses() {
+      try {
+        const response = await this.$axios.get(`${this.$baseURL}/addresses`,{
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+              });
+        if (response.data.success) {
+          return response.data.data;
+        }
+      } catch (error) {
+        console.error('Error fetching addresses:', error);
+        return [];
+      }
+    },
+
+    async requestAddress(wishID) {
+      
+          this.isRequestingAddress = true
+            try {
+                
+              await this.$axios.post(`${this.$baseURL}/wishes/${wishID}/address`,{} ,{
+              headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+            });
+
+            eventBus.onSuccess('Address request sent successfully.');
+            
+            } catch (error) {
+              console.error("Error requesting address:", error);
+                const errorMsg = error.response?.data?.message || 'Error requesting address. Please try again.';
+            } finally {
+                this.isRequestingAddress =false
+            }
+        },
+
+
     async loadData() {
       this.loading = true;  // Start loading
       try {
@@ -181,6 +244,12 @@ export default {
       }
     },
 
+    loadUserData() {
+      const userData = JSON.parse(localStorage.getItem('user'));
+      if (userData) {
+        this.user = userData;
+      }
+    },
 
 
     navigateToAllWishes(wishlistId) {
@@ -254,13 +323,6 @@ export default {
 
     handleEditWishlist(wishlist) {
       this.$emit('showCreateWishlistModal', wishlist.category, wishlist);
-    },
-
-    loadUserData() {
-      const userData = JSON.parse(localStorage.getItem('user'));
-      if (userData) {
-        this.user = userData;
-      }
     },
 
     async fetchWishlists() {

@@ -8,6 +8,7 @@
       </router-link>
     </div>
 
+
     <!-- Logo and Navigation for Desktop -->
     <div class="hidden lg:flex items-center h-full">
       <router-link to="/">
@@ -59,7 +60,7 @@
 
         <!-- Notifications Dropdown -->
         <div v-if="showNotifications" @mouseleave="toggleNotifications" class="absolute -right-20 top-10 w-[450px] bg-white border overflow-hidden rounded-lg shadow-lg z-50">
-          <NotificationDropdown />
+          <NotificationDropdown :notifications="notifications" />
         </div>
       </div>
 
@@ -99,7 +100,7 @@
 
   <!--Mobile Notification and Profile Section -->
   <div v-if="showNotifications" @mouseleave="toggleNotifications" class="fixed left-0 lg:hidden top-12 w-full h-screen bg-white border overflow-hidden rounded-lg shadow-lg z-40">
-    <NotificationDropdown />
+    <NotificationDropdown :notifications="notifications" />
   </div>
 
   <!-- Mobile Menu -->
@@ -162,17 +163,32 @@ export default {
       wishlists: [],
       filteredPeople: [],
       filteredWishlists: [],
+      notifications: [], // Add notifications array
     };
   },
-  mounted() {
+  async mounted() {
     this.loadUserData();
     this.getRecentSearches();
     document.addEventListener('click', this.handleClickOutside);
+    await this.fetchNotifications(); // Fetch notifications on mount
   },
   beforeDestroy() {
     document.removeEventListener('click', this.handleClickOutside);
   },
   methods: {
+    async fetchNotifications() {
+      try {
+        const response = await this.$axios.get(`${this.$baseURL}/notifications`, {
+          headers: { 'Authorization': `Bearer ${this.getToken()}` }
+        });
+        if (response.data.success) {
+          this.notifications = response.data.data;
+        }
+      } catch (error) {
+        console.error('Error fetching notifications:', error);
+      }
+    },
+    
     handleClickOutside(event) {
       const searchDropdown = this.$refs.searchDropdown;
       if (searchDropdown && !searchDropdown.contains(event.target)) {
@@ -213,6 +229,7 @@ export default {
           } else if (type === 'wishlists') {
             this.filteredWishlists = result.data.map(item => ({
               name: item.title,
+              id: item.id,
               username: 'fetch username accordingly', // Placeholder for username handling
               wishes: item.wishes_count
             }));

@@ -19,7 +19,9 @@
 
       <div v-if="wishlists.length" class="space-y-2">
         <p class="font-medium text-sm text-gray-500">Wishlist</p>
-        <div v-for="wishlist in wishlists" :key="wishlist.name" class="flex items-center justify-between" @click="$emit('selectResult', wishlist, 'wishlists')">
+        
+        <div v-for="wishlist in wishlists" :key="wishlist.name"  class="flex cursor-pointer items-center justify-between" @click="viewWishlist(wishlist.id)">
+          
           <div class="flex items-center space-x-2">
             <img src="/assets/wishlist-category-placeholder.svg" class="w-8 h-8" alt="Wishlist Icon">
             <div>
@@ -44,6 +46,13 @@ export default {
   props: {
     people: Array,
     wishlists: Array
+  },
+  methods:{
+    viewWishlist(wishlistId) {
+      console.log('working');
+      
+      this.$router.push({ name: 'Wishlist', params: { id: wishlistId } });
+    },
   }
 };
 </script>

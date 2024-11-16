@@ -3,7 +3,9 @@ import Home from '@/pages/Home/Home.vue';
 import { eventBus } from '@/eventBus.js';
 
 import UserDashboard from '@/pages/Dashboard/UserDashboard.vue';
+
 import UserExplore from '@/pages/Dashboard/UserExplore.vue';
+import UsersProfile from '@/pages/Dashboard/UsersProfile.vue';
 import Account from '@/pages/Dashboard/Account.vue';
 import Archived from '@/pages/Dashboard/Archived.vue';
 import ArchivedView from '@/pages/Dashboard/ArchivedView.vue';
@@ -28,6 +30,7 @@ const routes = [
   { path: '/view-archived', name: 'ArchivedView', component: ArchivedView },
   { path: '/dashboard', name: 'dashboard', component: UserDashboard },
   { path: '/wishlist/:id', name: 'Wishlist', component: Wishlist, props: true },
+  { path: '/user/:username', name: 'UsersProfile', component: UsersProfile, props: true },
 /*   { path: '/wishlist', name: 'Wishlist', component: Wishlist }, */
   { path: '/friends', name: 'Friends', component: Friends },
   { path: '/profile', name: 'Profile', component: Profile },
@@ -66,7 +69,7 @@ function clearAuthData() {
 }
 
 router.beforeEach((to, from, next) => {
-  const publicPages = ['Home', 'Login', 'Register', 'Create Option', 'Forgot Password', 'Reset Password', 'Verification Sent'];
+  const publicPages = ['Home', 'Login', 'Register', 'Create Option', 'Forgot Password', 'Reset Password', 'Verification Sent','Sign Up','Sign Up 2'];
   const authRequired = !publicPages.includes(to.name);
 
   eventBus.setLoading(true);

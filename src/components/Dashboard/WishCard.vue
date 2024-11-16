@@ -12,11 +12,12 @@
 
         <div v-if="!isWishOwner && wish.status === null && !wish.delivery_address" class="absolute z-30 top-3 right-2 w-full inline-flex justify-end toggle-menu-button transition-opacity opacity-0 group-hover:opacity-100">
               <button @click.stop="reserveWish" :disabled="isReserving" :class="['px-8 py-3 rounded-full', isReserving ? 'bg-primaryColor text-white hover:shadow-lg cursor-not-allowed' : 'bg-primaryColor text-white hover:shadow-lg']">
-                <span v-if="isReserving">
-                  <i class="fas fa-spinner fa-spin"></i>
-                </span>
-                
-                <span v-else>Reserve Wish</span>
+                <span   class="w-full flex justify-center">
+                  <span v-if="isReserving" class="  absolute ">
+                    <i class="fas fa-spinner fa-spin "></i>
+                  </span>
+                  Reserve Wish
+              </span>
               </button>
           </div>
 
@@ -126,13 +127,37 @@
             <span v-else class="font-medium text-sm">Reserved</span>
         </div>
 
-        <!-- FulFilled Indicator -->
-        <div v-if="wish.status == 'fulfiled'" class="absolute top-4 left-2 lg:left-4 bg-[#EFF9F3] text-[#1FB356] py-1 px-2 lg:px-4 rounded-full flex items-center">
+        <!-- FulFilled wish indicator with owner view and received Indicator -->
+        <div v-if="isWishOwner && wish.status == 'fulfiled' && wish.received" class="absolute top-4 left-2 lg:left-4 bg-[#EFF9F3] text-[#1FB356] py-1 px-2 lg:px-4 rounded-full flex items-center">
+          <i class="fa-light mr-2 fa-solid fa-circle-check"></i>
+            <span class="font-medium text-xs lg:text-sm">Received</span>
+        </div>
+
+        <!-- FulFilled wish indicator with owner view and received Indicator -->
+        <div v-if="isWishOwner && wish.status == 'fulfiled' && !wish.received" class="absolute top-4 left-2 lg:left-4 bg-[#EFF9F3] text-[#1FB356] py-1 px-2 lg:px-4 rounded-full flex items-center">
+          <i class="fa-light mr-2 fa-solid fa-circle-check"></i>
+            <span class="font-medium text-xs lg:text-sm">Unreceived</span>
+        </div>
+
+           <!-- FulFilled wish indicator with none owner viewing -->
+           <div v-if="!isDashboard">
+        <div v-if="!isWishOwner && wish.status == 'fulfiled' && loggedInUser == wish.gifter.username " class="absolute top-4 left-2 lg:left-4 bg-[#EFF9F3] text-[#1FB356] py-1 px-2 lg:px-4 rounded-full flex items-center">
           <i class="fa-light mr-2 fa-solid fa-circle-check"></i>
             <span class="font-medium text-xs lg:text-sm">Fulfilled by you</span>
         </div>
+        </div>
 
-        <!-- Saved Indicator -->
+           <!-- FulFilled wish indicator with none owner viewing on Dashboard -->
+            <div v-if="isDashboard">
+              <div v-if="!isWishOwner && wish.status == 'fulfiled'" class="absolute top-4 left-2 lg:left-4 bg-[#EFF9F3] text-[#1FB356] py-1 px-2 lg:px-4 rounded-full flex items-center">
+                <i class="fa-light mr-2 fa-solid fa-circle-check"></i>
+                  <span class="font-medium text-xs lg:text-sm">Fulfilled by you</span>
+              </div>
+            </div>
+
+
+
+            <!-- Saved Indicator -->
         <div v-if="status == 'saved'" class="absolute top-4 left-2 lg:left-4  bg-primaryMainBright text-primaryColor py-1 px-2 lg:px-4 rounded-full flex items-center">
             <span class="font-medium text-xs lg:text-sm">Birthday wishlist</span>
         </div>

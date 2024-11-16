@@ -16,10 +16,11 @@
  <!-- Friends Results -->
  <div v-else-if="selectedOption === 'Friends'">
     <div v-if="selectedOption === 'Friends'">
+      
       <div v-for="friend in results" :key="friend.id" 
       class="flex flex-col sm:flex-row justify-between w-full p-4 border-b border-gray-300">
- 
-        <div class="flex lg:items-center space-x-4">
+        
+        <router-link :to="`user/${friend.username}`" class="flex lg:items-center space-x-4 cursor-pointer" >
           <img :src="friend.avatar || '/assets/profile-7.svg'" 
                alt="Profile" 
                class="lg:w-20 lg:h-20 w-16 h-16 rounded-full" />
@@ -36,7 +37,7 @@
                 <span><span class="font-bold text-black">{{ friend.likes_count ? friend.likes_count : 0 }}</span> Likes</span>
               </div>
           </div>
-        </div>
+        </router-link>
         
         <!-- Friend Action Button -->
         <div class="flex self-end lg:self-auto lg:items-center space-x-4">
@@ -67,13 +68,13 @@
      <div v-else class="grid grid-cols-4 gap-4">
     
       <div v-for="wishlist in results" :key="wishlist.id"  @click="viewWishlist(wishlist.id)" class="card group hover:border-primaryColor h-full cursor-pointer" :class="['bg-white rounded-lg shadow-md p-4 border', isDropdownOpen ? 'border-primaryColor' : 'border-gray-100']">
-   <!--  <div v-if="isExplore" class="flex items-center space-x-2 mt-2 pb-2">
+    <div  class="flex items-center space-x-2 mt-2 pb-2">
       <div class="flex items-center space-x-2">
         <img :src="wishlist.user.avatar || '/assets/avatar.svg'" alt="Avatar" class="w-6 h-6 rounded-full">
         <span class="font-bold whitespace-nowrap text-sm">{{ wishlist.user.first_name }} {{ wishlist.user.last_name }}</span>
         <span class="text-gray-600 font-normal text-xs">@{{ wishlist.user.username }}</span>
       </div>
-    </div> -->
+    </div>
     
      <!-- Conditional Image and Menu-option for Dashboard -->
     <div  class="relative mb-4">
@@ -118,6 +119,7 @@
   <script>
   import WishlistCard from '@/components/Dashboard/WishlistCard.vue';
   import EmptyState from '@/components/Dashboard/EmptyState.vue';
+  import { eventBus } from '@/eventBus.js';
 
   export default {
     name: 'SearchResultsComponent',

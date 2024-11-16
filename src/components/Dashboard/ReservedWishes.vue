@@ -21,7 +21,7 @@
     </div>
 
     <!-- Fulfilled Wishes -->
-    <div class="mb-8">
+    <div class="mb-8" v-if="filteredWishes('fulfiled').length >0">
       <div class="text-[18px] lg:text-2xl font-bold mb-4">Wishes You've Fulfilled for Your Friends <span class="hidden lg:inline">...awww</span></div>
       <div class="flex w-full overflow-x-auto space-x-3 lg:space-x-6">
         <WishCard 

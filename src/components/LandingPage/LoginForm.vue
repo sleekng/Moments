@@ -25,7 +25,7 @@
     </div>
 
     <div class="text-gray-600 mb-8 text-sm flex justify-start w-full">
-      <a href="#" class="text-primaryColor font-medium">Forgot Password?</a>
+      <router-link to="/forgot-password" class="text-primaryColor font-medium">Forgot Password?</router-link>
     </div>
 
     <button 

@@ -8,6 +8,7 @@
       <TabNavigationsWish 
         :myWishesCount="myWishes.length" 
         :reservedCount="reservedWishes.length"
+        :receivedCount="receivedWishes.length"
         :activeTab="activeTab" 
         @switchTab="setActiveTab" 
       />
@@ -47,10 +48,10 @@
 
         <div v-if="activeTab === 'received' && receivedWishes.length === 0" class="col-span-2 lg:col-span-4 flex justify-center">
           <EmptyState 
-            title="No wishes received"
+            :title="currentUser?.username === currentWishlist?.user.username ? 'No wishes received' : 'No wishes received'"
             :message="currentUser?.username === currentWishlist?.user.username ? 
                       'You haven\'t received any wishes from your friends yet. Share your wishlist with them.' :  
-                      'hasn\'t added any wish.'"
+                      'Received wish will show here'"
             :showButton="false"
           />
         </div>
@@ -66,7 +67,7 @@
           @toggleDropdown="handleToggleDropdown" 
           @closeDropdown="handleCloseDropdown" 
           @editWish="openEditWishModal"
-          @reserved="showGiftReservedModal=true"
+          @reserved="reservedWish"
         />
       </div>
     </div>
@@ -80,7 +81,9 @@
       @close="closeWishDetailsModal" 
       :wish="showPrevWish"
       :loggedInUser="currentUser.username"
-         @reserved="showGiftReservedModal=true"
+       @reserved="reservedWish"
+       @requestAddress="requestAddress"
+       :isRequestingAddress="isRequestingAddress"
     />
 
     <CreateWishModal  
@@ -155,6 +158,7 @@ export default {
   },
   data() {
     return {
+      isRequestingAddress:false,
       showGiftReservedModal: false,
       updateType: null,
       showPrevWish: null,
@@ -183,14 +187,22 @@ export default {
     reservedWishes() {
       return this.wishes.filter(wish => wish.status === 'reserved');
     },
+
+    receivedWishes() {
+      return this.wishes.filter(wish => wish.status === 'fulfiled');
+    },
     filteredWishes() {
       if (this.activeTab === 'myWishes') {
         return this.myWishes;
       } else if (this.activeTab === 'reserved') {
         return this.reservedWishes;
-      } else {
+      }else if (this.activeTab === 'received') {
+        return this.receivedWishes;
+      }
+      else {
         return this.wishes;
       }
+
     },
     wishmodalTitle() {
       return this.wishCreated ? 'Wish Added! 🥳' : 'Wish Updated! 🥳';
@@ -206,6 +218,13 @@ export default {
     this.loadData();
   },
   methods: {
+
+    reservedWish(){
+      this.showGiftReservedModal=true
+      this.loadData();
+    },
+
+    
     loadCurrentUser() {
       const userData = JSON.parse(localStorage.getItem('user'));
       if (userData) {
@@ -335,6 +354,26 @@ export default {
         console.error('Error fetching wishes:', error);
       }
     },
+
+    async requestAddress(wishID) {
+      console.log('woking');
+          this.isRequestingAddress = true
+            try {
+                
+              await this.$axios.post(`${this.$baseURL}/wishes/${wishID}/address`,{} ,{
+              headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+            });
+
+            eventBus.onSuccess('Address request sent successfully.');
+            } catch (error) {
+              console.error("Error requesting address:", error);
+                const errorMsg = error.response?.data?.message || 'Error requesting address. Please try again.';
+            } finally {
+                this.isRequestingAddress =false
+            }
+        },
+
+
     addWish(updatedWish) {
       const index = this.wishes.findIndex(wish => wish.id === updatedWish.id);
       if (index !== -1) {

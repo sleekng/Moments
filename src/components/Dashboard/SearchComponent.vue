@@ -1,7 +1,7 @@
 <template>
     <div class="lg:flex flex-col items-center gap-6 hidden">
       <p class="text-center font-semibold text-2xl md:text-3xl leading-[150%]" style="color: #121212; font-family: Mukta">
-        Want to <span class="text-purple-500">find</span> a Friend or Wishlist?
+        Want to <span class="text-primaryColor">find</span> a Friend or Wishlist?
       </p>
       <div class="bg-white h-[60px] hidden w-[950px] max-w-4xl rounded-full shadow-sm lg:flex items-center relative">
         <div class="relative h-full" @mouseleave="closeDropdown">
@@ -16,15 +16,15 @@
             <!-- Dropdown items -->
             <div class="flex flex-col p-1">
               <div class="flex moment-text-effect-parent justify-between items-center p-2 rounded-lg hover:bg-gray-200 cursor-pointer" @click="selectOption('Friends')">
-                <div class="flex items-center space-x-3">
-                  <i class="fas fa-users moment-text-effect-child hover:text-primaryColor w-4 h-4"></i>
-                  <span class="hover:text-primaryColor moment-text-effect-child text-base" style="font-family: Mukta">Friends</span>
+                <div class="flex items-center space-x-3 " :class="selectedOption === 'Friends' ? 'text-primaryColor' : ''">
+                  <i class="fas fa-users moment-text-effect-child  w-4 h-4"></i>
+                  <span class=" moment-text-effect-child text-base" style="font-family: Mukta">Friends</span>
                 </div>
                 <i v-if="selectedOption === 'Friends'" class="fas fa-check text-primaryColor moment-text-effect-child w-4 h-4"></i>
               </div>
               <div  class="flex items-center justify-between moment-text-effect-parent p-2 rounded-lg hover:bg-gray-200 cursor-pointer" @click="selectOption('Wishlist')">
-                <div class="flex items-center space-x-3">
-                  <i class="fas fa-gift text-gray-600 moment-text-effect-child w-4 h-4"></i>
+                <div class="flex items-center space-x-3 " :class="selectedOption === 'Wishlist' ? 'text-primaryColor' : ''">
+                  <i class="fas fa-gift  moment-text-effect-child w-4 h-4"></i>
                 <span class="ml-3  text-base moment-text-effect-child" style="font-family: Mukta">Wishlist</span>
                 </div>
                 <i v-if="selectedOption === 'Wishlist'" class="fas fa-check text-primaryColor moment-text-effect-child w-4 h-4"></i>
@@ -133,6 +133,7 @@
         this.dropdownOpen = false;
       },
       selectOption(option) {
+        this.searchQuery = ''
         this.$emit('selectOption', option);
         this.dropdownOpen = false;
       },
