@@ -3,7 +3,7 @@
     <AppHeader @showCategoryModal="$emit('showCategoryModal')" />
     <div v-if="!loading" class="px-4 md:px-16 lg:pt-20 lg:py-20">
       <div class="flex justify-center items-center pt-20 mt-10 rounded-t-lg bg-black lg:bg-white">
-        <SearchComponent @startSearch="startSearch" @selectOption="selectOption" :selectedOption="selectedOption" />
+        <SearchComponent :loading="isSearchingLoading" @startSearch="startSearch" @selectOption="selectOption" :selectedOption="selectedOption" />
       </div>
       <TabNavigationsWishlist2 v-if="!isSearching" :activeTab="activeTab" @switchTab="setActiveTab" class="pt-4 lg:pt-20" />
       
@@ -83,6 +83,7 @@
       exploreWishlists: { trending: [], recent: [], birthdays: [] },
       friendsWishlists: { recent: [], birthdays: [], reserved_wishes: [] },
       isSearching: false,
+      isSearchingLoading: false,
       searchResults: [],
       selectedOption: 'Friends', // 'Friends' or 'Wishlist'
       loading:true
@@ -225,6 +226,7 @@
       async startSearch(query) {
         this.search = query;
         if (query && query.length >= 2) {
+          this.isSearchingLoading = true
           try {
             let response;
             if (this.selectedOption === 'Friends') {
@@ -254,7 +256,9 @@
             console.error('Search error:', error);
             this.searchResults = [];
             this.isSearching = false;
-          }
+          }finally {
+          this.isSearchingLoading = false; // Stop searching
+        }
         } else {
           this.isSearching = false;
           this.searchResults = [];

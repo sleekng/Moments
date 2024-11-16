@@ -3,7 +3,7 @@
     <AppHeader @showCategoryModal="$emit('showCategoryModal')" />
 
     <div v-if="!loading" class="container mx-auto pt-20">
-      <WishlistDetails @editWishlist="handleEditWishlist" :selectedWishlist="currentWishlist" />
+      <WishlistDetails  :canShow="currentUser?.username === currentWishlist?.user.username" @editWishlist="handleEditWishlist" :selectedWishlist="currentWishlist" />
 
       <TabNavigationsWish 
         :myWishesCount="myWishes.length" 
@@ -11,6 +11,7 @@
         :receivedCount="receivedWishes.length"
         :activeTab="activeTab" 
         @switchTab="setActiveTab" 
+       
       />
 
       <div class="grid grid-cols-2 w-full lg:grid-cols-4 gap-4 lg:gap-6 px-4 lg:px-12 py-6 pb-12 bg-white rounded-b-lg" @mouseleave="handleCloseDropdown">

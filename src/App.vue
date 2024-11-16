@@ -1,7 +1,7 @@
 <template>
   <div v-if="isLoading" class="progress-bar"></div>
   <div :class="{ 'blurred-content': isLoading }">
-    <Alert ref="alertComponent" :message="successMessage" />
+    <Alert ref="alertComponent" />
 
     <RouterView @showCreateWishlistModal="openCreateWishlistModal" @showCategoryModal="showCategoryModal = true" />
 

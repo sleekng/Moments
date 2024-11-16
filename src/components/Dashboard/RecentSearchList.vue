@@ -3,15 +3,15 @@
     <div v-if="people.length || wishlists.length" class="space-y-2">
       <div v-if="people.length" class="space-y-2">
         <p class="font-medium text-sm text-gray-500">People</p>
-        <div v-for="person in people" :key="person.username" class="flex items-center justify-between" @click="$emit('selectResult', person, 'people')">
-          <div class="flex items-center space-x-2">
+        <div v-for="person in people" :key="person.username" class="flex items-center justify-between cursor-pointer">
+          <div class="flex items-center space-x-2" @click="viewPerson(person)">
             <img :src="person.avatar ? person.avatar : '/assets/profile.svg'" class="w-8 h-8 rounded-full" alt="Avatar">
             <div>
               <span class="text-sm text-gray-700">{{ person.name }}</span>
               <p class="text-xs text-gray-500">@{{ person.username }} • {{ person.wishlists }} Wishlists</p>
             </div>
           </div>
-          <img src="/assets/close-3.svg" class="w-4 h-4 cursor-pointer" alt="Close Icon">
+          <img src="/assets/close-3.svg" class="w-4 h-4 cursor-pointer" alt="Close Icon" @click.stop="removePerson(person)" />
         </div>
       </div>
 
@@ -19,21 +19,18 @@
 
       <div v-if="wishlists.length" class="space-y-2">
         <p class="font-medium text-sm text-gray-500">Wishlist</p>
-        
-        <div v-for="wishlist in wishlists" :key="wishlist.name"  class="flex cursor-pointer items-center justify-between" @click="viewWishlist(wishlist.id)">
-          
-          <div class="flex items-center space-x-2">
+        <div v-for="wishlist in wishlists" :key="wishlist.name" class="flex items-center justify-between cursor-pointer">
+          <div class="flex items-center space-x-2" @click="viewWishlist(wishlist)">
             <img src="/assets/wishlist-category-placeholder.svg" class="w-8 h-8" alt="Wishlist Icon">
             <div>
               <span class="text-sm text-gray-700">{{ wishlist.name }}</span>
               <p class="text-xs text-gray-500">{{ wishlist.username }} • {{ wishlist.wishes }} Wishes</p>
             </div>
           </div>
-          <img src="/assets/close-5.svg" class="w-4 h-4 cursor-pointer" alt="Close Icon">
+          <img src="/assets/close-5.svg" class="w-4 h-4 cursor-pointer" alt="Close Icon" @click.stop="removeWishlist(wishlist)" />
         </div>
       </div>
     </div>
-    <!-- No Results Message -->
     <div v-else class="flex flex-col items-center justify-center py-8">
       <p class="text-gray-500">Oops... No search results found</p>
     </div>
@@ -47,12 +44,23 @@ export default {
     people: Array,
     wishlists: Array
   },
-  methods:{
-    viewWishlist(wishlistId) {
-      console.log('working');
-      
-      this.$router.push({ name: 'Wishlist', params: { id: wishlistId } });
+  methods: {
+    viewWishlist(wishlist) {
+      this.$emit('selectResult', wishlist, 'wishlists');
+      // Use window.location.href to force a full page reload for wishlist
+      window.location.href = this.$router.resolve({ name: 'Wishlist', params: { id: wishlist.id } }).href;
     },
+    viewPerson(person) {
+      this.$emit('selectResult', person, 'people');
+      window.location.href = this.$router.resolve({ name: 'UsersProfile', params: { username: person.username } }).href;
+    },
+    removePerson(person) {
+      this.$emit('removePerson', person);
+    },
+    removeWishlist(wishlist) {
+      this.$emit('removeWishlist', wishlist);
+    }
+    
   }
 };
 </script>

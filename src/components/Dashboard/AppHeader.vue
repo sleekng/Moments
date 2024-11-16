@@ -33,7 +33,8 @@
       <!-- Search Input -->
       <div class="relative" ref="searchDropdown">
         <input type="text" placeholder="Search" v-model="searchQuery" @focus="showRecentSearches" @input="filterResults" class="py-2 pl-10 px-4 border rounded-md w-[320px] bg-gray-100" />
-        <img src="/assets/magnifying-glass.svg" class="absolute left-0 top-[14px] px-4 w-12" alt="Search Icon" />
+        <img v-if="!loading" src="/assets/magnifying-glass.svg" class="absolute left-0 top-[14px] px-4 w-12" alt="Search Icon" />
+        <i v-if="loading" class="fas fa-spinner fa-spin absolute left-0 top-[14px] px-4 w-12 text-gray-500"></i>
 
         <!-- Search Dropdown -->
         <div v-if="showSearchDropdown" class="absolute left-0 top-12 mt-2 w-full bg-white border rounded-lg shadow-lg z-10">
@@ -42,7 +43,7 @@
               <span class="font-medium text-lg text-gray-900">{{ searchQuery ? 'Search Results' : 'Recent Searches' }}</span>
               <button v-if="people.length > 0 || wishlists.length > 0" class="text-pink-500 text-sm" @click="clearRecentSearches">Clear all</button>
             </div>
-            <RecentSearchList :people="searchQuery ? filteredPeople : people" :wishlists="searchQuery ? filteredWishlists : wishlists" @selectResult="selectResult"  />
+            <RecentSearchList :people="searchQuery ? filteredPeople : people" :wishlists="searchQuery ? filteredWishlists : wishlists" @selectResult="selectResult" @removePerson="removePerson" @removeWishlist="removeWishlist" />
           </div>
         </div>
       </div>
@@ -148,6 +149,7 @@ export default {
   },
   data() {
     return {
+      loading: false, // Add loading state
       searchQuery: '',
       showNotifications: false,
       showProfileDropdown: false,
@@ -201,12 +203,25 @@ export default {
         this.user = userData;
       }
     },
+    removePerson(person) {
+      this.people = this.people.filter(p => p.username !== person.username);
+      this.updateRecentSearches();
+    },
+    removeWishlist(wishlist) {
+      this.wishlists = this.wishlists.filter(w => w.name !== wishlist.name);
+      this.updateRecentSearches();
+    },
+    updateRecentSearches() {
+      const recentSearches = { people: this.people, wishlists: this.wishlists };
+      localStorage.setItem('recentSearches', JSON.stringify(recentSearches));
+    },
     getRecentSearches() {
       const recentSearches = JSON.parse(localStorage.getItem('recentSearches')) || { people: [], wishlists: [] };
       this.people = recentSearches.people;
       this.wishlists = recentSearches.wishlists;
     },
     async search(type, value) {
+      this.loading = true; // Start loading
       try {
         const response = await fetch(`${this.$baseURL}/explore/search?type=${type}&value=${value}`, {
           method: 'GET',
@@ -237,6 +252,8 @@ export default {
         }
       } catch (error) {
         console.error('Search error:', error);
+      }finally {
+        this.loading = false; // End loading
       }
     },
     showRecentSearches() {

@@ -27,8 +27,8 @@
         </div>
         <div v-else>
           <EmptyState
-            title="Your wishlist is empty"
-            message="Go ahead and create your first wishlist"
+            title="No wishlists yet"
+            :message="user.first_name + ' hasn\'t created any wishlists yet'"
             @button-click="$emit('showCategoryModal')"
             :showButton="true"
             buttonText="Create Wishlist"

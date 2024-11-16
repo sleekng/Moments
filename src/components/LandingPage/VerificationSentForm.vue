@@ -23,7 +23,7 @@
     </div>
 
     <button class="max-w-fit px-24 py-3 mt-8 bg-primaryColor text-white font-semibold text-lg rounded-full shadow-lg" :class="opacity" :disabled="countdown > 0" @click="resendCode">
-        Resend Code
+        Resend Link
     </button>
 </div>
 </template>

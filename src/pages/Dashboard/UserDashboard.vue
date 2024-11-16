@@ -29,6 +29,7 @@
             />
           </div>
           <div  v-else>
+            
   
             <EmptyState 
               
@@ -36,6 +37,7 @@
               message="Go ahead and create your first wishlist" 
               @button-click="$emit('showCategoryModal')" 
               :showButton="true"
+              :userOwnsWishlist="true"
               buttonText="Create Wishlist"
             />
           </div>

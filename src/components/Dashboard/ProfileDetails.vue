@@ -54,7 +54,7 @@
 
 
             <!-- Share with Friends Dropdown -->
-          <div v-if="isShareMenuOpen" class="absolute top-8 right-0 w-[500px] bg-white shadow-lg rounded-lg p-4 z-40">
+          <div v-if="isShareMenuOpen" @mouseleave="toggleShareMenu" class="absolute top-8 right-0 w-[500px] bg-white shadow-lg rounded-lg p-4 z-40">
             <div class="flex space-x-4 items-center pb-2">
               <button @click="toggleShareMenu" class="text-gray-500 hover:text-gray-700">
                 <i class="fas fa-times"></i>
@@ -95,6 +95,7 @@
 </template>
 
 <script>
+import { eventBus } from '@/eventBus.js';
 export default {
   name: 'ProfileDetails',
   props:{
@@ -135,29 +136,29 @@ export default {
       this.isShareMenuOpen = !this.isShareMenuOpen;
     },
     copyLink() {
-      navigator.clipboard.writeText(`${window.location.href}/user/${this.user.username}`).then(() => {
-        alert('Profile link copied to clipboard!');
+      navigator.clipboard.writeText(`${window.location.href}`).then(() => {
+        eventBus.onSuccess('Profile link copied to clipboard!');
       });
     },
     shareToEmail() {
       const subject = encodeURIComponent(`Check out this profile: ${this.user.username}`);
-      const body = encodeURIComponent(`${window.location.href}/user/${this.user.username}`);
+      const body = encodeURIComponent(`${window.location.href}`);
       window.location.href = `mailto:?subject=${subject}&body=${body}`;
     },
     shareToWhatsApp() {
-      const text = encodeURIComponent(`Check out this profile: ${window.location.href}/user/${this.user.username}`);
+      const text = encodeURIComponent(`Check out this profile: ${window.location.href}`);
       window.open(`https://wa.me/?text=${text}`, '_blank');
     },
     shareToTwitter() {
-      const text = encodeURIComponent(`Check out this profile: ${window.location.href}/user/${this.user.username}`);
+      const text = encodeURIComponent(`Check out this profile: ${window.location.href}`);
       window.open(`https://twitter.com/intent/tweet?text=${text}`, '_blank');
     },
     shareToFacebook() {
-      const url = encodeURIComponent(`${window.location.href}/user/${this.user.username}`);
+      const url = encodeURIComponent(`${window.location.href}`);
       window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
     },
     shareToInstagram() {
-      alert('Instagram sharing is not supported directly from the web. Feature is coming soon');
+      eventBus.onSuccess('Instagram sharing is not supported directly from the web. Feature is coming soon');
     },
     showAnalyticsModal() {
       this.$emit('showAnalyticsModal');

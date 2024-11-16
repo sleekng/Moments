@@ -62,7 +62,7 @@
                         </button>
 
                         <!-- Share with Friends Dropdown -->
-                        <div v-if="isShareMenuOpen" class="absolute top-8 right-0 w-[500px] bg-white shadow-lg rounded-lg p-4 z-50">
+                        <div v-if="isShareMenuOpen" @mouseleave="toggleShareMenu" class="absolute top-8 right-0 w-[500px] bg-white shadow-lg rounded-lg p-4 z-50">
                             <div class="flex space-x-4 items-center pb-2">
                                 <button @click="toggleShareMenu" class="text-gray-500 hover:text-gray-700">
                                     <i class="fas fa-times"></i>
@@ -299,10 +299,10 @@
             </div>
          </div>
 
-                <div class="flex items-center space-x-2 text-gray-600">
-                    <img src="/assets/heart-outline.svg" alt="Likes" class="w-5 h-5" />
-                    <span>{{ wish.likes_count }} Likes</span>
-                </div>
+         <div class="flex items-center" @click.stop="toggleLike">
+        <i :class="wish.liked_by_me ? 'fa-solid fa-heart text-red-500' : 'fa-light fa-heart'" class="mr-1 text-[14px] cursor-pointer"></i>
+        <span>{{ wish.likes_count }} Likes</span>
+      </div>
 
                 <div v-if="wish.delivery_address" class="bg-[#f8f9f9] rounded-md border border-[#9ca1aa] p-2.5 w-full" style="width: 407.04px">
                     <div class="flex items-center gap-1.5 px-3">
@@ -548,6 +548,23 @@ export default {
         },
     },
     methods: {
+        async toggleLike() {
+      try {
+        const likeStatus = !this.wish.liked_by_me;
+        const response = await this.$axios.put(`${this.$baseURL}/wishes/${this.wish.id}`, {
+          like: likeStatus
+        }, {
+          headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+        });
+        if (response.data.success) {
+          this.wish.liked_by_me = response.data.data.liked_by_me;
+          this.wish.likes_count = response.data.data.likes_count;
+        }
+      } catch (error) {
+        console.error('Error toggling like status:', error);
+        eventBus.onError('Failed to update like status.');
+      }
+    },
         closeModal() {
             this.$emit("close");
         },
@@ -566,9 +583,9 @@ export default {
         },
         copyLink() {
             navigator.clipboard
-                .writeText(`${window.location.href}/wish/${this.wish.id}`)
+                .writeText(`${window.location.href}`)
                 .then(() => {
-                    alert("Link copied to clipboard!");
+                    eventBus.onSuccess('Link copied to clipboard!');
                 });
         },
         shareToEmail() {
@@ -576,25 +593,25 @@ export default {
                 `Check out this wish: ${this.wish.name}`
             );
             const body = encodeURIComponent(
-                `${window.location.href}/wish/${this.wish.id}`
+                `${window.location.href}`
             );
             window.location.href = `mailto:?subject=${subject}&body=${body}`;
         },
         shareToWhatsApp() {
             const text = encodeURIComponent(
-                `Check out this wish: ${window.location.href}/wish/${this.wish.id}`
+                `Check out this wish: ${window.location.href}`
             );
             window.open(`https://wa.me/?text=${text}`, "_blank");
         },
         shareToTwitter() {
             const text = encodeURIComponent(
-                `Check out this wish: ${window.location.href}/wish/${this.wish.id}`
+                `Check out this wish: ${window.location.href}`
             );
             window.open(`https://twitter.com/intent/tweet?text=${text}`, "_blank");
         },
         shareToFacebook() {
             const url = encodeURIComponent(
-                `${window.location.href}/wish/${this.wish.id}`
+                `${window.location.href}`
             );
             window.open(
                 `https://www.facebook.com/sharer/sharer.php?u=${url}`,
@@ -602,7 +619,7 @@ export default {
             );
         },
         shareToInstagram() {
-            alert("Instagram sharing is not supported directly from the web.");
+            eventBus.onSuccess('Instagram sharing is not supported directly from the web.');
         },
         async markAsReceived() {
           this.isReceiving = true

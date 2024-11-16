@@ -33,16 +33,17 @@
           </div>
         </div>
         <div class="flex-grow flex items-center h-full pl-4 bg-gray-100 rounded-r-full">
-          <img src="/assets/search.svg" alt="Search" class="w-4 h-4" />
-          <input 
-            type="text" 
-            :placeholder="searchPlaceholder"
-            class="ml-3 px-4 border-none focus:outline-none w-full focus:ring-0 bg-transparent text-gray-500 text-base" 
-            style="font-family: Mukta" 
-            @input="debounceInput"
-            v-model="searchQuery"
-          />
-        </div>
+        <i v-if="!loading" class="fas fa-search text-gray-600 w-4 h-4"></i>
+        <i v-if="loading" class="fas fa-spinner fa-spin text-gray-600 w-4 h-4"></i>
+        <input 
+          type="text" 
+          :placeholder="searchPlaceholder"
+          class="ml-3 px-4 border-none focus:outline-none w-full focus:ring-0 bg-transparent text-gray-500 text-base" 
+          style="font-family: Mukta" 
+          @input="debounceInput"
+          v-model="searchQuery"
+        />
+      </div>
       </div>
     </div>
   
@@ -103,7 +104,11 @@
       selectedOption: {
         type: String,
         required: true
-      }
+      },
+      loading: {
+      type: Boolean,
+      default: false
+    }
     },
     data() {
       return {

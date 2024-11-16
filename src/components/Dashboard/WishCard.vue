@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div @click="preview" class="bg-white cursor-pointer rounded-lg shadow-lg overflow-hidden relative card group flex-shrink-0 md:w-auto   min-w-[286px]">
+    <div @click="preview" class="bg-white cursor-pointer rounded-lg shadow-lg overflow-hidden relative card group flex-shrink-0 md:w-auto min-h-[360px]   min-w-[286px]">
       <div class="relative">
-        <img :src="wish.photo || '/assets/wishlist-category-placeholder.svg'" alt="Wish Item" class="w-full h-[200px] md:h-[360px] object-cover">
+        <img :src="wish.photo || '/assets/wishlist-category-placeholder.svg'" alt="Wish Item" class="w-full  md:h-[360px] object-cover">
         <button @click.stop="toggleMenu" v-if="isWishOwner && wish.status === null && !wish.delivery_address" class="absolute z-30 top-3 right-2 p-1 bg-gray-200 rounded-full toggle-menu-button transition-opacity opacity-0 group-hover:opacity-100">
           <img src="/assets/frame-1618868216.svg" alt="Menu" class="h-6 w-6" />
         </button>
@@ -193,10 +193,10 @@
         <h2 class="text-sm md:text-lg font-semibold">{{ wish.name }}</h2>
         <p class="text-sm md:text-lg">{{ wish.amount }} {{ wish.currency }}</p>
         <div class="flex justify-between items-center mt-2">
-          <div class="flex items-center">
-            <img src="/assets/heart.svg" alt="Likes" class="w-3 h-3 md:w-5 md:h-5 mr-2" />
-            <span class="text-xs md:text-sm">{{ wish.likes_count }}</span>
-          </div>
+          <div class="flex items-center" @click.stop="toggleLike">
+        <i :class="wish.liked_by_me ? 'fa-solid fa-heart text-red-500' : 'fa-light fa-heart'" class="mr-1 text-[14px]"></i>
+        <span>{{ wish.likes_count }}</span>
+      </div>
           <div class="flex space-x-2 md:space-x-4">
             <button class="border-white border p-1 md:p-2 rounded-full focus:outline-none shadow-sm">
               <img src="/assets/bookmark.svg" alt="Save" class="w-3 h-3 md:w-5 md:h-5" />
@@ -302,6 +302,24 @@ export default {
     closeMenu() {
       this.$emit('closeDropdown', this.wish.id);
     },
+
+    async toggleLike() {
+      try {
+        const likeStatus = !this.wish.liked_by_me;
+        const response = await this.$axios.put(`${this.$baseURL}/wishes/${this.wish.id}`, {
+          like: likeStatus
+        }, {
+          headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+        });
+        if (response.data.success) {
+          this.wish.liked_by_me = response.data.data.liked_by_me;
+          this.wish.likes_count = response.data.data.likes_count;
+        }
+      } catch (error) {
+        console.error('Error toggling like status:', error);
+        eventBus.onError('Failed to update like status.');
+      }
+    }
   },
 };
 </script>
