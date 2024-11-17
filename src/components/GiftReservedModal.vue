@@ -43,12 +43,19 @@
             >
             Maybe Later
             </button>
-            <button
-              @click="$emit('requestAddress')"
-              class="flex-1 ml-2 text-white bg-primaryColor hover:shadow-lg transition-all font-medium py-3 px-4 rounded-full text-center focus:outline-none"
-            >
-            Request address
-            </button>
+            <button @click="requestAddress" :disabled="isRequestingAddress" :class="[
+                  'px-8 py-3 rounded-full relative',
+                  isRequestingAddress
+                    ? 'bg-primaryColor text-white hover:shadow-lg cursor-not-allowed'
+                    : 'bg-primaryColor text-white hover:shadow-lg',
+                ]">
+                            <span class="w-full flex justify-center">
+                                <span v-if="isRequestingAddress" class="  absolute ">
+                                    <i class="fas fa-spinner fa-spin "></i>
+                                </span>
+                                Request Address
+                            </span>
+                        </button>
           </div>
 
 
@@ -60,6 +67,9 @@
   export default {
     name: 'GiftReservedModal',
     props: {
+      wish:{
+        type: Object,
+      },
       title: {
         type: String,
         default: 'Gift Reserved!',
@@ -80,9 +90,18 @@
         default: 'Wish Created',
       },
 
+      isRequestingAddress:{
+          type:Boolean,
+        }
 
     },
     emits: ['close', 'requestAddress'],
+
+    methods:{
+      requestAddress() {
+          this.$emit('requestAddress',this.wish.id)
+        },
+    }
   };
   </script>
   

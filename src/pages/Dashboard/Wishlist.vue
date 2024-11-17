@@ -120,7 +120,9 @@
     <GiftReservedModal
       v-if="showGiftReservedModal"
       @close="showGiftReservedModal = false"
-      @requestAddress="handleRequestAddress"
+       @requestAddress="requestAddress"
+        :isRequestingAddress="isRequestingAddress"
+        :wish="giftReservedWish"
     />
   </div>
   <Loader :show="loading" />
@@ -159,6 +161,7 @@ export default {
   },
   data() {
     return {
+      giftReservedWish:null,
       isRequestingAddress:false,
       showGiftReservedModal: false,
       updateType: null,
@@ -220,7 +223,8 @@ export default {
   },
   methods: {
 
-    reservedWish(){
+    reservedWish(wish){
+      this.giftReservedWish = wish
       this.showGiftReservedModal=true
       this.loadData();
     },
@@ -359,6 +363,7 @@ export default {
     async requestAddress(wishID) {
       console.log('woking');
           this.isRequestingAddress = true
+          
             try {
                 
               await this.$axios.post(`${this.$baseURL}/wishes/${wishID}/address`,{} ,{

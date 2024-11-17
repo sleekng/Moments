@@ -72,12 +72,6 @@
       <WishDetailView  :isRequestingAddress="isRequestingAddress"     @requestAddress="requestAddress" @editWish="openEditWishModal" v-if="showWishDetailsModal" @close="closeWishDetailsModal" :wish="showPrevWish ? showPrevWish : showSavedPrevWish" />
 
 
-     
-
-
-
-
-
       <AnalyticsModal
         v-if="showAnalyticsModal"
         :analyticsData="analyticsData"
@@ -387,6 +381,7 @@ export default {
       }
     },
     ToggleAnalyticsModal() {
+      this.fetchAnalyticsData()
       this.showAnalyticsModal = true;
     },
     prevWish(wishId) {

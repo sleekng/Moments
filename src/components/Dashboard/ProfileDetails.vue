@@ -53,41 +53,43 @@
           </button>
 
 
-            <!-- Share with Friends Dropdown -->
-          <div v-if="isShareMenuOpen" @mouseleave="toggleShareMenu" class="absolute top-8 right-0 w-[500px] bg-white shadow-lg rounded-lg p-4 z-40">
-            <div class="flex space-x-4 items-center pb-2">
-              <button @click="toggleShareMenu" class="text-gray-500 hover:text-gray-700">
-                <i class="fas fa-times"></i>
-              </button>
-              <span class="font-bold text-lg">Share with friends</span>
-            </div>
-            <div class="grid grid-cols-2 pt-4 gap-4">
-              <button @click="copyLink" class="flex items-center space-x-2 p-2 border hover:bg-gray-100 rounded-lg">
-                <i class="fas fa-link"></i>
-                <span>Copy Link</span>
-              </button>
-              <button @click="shareToEmail" class="flex items-center space-x-2 p-2 border hover:bg-gray-100 rounded-lg">
-                <i class="fas fa-envelope"></i>
-                <span>Share to Email</span>
-              </button>
-              <button @click="shareToWhatsApp" class="flex items-center space-x-2 p-2 border hover:bg-gray-100 rounded-lg">
-                <i class="fab fa-whatsapp"></i>
-                <span>Share to Whatsapp</span>
-              </button>
-              <button @click="shareToTwitter" class="flex items-center space-x-2 p-2 border hover:bg-gray-100 rounded-lg">
-                <i class="fab fa-twitter"></i>
-                <span>Share to Twitter</span>
-              </button>
-              <button @click="shareToFacebook" class="flex items-center space-x-2 p-2 border hover:bg-gray-100 rounded-lg">
-                <i class="fab fa-facebook"></i>
-                <span>Share to Facebook</span>
-              </button>
-              <button @click="shareToInstagram" class="flex items-center space-x-2 p-2 border hover:bg-gray-100 rounded-lg">
-                <i class="fab fa-instagram"></i>
-                <span>Share to Instagram</span>
-              </button>
-            </div>
-            </div>
+              <!-- Share Modal -->
+              <div v-if="isShareMenuOpen" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                            <div class="bg-white rounded-lg shadow-lg p-6 relative max-w-lg w-full">
+                            <button @click="toggleShareMenu" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            <div class="flex space-x-4 items-center pb-2">
+                                <span class="font-bold text-lg">Share with friends</span>
+                            </div>
+                            <div class="grid grid-cols-2 pt-4 gap-4">
+                                <button @click="copyLink" class="flex items-center space-x-2 p-2 border hover:bg-gray-100 rounded-lg">
+                                <i class="fas fa-link"></i>
+                                <span>Copy Link</span>
+                                </button>
+                                <button @click="shareToEmail" class="flex items-center space-x-2 p-2 border hover:bg-gray-100 rounded-lg">
+                                <i class="fas fa-envelope"></i>
+                                <span>Share to Email</span>
+                                </button>
+                                <button @click="shareToWhatsApp" class="flex items-center space-x-2 p-2 border hover:bg-gray-100 rounded-lg">
+                                <i class="fab fa-whatsapp"></i>
+                                <span>Share to Whatsapp</span>
+                                </button>
+                                <button @click="shareToTwitter" class="flex items-center space-x-2 p-2 border hover:bg-gray-100 rounded-lg">
+                                <i class="fab fa-twitter"></i>
+                                <span>Share to Twitter</span>
+                                </button>
+                                <button @click="shareToFacebook" class="flex items-center space-x-2 p-2 border hover:bg-gray-100 rounded-lg">
+                                <i class="fab fa-facebook"></i>
+                                <span>Share to Facebook</span>
+                                </button>
+                                <button @click="shareToInstagram" class="flex items-center space-x-2 p-2 border hover:bg-gray-100 rounded-lg">
+                                <i class="fab fa-instagram"></i>
+                                <span>Share to Instagram</span>
+                                </button>
+                            </div>
+                            </div>
+                        </div>
         </div>
       </div>
     </div>
@@ -162,6 +164,7 @@ export default {
     },
     showAnalyticsModal() {
       this.$emit('showAnalyticsModal');
+
     }
   }
 };

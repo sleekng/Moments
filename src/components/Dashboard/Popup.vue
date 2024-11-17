@@ -5,7 +5,7 @@
           <img src="/assets/close.svg" alt="Close" class="w-6 h-6">
         </button>
         <div class="flex justify-center">
-          <img src="/assets/https-lottiefiles-com-animations-confetti-3-of-vst-9-o-ig.svg" alt="Confetti" class="w-[400px] h-full">
+          <img src="/assets/ConfettiMH.gif" alt="Confetti" class="w-[400px] h-full">
         </div>
         <div class="text-center -mt-20">
           <h2 class="text-2xl font-semibold text-gray-800 mb-2">Congratulations! 🥳</h2>

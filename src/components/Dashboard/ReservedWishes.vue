@@ -15,6 +15,9 @@
           :openDropdownId="openDropdownId" 
           @toggleDropdown="handleToggleDropdown" 
           @closeDropdown="handleCloseDropdown" 
+             @markAsFulfilled="markAsFulfilled"
+          @cancelReservation="cancelReservation"
+          
           class="md:w-[286px] w-40 flex-shrink-0" 
         />
       </div>
@@ -34,6 +37,7 @@
           :openDropdownId="openDropdownId" 
           @toggleDropdown="handleToggleDropdown" 
           @closeDropdown="handleCloseDropdown" 
+          @removeFromFulfiled="removeFromFulfiled"
           class="md:w-[286px] w-40 flex-shrink-0" 
         />
       </div>
@@ -43,6 +47,9 @@
 
 <script>
 import WishCard from '@/components/Dashboard/WishCard.vue';
+import {
+    eventBus
+} from "@/eventBus.js";
 
 export default {
   components: {
@@ -60,6 +67,82 @@ export default {
     };
   },
   methods: {
+    async removeFromFulfiled(wish) {
+            eventBus.setLoading(true);
+            try {
+                await this.$axios.put(
+                    `${this.$baseURL}/wishes/${wish.id}`, {
+                        status: null
+                    }, {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+                        },
+                    }
+                );
+
+                wish.status = null;
+                eventBus.onSuccess('Wish has been remove from Fulfilled.');
+            } catch (error) {
+                console.error("Error removing Fulfilled:", error);
+                const errorMsg = error.response?.data?.message || 'Error removing from Fulfilled. Please try again.';
+                eventBus.onError(errorMsg);
+            } finally {
+                eventBus.setLoading(false);
+            }
+        },
+
+
+        
+        async markAsFulfilled(wish) {
+          eventBus.setLoading(true);
+            try {
+                await this.$axios.put(
+                    `${this.$baseURL}/wishes/${wish.id}`, {
+                        status: "fulfiled"
+                    }, {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+                        },
+                    }
+                );
+                wish.status = "fulfiled";
+                eventBus.onSuccess('Wish marked as fulfilled.');
+            } catch (error) {
+                console.error("Error marking as fulfiled:", error);
+                const errorMsg = error.response?.data?.message || 'Error marking as fulfiled. Please try again.';
+                eventBus.onError(errorMsg);
+            } finally{
+              eventBus.setLoading(false);
+            }
+        },
+        async cancelReservation(wish) {
+    eventBus.setLoading(true);
+    try {
+        await this.$axios.put(
+            `${this.$baseURL}/wishes/${wish.id}`,
+            { status: null },
+            {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+                },
+            }
+        );
+
+        wish.status = null;
+        eventBus.onSuccess('Wish reservation Cancelled.');
+        
+     
+
+    } catch (error) {
+        console.error("Error canceling reservation:", error);
+        const errorMsg = error.response?.data?.message || 'Error canceling reservation. Please try again.';
+        eventBus.onError(errorMsg);
+    } finally {
+        eventBus.setLoading(false);
+    }
+},
+
+
     openEditWishModal(wish) {
       this.$emit('editWish', wish);
     },

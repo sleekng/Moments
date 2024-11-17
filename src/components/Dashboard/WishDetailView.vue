@@ -61,39 +61,41 @@
                             <img src="/assets/frame-1618868216.svg" alt="Menu" class="h-6 w-6" />
                         </button>
 
-                        <!-- Share with Friends Dropdown -->
-                        <div v-if="isShareMenuOpen" @mouseleave="toggleShareMenu" class="absolute top-8 right-0 w-[500px] bg-white shadow-lg rounded-lg p-4 z-50">
+                          <!-- Share Modal -->
+                        <div v-if="isShareMenuOpen" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                            <div class="bg-white rounded-lg shadow-lg p-6 relative max-w-lg w-full">
+                            <button @click="toggleShareMenu" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
+                                <i class="fas fa-times"></i>
+                            </button>
                             <div class="flex space-x-4 items-center pb-2">
-                                <button @click="toggleShareMenu" class="text-gray-500 hover:text-gray-700">
-                                    <i class="fas fa-times"></i>
-                                </button>
                                 <span class="font-bold text-lg">Share with friends</span>
                             </div>
                             <div class="grid grid-cols-2 pt-4 gap-4">
                                 <button @click="copyLink" class="flex items-center space-x-2 p-2 border hover:bg-gray-100 rounded-lg">
-                                    <i class="fas fa-link"></i>
-                                    <span>Copy Link</span>
+                                <i class="fas fa-link"></i>
+                                <span>Copy Link</span>
                                 </button>
                                 <button @click="shareToEmail" class="flex items-center space-x-2 p-2 border hover:bg-gray-100 rounded-lg">
-                                    <i class="fas fa-envelope"></i>
-                                    <span>Share to Email</span>
+                                <i class="fas fa-envelope"></i>
+                                <span>Share to Email</span>
                                 </button>
                                 <button @click="shareToWhatsApp" class="flex items-center space-x-2 p-2 border hover:bg-gray-100 rounded-lg">
-                                    <i class="fab fa-whatsapp"></i>
-                                    <span>Share to Whatsapp</span>
+                                <i class="fab fa-whatsapp"></i>
+                                <span>Share to Whatsapp</span>
                                 </button>
                                 <button @click="shareToTwitter" class="flex items-center space-x-2 p-2 border hover:bg-gray-100 rounded-lg">
-                                    <i class="fab fa-twitter"></i>
-                                    <span>Share to Twitter</span>
+                                <i class="fab fa-twitter"></i>
+                                <span>Share to Twitter</span>
                                 </button>
                                 <button @click="shareToFacebook" class="flex items-center space-x-2 p-2 border hover:bg-gray-100 rounded-lg">
-                                    <i class="fab fa-facebook"></i>
-                                    <span>Share to Facebook</span>
+                                <i class="fab fa-facebook"></i>
+                                <span>Share to Facebook</span>
                                 </button>
                                 <button @click="shareToInstagram" class="flex items-center space-x-2 p-2 border hover:bg-gray-100 rounded-lg">
-                                    <i class="fab fa-instagram"></i>
-                                    <span>Share to Instagram</span>
+                                <i class="fab fa-instagram"></i>
+                                <span>Share to Instagram</span>
                                 </button>
+                            </div>
                             </div>
                         </div>
 
@@ -125,9 +127,13 @@
                                         <i class="fa-solid fa-gift moment-text-effect-child"></i>
                                         <span class="ml-2 text-gray-800 w-full moment-text-effect-child font-medium">Add to my wishlist</span>
                                     </div>
-                                    <div @click="saveWish" v-if="wish.status == null" class="flex items-center p-2 group moment-text-effect-parent cursor-pointer border-gray-200">
+                                    <div @click="saveWish" v-if="wish.status == null && isDashboard" class="flex items-center p-2 group moment-text-effect-parent cursor-pointer border-gray-200">
                                         <i class="fa-regular fa-bookmark moment-text-effect-child"></i>
-                                        <span class="ml-2 text-gray-800 w-full moment-text-effect-child font-medium">Save wish</span>
+                                        <span class="ml-2 text-gray-800 w-full moment-text-effect-child font-medium">Unsave wish</span>
+                                    </div>
+                                    <div @click="saveWish" v-if="wish.status == null && !isDashboard" class="flex items-center p-2 group moment-text-effect-parent cursor-pointer border-gray-200">
+                                        <i class="fa-regular fa-bookmark moment-text-effect-child"></i>
+                                        <span class="ml-2 text-gray-800 w-full moment-text-effect-child font-medium">Unsave wish</span>
                                     </div>
                                     <div class="flex items-center p-2 group moment-text-effect-parent cursor-pointer border-gray-200">
                                         <i class="fa-regular fa-globe moment-text-effect-child"></i>
@@ -626,6 +632,7 @@ export default {
             try {
                 await this.$axios.put(
                     `${this.$baseURL}/wishes/${this.wish.id}`, {
+                        status: 'fulfiled',
                         received: true
                     }, {
                         headers: {
@@ -666,6 +673,32 @@ export default {
               this.isUnReceiving = false
             }
         },
+
+        async reserveWish() {
+            this.isReserving = true; // Start loading state
+
+            try {
+                await this.$axios.put(
+                    `${this.$baseURL}/wishes/${this.wish.id}`, {
+                        status: "reserved"
+                    }, {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+                        },
+                    }
+                );
+                this.wish.status = "reserved";
+                this.$emit("reserved",this.wish);
+                this.closeModal();
+            } catch (error) {
+                console.error("Error reserving wish:", error);
+                const errorMsg = error.response?.data?.message || 'Error reserving wish. Please try again.';
+                eventBus.onError(errorMsg);
+            } finally {
+                this.isReserving = false; // End loading state
+            }
+        },
+
         async markAsFulfilled() {
           this.isFulfilling = true
             try {
@@ -688,30 +721,6 @@ export default {
               this.isFulfilling = false
             }
         },
-        async reserveWish() {
-            this.isReserving = true; // Start loading state
-
-            try {
-                await this.$axios.put(
-                    `${this.$baseURL}/wishes/${this.wish.id}`, {
-                        status: "reserved"
-                    }, {
-                        headers: {
-                            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-                        },
-                    }
-                );
-                this.wish.status = "reserved";
-                this.$emit("reserved");
-                this.closeModal();
-            } catch (error) {
-                console.error("Error reserving wish:", error);
-                const errorMsg = error.response?.data?.message || 'Error reserving wish. Please try again.';
-                eventBus.onError(errorMsg);
-            } finally {
-                this.isReserving = false; // End loading state
-            }
-        },
         async cancelReservation() {
     eventBus.setLoading(true);
     try {
@@ -727,7 +736,10 @@ export default {
 
         this.wish.status = null;
         eventBus.onSuccess('Wish reservation Cancelled.');
-        window.location.reload()
+        
+        setTimeout(() => {
+            window.location.reload()
+        }, 2000);
 
     } catch (error) {
         console.error("Error canceling reservation:", error);
