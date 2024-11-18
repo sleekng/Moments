@@ -15,7 +15,7 @@
                 <div class="grid md:grid-cols-3 gap-4 p-6">
                     <div class="md:col-span-1">
                         <div class="bg-gray-100 rounded-lg overflow-hidden w-[200px] h-[200px] flex items-center justify-center">
-                            <img :src="imagePreview || '/assets/wishlist-category-placeholder.svg'" alt="Placeholder" class="object-cover w-full h-full" />
+                            <img :src="imagePreview ||  categoryImage" alt="Placeholder" class="object-cover w-full h-full" />
                         </div>
                         <label class="my-4 py-2 bg-gray-200 rounded-full block text-center cursor-pointer w-[200px]">
                             Upload photo

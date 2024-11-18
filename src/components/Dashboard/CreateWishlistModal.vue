@@ -15,7 +15,7 @@
           <div class="grid grid-cols-1 lg:grid-cols-3 lg:gap-4 p-6">
             <div class="col-span-1">
               <div class="bg-gray-100 rounded-lg overflow-hidden w-[200px] h-[200px] flex items-center justify-center">
-                <img :src="imagePreview || '/assets/wishlist-category-placeholder.svg'" alt="Placeholder" class="object-cover w-full h-full"/>
+                <img :src="imagePreview ||  categoryImage" alt="Placeholder" class="object-cover w-full h-full"/>
               </div>
               <label class="my-4 py-2 bg-gray-200 rounded-full block text-center cursor-pointer w-[200px]">
                 Upload photo
@@ -29,7 +29,7 @@
                   <label class="block text-gray-700 mb-2" for="title">Title</label>
                   <input v-model="form.title" class="w-full p-3 bg-white border border-gray-300 rounded-md" type="text" id="title" placeholder="Enter Title"/>
                 </div>
-
+                
                 <div class="relative">
                   <label class="text-gray-700 mb-2 flex items-center gap-1" for="event-date">
                     Event date
@@ -161,6 +161,25 @@ export default {
     };
   },
   computed: {
+    categoryImage() {
+      const categoryImages = {
+        anniversary: '/assets/others-3.svg',
+        'baby-shower': '/assets/baby.svg',
+        birthday: '/assets/13-1.svg',
+        book: '/assets/others-5.svg',
+        fashion: '/assets/others.svg',
+        gadgets: '/assets/others-4.svg',
+        graduation: '/assets/graduation.svg',
+        holiday: '/assets/holiday.svg',
+        'house-warming': '/assets/others-2.svg',
+        others: '/assets/others-9.svg',
+        personal: '/assets/personal.svg',
+        'pet-supply': '/assets/others-7.svg',
+        ramadan: '/assets/others-8.svg',
+        travel: '/assets/others-6.svg',
+      };
+      return categoryImages[this.selectedCategory.slug];
+    },
     modalTitle() {
       return this.wishlist ? 'Edit Wishlist' : 'Create a new wishlist';
     },

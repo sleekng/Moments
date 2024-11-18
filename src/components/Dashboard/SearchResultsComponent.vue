@@ -78,7 +78,7 @@
     
      <!-- Conditional Image and Menu-option for Dashboard -->
     <div  class="relative mb-4">
-      <img class="w-full h-56 object-cover rounded-md" :src="wishlist.photo || '/assets/wishlist-category-placeholder.svg'" alt="Wishlist Image" />
+      <img class="w-full h-56 object-cover rounded-md" :src="wishlist.photo ||  categoryImage(wishlist)" alt="Wishlist Image" />
       
     </div>
 
@@ -149,6 +149,7 @@
     },
 
     computed: {
+     
     emptyStateTitle() {
       return this.selectedOption === 'Friends' 
         ? 'No users found' 
@@ -162,6 +163,25 @@
   },
 
     methods: {
+      categoryImage(wishlist) {
+      const categoryImages = {
+        anniversary: '/assets/others-3.svg',
+        'baby-shower': '/assets/baby.svg',
+        birthday: '/assets/13-1.svg',
+        book: '/assets/others-5.svg',
+        fashion: '/assets/others.svg',
+        gadgets: '/assets/others-4.svg',
+        graduation: '/assets/graduation.svg',
+        holiday: '/assets/holiday.svg',
+        'house-warming': '/assets/others-2.svg',
+        others: '/assets/others-9.svg',
+        personal: '/assets/personal.svg',
+        'pet-supply': '/assets/others-7.svg',
+        ramadan: '/assets/others-8.svg',
+        travel: '/assets/others-6.svg',
+      };
+      return categoryImages[wishlist.category.slug];
+    },
     getFriendshipButtonText(status) {
       switch(status) {
         case 'accepted':
