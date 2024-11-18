@@ -60,8 +60,8 @@
         <img v-if="showNotifications" src="/assets/notification-arrow.svg" alt="Notifications" class="h-6 w-6 absolute" />
 
         <!-- Notifications Dropdown -->
-        <div v-if="showNotifications" @mouseleave="toggleNotifications" class="absolute -right-20 top-10 w-[450px] bg-white border overflow-hidden rounded-lg shadow-lg z-50">
-          <NotificationDropdown :notifications="notifications" />
+        <div v-if="showNotifications"   class="absolute -right-20 top-10 w-[450px] bg-white border overflow-hidden rounded-lg shadow-lg z-50">
+          <NotificationDropdown :notifications="notifications" @shareAddress="showShareAddressModalMethod" />
         </div>
       </div>
 
@@ -100,8 +100,8 @@
   </header>
 
   <!--Mobile Notification and Profile Section -->
-  <div v-if="showNotifications" @mouseleave="toggleNotifications" class="fixed left-0 lg:hidden top-12 w-full h-screen bg-white border overflow-hidden rounded-lg shadow-lg z-40">
-    <NotificationDropdown :notifications="notifications" />
+  <div v-if="showNotifications"  class="fixed left-0 lg:hidden top-12 w-full h-screen bg-white border overflow-hidden rounded-lg shadow-lg z-40">
+    <NotificationDropdown  :notifications="notifications" @shareAddress="showShareAddressModalMethod" />
   </div>
 
   <!-- Mobile Menu -->
@@ -134,9 +134,11 @@
       </div>
     </div>
   </div>
+  <ShareAddressModal @close="closeShareAddressModal" :fetchAddresses="fetchAddresses" :wishID="selectedWishID" :showShareAddressModal="showShareAddressModal"/>
 </template>
 
 <script>
+import ShareAddressModal from '@/components/ShareAddressModal.vue';
 import NotificationDropdown from './NotificationDropdown.vue';
 import RecentSearchList from './RecentSearchList.vue';
 import { eventBus } from '@/eventBus.js';
@@ -146,9 +148,12 @@ export default {
   components: {
     NotificationDropdown,
     RecentSearchList,
+    ShareAddressModal,
   },
   data() {
     return {
+      showShareAddressModal:false,
+      selectedWishID: null,
       loading: false, // Add loading state
       searchQuery: '',
       showNotifications: false,
@@ -188,6 +193,34 @@ export default {
         }
       } catch (error) {
         console.error('Error fetching notifications:', error);
+      }
+    },
+
+
+    closeShareAddressModal() {
+      this.showShareAddressModal = false;
+    },
+
+    showShareAddressModalMethod(wishID) {
+      this.selectedWishID = wishID;
+      this.showShareAddressModal = true;
+      console.log('working');
+      
+      
+    },
+
+    
+    async fetchAddresses() {
+      try {
+        const response = await this.$axios.get(`${this.$baseURL}/addresses`,{
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+              });
+        if (response.data.success) {
+          return response.data.data;
+        }
+      } catch (error) {
+        console.error('Error fetching addresses:', error);
+        return [];
       }
     },
     

@@ -3,7 +3,7 @@
   <div :class="{ 'blurred-content': isLoading }">
     <Alert ref="alertComponent" />
 
-    <RouterView @showCreateWishlistModal="openCreateWishlistModal" @showCategoryModal="showCategoryModal = true" />
+    <RouterView @showCreateWishlistModal="openCreateWishlistModal" @showCategoryModal="showCategoryModal = true" @showShareAddressModal="openShareAddressModal"  />
 
     <CategoryPopup
       v-if="showCategoryModal"
@@ -70,6 +70,7 @@ export default {
   },
   data() {
     return {
+     
       updateType: null,
       showCategoryModal: false,
       showCreateWishlistModal: false,
@@ -125,6 +126,9 @@ export default {
     eventBus.onError = this.handleError;
   },
   methods: {
+
+
+
 
     closeCreatedModal() {
       this.wishCreated = this.wishUpdated = false;

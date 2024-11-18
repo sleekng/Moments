@@ -5,7 +5,6 @@
         <h2 class="text-xl font-semibold mb-4" style="font-family: Mukta">Your notifications</h2>
         <img src="/assets/settings.svg" alt="Settings" class="w-4 h-4 cursor-pointer">
       </div>
-      <!-- Tabs -->
       <div class="flex justify-between text-center px-4">
         <span :class="{'font-bold text-black border-b-4 border-black': activeTab === 'All'}" class="text-sm w-[93.5px] text-gray-500 cursor-pointer" @click="setActiveTab('All')">All</span>
         <span :class="{'font-bold text-black border-b-4 border-black': activeTab === 'Friend'}" class="text-sm w-[93.5px] text-gray-500 cursor-pointer" @click="setActiveTab('Friend')">Friend</span>
@@ -14,9 +13,7 @@
       </div>
     </div>
     <div class="pt-20 h-[650px] pb-10 overflow-y-auto">
-      <!-- Notification Items -->
-      <NotificationItem v-for="notification in filteredNotifications" :key="notification.id" :notification="notification" />
-      <!-- Empty State -->
+      <NotificationItem v-for="notification in filteredNotifications" :key="notification.id" :notification="notification" @shareAddress="shareAddress" />
       <div v-if="filteredNotifications.length === 0" class="flex flex-col items-center justify-center h-full">
         <img src="/assets/notification-bell.svg" alt="No Notifications" class="w-12 h-12 mb-4" />
         <p class="text-center text-gray-500">You don't have any notifications at the moment.</p>
@@ -56,6 +53,9 @@ export default {
   methods: {
     setActiveTab(tab) {
       this.activeTab = tab;
+    },
+    shareAddress(wishID) {
+      this.$emit('shareAddress', wishID);
     }
   }
 };

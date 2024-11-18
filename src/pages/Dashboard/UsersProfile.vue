@@ -11,7 +11,7 @@
           @switchTab="setActiveTab"
           :user="user"
         />
-  
+
         <div v-if="wishlists.length > 0" class="grid grid-cols-1 lg:grid-cols-4 gap-6 lg:px-12 py-8 rounded-b-lg bg-white">
           <WishlistCard
             v-for="wishlist in wishlists"
@@ -91,11 +91,7 @@
         loading: true,  // Set loading initial state to true
       };
     },
-    computed: {
-      filteredWishlist() {
-        return this.wishlists.filter(wishlist => wishlist.status === this.activeTab);
-      },
-    },
+   
     async mounted() {
       await this.fetchUserData();
     },
@@ -107,6 +103,8 @@
           });
           if (response.data.success) {
             this.user = response.data.data;
+            console.log(this.user);
+            
             this.wishlists = this.user.wishlists || [];
           }
         } catch (error) {

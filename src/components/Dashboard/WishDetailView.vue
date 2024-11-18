@@ -127,13 +127,13 @@
                                         <i class="fa-solid fa-gift moment-text-effect-child"></i>
                                         <span class="ml-2 text-gray-800 w-full moment-text-effect-child font-medium">Add to my wishlist</span>
                                     </div>
-                                    <div @click="saveWish" v-if="wish.status == null && isDashboard" class="flex items-center p-2 group moment-text-effect-parent cursor-pointer border-gray-200">
+                                    <div @click="$emit('unSaveWish', wish)" v-if="wish.status == null && isDashboard" class="flex items-center p-2 group moment-text-effect-parent cursor-pointer border-gray-200">
                                         <i class="fa-regular fa-bookmark moment-text-effect-child"></i>
                                         <span class="ml-2 text-gray-800 w-full moment-text-effect-child font-medium">Unsave wish</span>
                                     </div>
                                     <div @click="saveWish" v-if="wish.status == null && !isDashboard" class="flex items-center p-2 group moment-text-effect-parent cursor-pointer border-gray-200">
                                         <i class="fa-regular fa-bookmark moment-text-effect-child"></i>
-                                        <span class="ml-2 text-gray-800 w-full moment-text-effect-child font-medium">Unsave wish</span>
+                                        <span class="ml-2 text-gray-800 w-full moment-text-effect-child font-medium">Save wish</span>
                                     </div>
                                     <div class="flex items-center p-2 group moment-text-effect-parent cursor-pointer border-gray-200">
                                         <i class="fa-regular fa-globe moment-text-effect-child"></i>

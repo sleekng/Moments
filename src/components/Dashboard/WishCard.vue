@@ -189,19 +189,19 @@
 
 
         <h2 class="text-sm md:text-lg font-semibold">{{ wish.name }}</h2>
-        <p class="text-sm md:text-lg">{{ wish.amount }} {{ wish.currency }}</p>
+        <p class="text-sm md:text-lg">{{ formattedAmount }} {{ wish.currency }}</p>
         <div class="flex justify-between items-center mt-2">
           <div class="flex items-center" @click.stop="toggleLike">
         <i :class="wish.liked_by_me ? 'fa-solid fa-heart text-red-500' : 'fa-light fa-heart'" class="mr-1 text-[14px]"></i>
         <span>{{ wish.likes_count }}</span>
       </div>
           <div class="flex space-x-2 md:space-x-4">
-            <button @click.stop="saveWish" v-if="status != 'saved'" class="border-white border p-1 md:p-2 rounded-full focus:outline-none shadow-sm">
-              <img src="/assets/bookmark.svg" alt="Save" class="w-3 h-3 md:w-5 md:h-5" />
-            </button>
-            <button @click.stop="toggleShareMenu" class="border-white border p-1 md:p-2 rounded-full focus:outline-none shadow-sm">
-              <img src="/assets/share-2.svg" alt="Share" class="w-3 h-3 md:w-5 md:h-5" />
-            </button>
+           <button @click.stop="saveWish" class="border-white border  w-10 h-10 rounded-full focus:outline-none shadow-sm">
+                <i :class="status === 'saved' ? 'fas fa-bookmark' : 'far fa-bookmark'" class="w-3  h-3 md:w-5 md:h-5"></i>
+              </button>
+            <button @click.stop="toggleShareMenu" class="border-white w-10 h-10 border p-1 md:p-2 rounded-full focus:outline-none shadow-sm">
+                <i class="fa-light fa-share-nodes  w-3 h-3 md:w-5 md:h-5"></i>
+              </button>
           </div>
         </div>
       </div>
@@ -307,6 +307,9 @@ export default {
     }
     },
   computed: {
+    formattedAmount() {
+      return parseFloat(this.wish.amount).toLocaleString('en-US');
+    },
     isWishOwner() {
       if(this.wish.wishlist.user?.username){
       return this.wish.wishlist.user?.username === this.loggedInUser;
@@ -320,6 +323,7 @@ export default {
     },
   },
   methods: {
+    
 
     toggleShareMenu() {
       this.isShareMenuOpen = !this.isShareMenuOpen;

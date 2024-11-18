@@ -9,16 +9,14 @@ import './assets/css/all.css';  // FontAwesome CSS
 
 import UserAccess from './directives/v-user-access'; // Import your directive
 
-
 const app = createApp(App);
 
 // Register the directive
 app.directive('user-access', UserAccess);
 
 // Set the global base URL
-app.config.globalProperties.$baseURL = 'https://be.momentshub.org/api';
-
-/* app.config.globalProperties.$baseURL = 'https://account.momentshub.org/api'; */
+/* app.config.globalProperties.$baseURL = 'https://be.momentshub.org/api'; */
+app.config.globalProperties.$baseURL = 'https://account.momentshub.org/api';
 
 // Create a new Axios instance for the app
 const axiosInstance = axios.create({

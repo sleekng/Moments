@@ -1,5 +1,5 @@
 <template>
-    <div v-if="isRequestingAddress" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+    <div v-if="showShareAddressModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[500]">
       <div class="bg-white rounded-lg w-full max-w-lg p-6">
         <div class="flex justify-between items-center mb-6">
           <div class="flex items-center gap-3">
@@ -77,14 +77,14 @@
     name: 'ShareAddressModal',
     props: {
       fetchAddresses: Function,
-      wishID: Number
+      wishID: Number,
+      showShareAddressModal:Boolean
     },
     data() {
       return {
         tipMessage: 'For your safety, we recommend sharing your public address for general use and your private address to only trusted friends. Your privacy is important to us!',
         addresses: [],
         selectedAddressId: null,
-        isRequestingAddress: false,
         showConfirmationModal: false
       };
     },
@@ -105,9 +105,8 @@
       async confirmShare() {
         if (!this.selectedAddressId) return;
   
-        this.isRequestingAddress = true;
         try {
-          await this.$axios.post(`${this.$baseURL}/wishes/${this.wishID}/address/${this.selectedAddressId}`, {}, {
+          await this.$axios.put(`${this.$baseURL}/wishes/${this.wishID}/address/${this.selectedAddressId}`, {}, {
             headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
           });
   
@@ -118,7 +117,7 @@
           const errorMsg = error.response?.data?.message || 'Error sharing address. Please try again.';
           eventBus.onError(errorMsg);
         } finally {
-          this.isRequestingAddress = false;
+          this.showShareAddressModal = false;
           this.showConfirmationModal = false;
         }
       }

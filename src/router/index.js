@@ -72,7 +72,14 @@ router.beforeEach((to, from, next) => {
   const publicPages = ['Home', 'Login', 'Register', 'Create Option', 'Forgot Password', 'Reset Password', 'Verification Sent','Sign Up','Sign Up 2'];
   const authRequired = !publicPages.includes(to.name);
 
+  const loggedIn = !isTokenExpired();
+
   eventBus.setLoading(true);
+
+  if (loggedIn && publicPages.includes(to.name) && !['Verification Sent', 'Sign Up', 'Sign Up 2'].includes(to.name)) {
+    // Redirect logged-in users to the dashboard if they try to access public pages, except specified ones
+    return next({ name: 'dashboard' });
+  }
 
   // Check if route requires authentication
   if (authRequired) {

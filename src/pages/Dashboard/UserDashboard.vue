@@ -2,7 +2,7 @@
   <div class="bg-white lg:bg-gray-100 py-10">
     <AppHeader @showCategoryModal="$emit('showCategoryModal')" />
     <div v-if="!loading" class="px-4 lg:px-16 pt-10 lg:pt-20">
-      <ShareAddressModal :fetchAddresses="fetchAddresses" :wishID="selectedWishID" />
+
       <ProfileCover />
       <ProfileDetails :user="user" @showAnalyticsModal="ToggleAnalyticsModal" :myWishlistCount="wishlists.length" />
       <TabNavigationsWishlist :myWishlistCount="wishlists.length" :savedwishesCount="savedwishes.length" :reservedWishesCount="reservedWishes.length" :activeTab="activeTab" @switchTab="setActiveTab" />
@@ -64,12 +64,33 @@
           />
         </div>
 
+
+        <transition name="fade">
+      <div v-if="showBirthdayModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div class="bg-white rounded-lg shadow-lg p-6 max-w-sm w-full">
+          <div class="relative">
+            <img src="/assets/gif/birthday-notify.svg" alt="Celebration" class="w-full h-64 object-cover rounded-t-lg" />
+            <button @click="closeBirthdayModal" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
+              <img src="./assets/close.svg" alt="Close" class="w-6 h-6" />
+            </button>
+          </div>
+          <div class="text-center mt-4">
+            <h2 class="text-2xl font-semibold text-gray-800">Happy Birthday, {{ user.first_name }}! 🎂</h2>
+            <p class="mt-2 text-gray-600">
+              Birthdays are for celebrating all the amazing things about you! We hope your day is filled with joy, laughter, and cake (of course!)
+            </p>
+          </div>
+        </div>
+      </div>
+    </transition>
      
 
 
       <!-- Modals -->
+   <!-- Birthday Modal -->
+
       <Congratulations v-if="showInitialModal" @close="closeInitialModal" />
-      <WishDetailView  :isRequestingAddress="isRequestingAddress"     @requestAddress="requestAddress" @editWish="openEditWishModal" v-if="showWishDetailsModal" @close="closeWishDetailsModal" :wish="showPrevWish ? showPrevWish : showSavedPrevWish" />
+      <WishDetailView  :isRequestingAddress="isRequestingAddress"     @requestAddress="requestAddress" @editWish="openEditWishModal" v-if="showWishDetailsModal" @close="closeWishDetailsModal" :wish="showPrevWish ? showPrevWish : showSavedPrevWish" @unSaveWish="unSaveWish" />
 
 
       <AnalyticsModal
@@ -88,7 +109,7 @@
 <script>
 import EmptyState from '@/components/Dashboard/EmptyState.vue';
 import Loader from '@/components/Loader.vue';
-import ShareAddressModal from '@/components/ShareAddressModal.vue';
+
 import { eventBus } from '@/eventBus.js';
 import CreateWishModal from '@/components/Dashboard/CreateWishModal.vue';
 import AppHeader from '@/components/Dashboard/AppHeader.vue';
@@ -105,7 +126,7 @@ import DeleteConfirmationModal from '@/components/Dashboard/DeleteConfirmationMo
 
 export default {
   components: {
-    ShareAddressModal,
+
     Loader,
     EmptyState,
     CreateWishModal,
@@ -143,6 +164,7 @@ export default {
         friendship_status: null,
         token: ''
       },
+      showBirthdayModal: false,
       showCreateWishModal: false,
       analyticsData: null,
       showAnalyticsModal: false,
@@ -161,6 +183,7 @@ export default {
       savedwishes: [],
       reservedWishes: [],
       loading: false,  // Add loading state
+      
     };
   },
   computed: {
@@ -169,6 +192,20 @@ export default {
     },
     filteredSavedWish() {
       return this.wishes.filter(wish => wish.status === this.activeTab);
+    }
+  },
+  watch: {
+    user: {
+      immediate: true,
+      handler(newUser) {
+        if (newUser.dob) {
+          const today = new Date();
+          const dob = new Date(newUser.dob);
+          if (dob.getDate() === today.getDate() && dob.getMonth() === today.getMonth()) {
+            this.showBirthdayModal = true;
+          }
+        }
+      }
     }
   },
   mounted() {
@@ -190,20 +227,37 @@ export default {
 
 
   methods: {
-
-    async fetchAddresses() {
-      try {
-        const response = await this.$axios.get(`${this.$baseURL}/addresses`,{
-                headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
-              });
-        if (response.data.success) {
-          return response.data.data;
-        }
-      } catch (error) {
-        console.error('Error fetching addresses:', error);
-        return [];
-      }
+    closeBirthdayModal() {
+      this.showBirthdayModal = false;
     },
+
+    async unSaveWish(wish) {
+      console.log(wish);
+      
+            eventBus.setLoading(true);
+            try {
+                await this.$axios.post(
+                    `${this.$baseURL}/saved-wishes`, {
+                        'wish_id': wish.id
+                    }, {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+                        },
+                    }
+                );
+
+                eventBus.onSuccess('Wish Saved.');
+                wish.status = null;
+            } catch (error) {
+                console.error("Error Saving Wish:", error);
+                const errorMsg = error.response?.data?.message || 'Error Saving Wish. Please try again.';
+                eventBus.onError(errorMsg);
+            } finally {
+                eventBus.setLoading(false);
+            }
+        },
+
+
 
     async requestAddress(wishID) {
       
@@ -411,3 +465,14 @@ export default {
   },
 };
 </script>
+  
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>
