@@ -61,7 +61,6 @@
              class="absolute top-4 right-3 cursor-pointer"></i>
         </div>
       </div>
-  {{ token }}
       <button @click="resetPassword" class="max-w-fit px-24 py-3 mt-6 bg-primaryColor text-white transition-all font-semibold text-lg rounded-full hover:shadow-lg">
         Reset Password
       </button>
@@ -146,6 +145,7 @@
           });
   
           if (response.data.success) {
+            localStorage.setItem("authToken", token);
             this.message = response.data.message || 'Your password has been reset.';
             this.success = true;
           } else {
@@ -157,6 +157,9 @@
           this.success = false;
         } finally {
           eventBus.setLoading(false);
+          this.$router.push({
+            path: "/dashboard",
+          });
         }
       }
     }

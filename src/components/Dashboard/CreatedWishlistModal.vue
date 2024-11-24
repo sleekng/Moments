@@ -27,11 +27,17 @@
           >
             {{ viewWishlistText }}
           </button>
-          <button
+          <button v-if="wishlistUpdated"
+            @click="shareWishlist"
+            class="flex-1 ml-2 text-white bg-primaryColor hover:shadow-lg transition-all font-medium py-3 px-4 rounded-full text-center focus:outline-none"
+          >
+            {{ makeAWishText }}l
+          </button>
+          <button v-if="!wishlistUpdated"
             @click="makeAWish"
             class="flex-1 ml-2 text-white bg-primaryColor hover:shadow-lg transition-all font-medium py-3 px-4 rounded-full text-center focus:outline-none"
           >
-            {{ makeAWishText }}
+            {{ makeAWishText }}l
           </button>
         </div>
       </div>
@@ -41,6 +47,10 @@
 <script>
 export default {
   props: {
+    wishlistUpdated: {
+      type: Boolean,
+      default: false,
+    },
     title: {
       type: String,
       default: 'New Wishlist Created! ✨',
@@ -76,6 +86,10 @@ export default {
     viewWishlist() {
       this.$emit('viewWishlist', this.createdWishlistId);
       this.closeModal();
+    },
+    shareWishlist(){
+      alert('work')
+      this.$emit('shareWishlist', this.createdWishlistId);
     },
     makeAWish() {
       this.$emit('makeAWish', this.createdWishlistId);

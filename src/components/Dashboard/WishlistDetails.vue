@@ -6,14 +6,17 @@
           <img :src="selectedWishlist.photo || '/assets/wishlist-category-placeholder.svg'" alt="Wishlist Category" class="w-40 h-40 lg:w-52 lg:h-52 object-cover bg-gray-100 rounded-full">
         </div>
         <div class="mt-4 inline-flex flex-col space-y-4 text-center">
-          <div>
-            <div class="inline-flex items-center justify-center bg-primaryMainBright text-primaryColor py-2 px-4 rounded-full text-sm font-medium">
-              <span>{{ selectedWishlist.category.name }}</span>
+          <div class=" lg:max-w-xl inline-flex flex-col space-y-4 text-center">
+
+            <div>
+              <div class="inline-flex items-center justify-center bg-primaryMainBright text-primaryColor py-2 px-4 rounded-full text-sm font-medium">
+                <span>{{ selectedWishlist.category.name }}</span>
+              </div>
             </div>
-          </div>
-          <div class="space-y-1">
-            <h2 class="text-3xl font-semibold text-gray-900">{{ selectedWishlist.title }}</h2>
-            <p class="text-gray-600">{{ selectedWishlist.description }}</p>
+            <div class="space-y-1">
+              <h2 class="text-3xl font-semibold text-gray-900">{{ selectedWishlist.title }}</h2>
+              <p class="text-gray-600">{{ selectedWishlist.description }}</p>
+            </div>
           </div>
           <div>
             <div class="mt-4 inline-flex px-2 pr-4 items-center justify-center space-x-2 bg-gray-900 text-white py-2 rounded-full">

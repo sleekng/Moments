@@ -23,6 +23,7 @@
       <!-- Optional: Not Found Link -->
       <li><router-link to="/not-found">Not Found</router-link></li>
     </ul>
+    
   </div>
 </template>
 

@@ -3,7 +3,6 @@
     <AppHeader @showCategoryModal="$emit('showCategoryModal')" />
     <div v-if="!loading" class="px-4 lg:px-16 pt-10 lg:pt-20">
 
-      <ProfileCover />
       <ProfileDetails :user="user" @showAnalyticsModal="ToggleAnalyticsModal" :myWishlistCount="wishlists.length" />
       <TabNavigationsWishlist :myWishlistCount="wishlists.length" :savedwishesCount="savedwishes.length" :reservedWishesCount="reservedWishes.length" :activeTab="activeTab" @switchTab="setActiveTab" />
 
@@ -87,7 +86,8 @@
 
 
       <!-- Modals -->
-   <!-- Birthday Modal -->
+
+         <WelcomeModal v-if="showWelcomeModal" @close="closeWelcomeModal" />
 
       <Congratulations v-if="showInitialModal" @close="closeInitialModal" />
       <WishDetailView  :isRequestingAddress="isRequestingAddress"     @requestAddress="requestAddress" @editWish="openEditWishModal" v-if="showWishDetailsModal" @close="closeWishDetailsModal" :wish="showPrevWish ? showPrevWish : showSavedPrevWish" @unSaveWish="unSaveWish" />
@@ -109,11 +109,10 @@
 <script>
 import EmptyState from '@/components/Dashboard/EmptyState.vue';
 import Loader from '@/components/Loader.vue';
-
+import WelcomeModal from '@/components/Dashboard/WelcomeModal.vue';
 import { eventBus } from '@/eventBus.js';
 import CreateWishModal from '@/components/Dashboard/CreateWishModal.vue';
 import AppHeader from '@/components/Dashboard/AppHeader.vue';
-import ProfileCover from '@/components/Dashboard/ProfileCover.vue';
 import ProfileDetails from '@/components/Dashboard/ProfileDetails.vue';
 import TabNavigationsWishlist from '@/components/Dashboard/TabNavigationsWishlist.vue';
 import WishlistCard from '@/components/Dashboard/WishlistCard.vue';
@@ -126,13 +125,12 @@ import DeleteConfirmationModal from '@/components/Dashboard/DeleteConfirmationMo
 
 export default {
   components: {
-
+    WelcomeModal,
     Loader,
     EmptyState,
     CreateWishModal,
     AppHeader,
     DeleteConfirmationModal,
-    ProfileCover,
     ProfileDetails,
     TabNavigationsWishlist,
     WishlistCard,
@@ -145,6 +143,7 @@ export default {
   
   data() {
     return {
+      showWelcomeModal: false,
       isRequestingAddress:false,
       user: {
         username: '',
@@ -218,6 +217,12 @@ export default {
     if (this.$route.query.showCongratulations === 'true') {
       this.showInitialModal = true;
     }
+        // Show welcome modal once after registration
+        if (!localStorage.getItem('welcomeShown')) {
+      this.showWelcomeModal = true;
+      localStorage.setItem('welcomeShown', 'true');
+    }
+    
     this.fetchAnalyticsData();
 
     this.loadData();
@@ -230,7 +235,9 @@ export default {
     closeBirthdayModal() {
       this.showBirthdayModal = false;
     },
-
+    closeWelcomeModal() {
+      this.showWelcomeModal = false;
+    },
     async unSaveWish(wish) {
       console.log(wish);
       

@@ -10,6 +10,45 @@
       @close="closeCategoryModal"
       @showCreateWishlistModal="openCreateWishlistModal"
     />
+
+
+     <!-- Share Modal -->
+     <div v-if="isShareMenuOpen" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[100]">
+                            <div class="bg-white rounded-lg shadow-lg p-6 relative max-w-lg w-full">
+                            <button @click="toggleShareMenu" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            <div class="flex space-x-4 items-center pb-2">
+                                <span class="font-bold text-lg">Share with friends</span>
+                            </div>
+                            <div class="grid grid-cols-2 pt-4 gap-4">
+                                <button @click="copyLink" class="flex items-center space-x-2 p-2 border hover:bg-gray-100 rounded-lg">
+                                <i class="fas fa-link"></i>
+                                <span>Copy Link</span>
+                                </button>
+                                <button @click="shareToEmail" class="flex items-center space-x-2 p-2 border hover:bg-gray-100 rounded-lg">
+                                <i class="fas fa-envelope"></i>
+                                <span>Share to Email</span>
+                                </button>
+                                <button @click="shareToWhatsApp" class="flex items-center space-x-2 p-2 border hover:bg-gray-100 rounded-lg">
+                                <i class="fab fa-whatsapp"></i>
+                                <span>Share to Whatsapp</span>
+                                </button>
+                                <button @click="shareToTwitter" class="flex items-center space-x-2 p-2 border hover:bg-gray-100 rounded-lg">
+                                <i class="fab fa-twitter"></i>
+                                <span>Share to Twitter</span>
+                                </button>
+                                <button @click="shareToFacebook" class="flex items-center space-x-2 p-2 border hover:bg-gray-100 rounded-lg">
+                                <i class="fab fa-facebook"></i>
+                                <span>Share to Facebook</span>
+                                </button>
+                                <button @click="shareToInstagram" class="flex items-center space-x-2 p-2 border hover:bg-gray-100 rounded-lg">
+                                <i class="fab fa-instagram"></i>
+                                <span>Share to Instagram</span>
+                                </button>
+                            </div>
+                            </div>
+      </div>
     
     <CreateWishlistModal
       v-if="showCreateWishlistModal"
@@ -22,6 +61,8 @@
 
     <CreatedWishlistModal 
       v-if="wishlistCreated || wishlistUpdated" 
+      :wishlistUpdated="wishlistUpdated"
+      @shareWishlist ="toggleShareMenu"
       :title="modalTitle"
       :description="modalDescription"
       :createdWishlistId="createdWishlistId"
@@ -70,7 +111,7 @@ export default {
   },
   data() {
     return {
-     
+      isShareMenuOpen: false,
       updateType: null,
       showCategoryModal: false,
       showCreateWishlistModal: false,
@@ -127,7 +168,34 @@ export default {
   },
   methods: {
 
-
+    toggleShareMenu() {
+      this.isShareMenuOpen = !this.isShareMenuOpen;
+    },
+    copyLink() {
+      navigator.clipboard.writeText(`${window.location.href}`).then(() => {
+        eventBus.onSuccess('Profile link copied to clipboard!');
+      });
+    },
+    shareToEmail() {
+      const subject = encodeURIComponent(`Check out this profile: ${this.user.username}`);
+      const body = encodeURIComponent(`${window.location.href}`);
+      window.location.href = `mailto:?subject=${subject}&body=${body}`;
+    },
+    shareToWhatsApp() {
+      const text = encodeURIComponent(`Check out this profile: ${window.location.href}`);
+      window.open(`https://wa.me/?text=${text}`, '_blank');
+    },
+    shareToTwitter() {
+      const text = encodeURIComponent(`Check out this profile: ${window.location.href}`);
+      window.open(`https://twitter.com/intent/tweet?text=${text}`, '_blank');
+    },
+    shareToFacebook() {
+      const url = encodeURIComponent(`${window.location.href}`);
+      window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
+    },
+    shareToInstagram() {
+      eventBus.onSuccess('Instagram sharing is not supported directly from the web. Feature is coming soon');
+    },
 
 
     closeCreatedModal() {
@@ -198,7 +266,12 @@ export default {
       this.$refs.alertComponent.showAlert(message);
     },
     viewCreatedWishlist() {
-      this.$router.push({ name: 'Wishlist', params: { id: this.createdWishlistId } });
+/*       this.$router.push({ name: 'Wishlist', params: { id: this.createdWishlistId } });
+ */
+
+      window.location.href = this.$router.resolve({ name: 'Wishlist', params: { id: this.createdWishlistId } }).href;
+
+
       this.wishlistCreated = false;
       this.wishlistUpdated = false;
     }
