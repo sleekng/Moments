@@ -61,7 +61,7 @@ export default {
     },
     imageSrc: {
       type: String,
-      default: '/assets/modal-illustration.svg',
+      default: '/assets/gif/Gift_animation.gif',
     },
     imageAlt: {
       type: String,
@@ -88,7 +88,6 @@ export default {
       this.closeModal();
     },
     shareWishlist(){
-      alert('work')
       this.$emit('shareWishlist', this.createdWishlistId);
     },
     makeAWish() {

@@ -2,7 +2,7 @@
 <div class="bg-primaryBackground">
     <!-- Header section -->
     <section class=" w-full">
-        <div class=" h-[100vh] md:h-[920px] lg:h-[100vh] overflow-hidden relative w-full  ">
+        <div class="  overflow-hidden relative w-full  ">
             <!-- Header with Login and Signup buttons -->
             <header class="flex justify-between items-center p-4 lg:px-8">
                 <img src="/assets/Logo-1.svg" alt="Logo" class="w-24 h-10">
@@ -12,9 +12,9 @@
                 </div>
             </header>
 
-            <div class="flex flex-col items-center  py-28 md:py-8 2xl:py-10">
+            <div class="flex flex-col items-center  py-28 md:py-8 2xl:py-10 px-4">
                 <div class="text-center flex justify-center flex-col items-center  mx-auto mb-4 space-y-2 relative">
-                    <h1 class="2xl:text-4xl max-w-lg  font-semibold text-gray-900  leading-none relative">
+                    <h1 class="2xl:text-4xl max-w-lg text-[64px]  font-semibold text-gray-900  leading-none relative">
                         <img class=" particle-7" src="/assets/balloon-svgrepo-com1.svg" alt="particle-7">
                         Make Every Moment Memorable
                         <span class="text-primaryColor absolute">.</span>
@@ -26,15 +26,15 @@
                     <img src="/assets/frame-1618868561.svg" alt="Arrow Icon" class="w-4 h-auto" />
                 </RouterLink>
 
-                <div class="relative w-full max-w-4xl mx-auto mt-20 lg:mt-16 flex justify-center">
+                <div class="relative w-full max-w-4xl mx-auto mt-10 lg:mt-16 flex justify-center overflow-hidden">
                     <!-- Rotated Images Section -->
-                    <div class="relative w-[867.52px] h-[867.52px] lg:w-[700.52px] lg:h-[700.52px] flex justify-center">
-                        <img src="/assets/home-rotate.png" alt="Image 1" class="absolute smooth-rotate" />
+                    <div class="relative w-full max-w-[90vw] h-[24vh] lg:h-[50vh] flex justify-center items-center overflow-hidden">
+                        <img src="/assets/home-rotate.png" alt="Image 1" class="absolute smooth-rotate w-full h-auto max-w-[700px] top-10 lg:top-20 transform -translate-y-1/2" />
                     </div>
+                    <img src="/assets/frame-1618868348.svg" alt="Background Decor" class="absolute -bottom-5 md:-bottom-20 left-1/2 z-50 transform -translate-x-1/2 w-full" />
                 </div>
             </div>
 
-            <img src="/assets/frame-1618868348.svg" alt="Background Decor" class="absolute -bottom-7 md:-bottom-20 left-1/2 z-50 transform -translate-x-1/2 w-full" />
             <!-- Particles -->
             <div>
                 <img class=" particle-1 z-50" src="/assets/Star1.svg" alt="particle-1">
@@ -47,9 +47,9 @@
         </div>
     </section>
 
-    <section class="py-24 px-4 md:px-24">
+    <section class="lg:py-24 px-4 md:px-24">
         <div class="text-center max-w-full mx-auto mb-10 space-y-4">
-            <h2 class="text-5xl md:text-5xl font-semibold text-gray-900 leading-tight">
+            <h2 class="text-4xl md:text-5xl font-semibold text-gray-900 leading-tight">
                 Explore endless <br> possibilities <span class="text-pink-500">.</span>
             </h2>
         </div>
@@ -149,10 +149,10 @@
     </section>
 
     <!-- Main section containing multiple flexbox layouts with custom spacing -->
-    <section class="flex flex-col  space-y-8 px-4 lg:px-8">
+    <section class="flex flex-col lg:py-12 pt-10  space-y-8 px-4 lg:px-8">
 
         <!-- Title Section with centered heading -->
-        <div class="text-center max-w-full mx-auto mb-10 space-y-4">
+        <div class="text-center max-w-full mx-auto mb-4 space-y-4">
             <h2 class="text-5xl md:text-5xl font-semibold text-gray-900 leading-tight">
                 Gift giving made easy.<span class="text-pink-500">.</span>
             </h2>
@@ -459,7 +459,7 @@ button span {
 
     h1 {
         font-family: 'Mukta', sans-serif;
-        font-size: 64px;
+
         letter-spacing: -0.02em;
     }
 
@@ -496,7 +496,7 @@ button span {
     .particle-6 {
         width: 40px;
         height: 321px;
-        top: 543px;
+        top: 420px;
         left: 0px;
         gap: 0px;
         opacity: 0px;

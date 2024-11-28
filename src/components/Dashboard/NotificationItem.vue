@@ -1,9 +1,9 @@
 <template>
   <div class="p-4 border-b border-gray-200 flex items-start space-x-3">
-    <img :src="notification.notifier.avatar || '/assets/avatar.svg'" alt="Profile" class="w-10 h-10 rounded-full">
+    <img :src="notification.notifier?.avatar || '/assets/avatar.svg'" alt="Profile" class="w-10 h-10 rounded-full">
     <div class="w-full">
       <p class="text-sm text-gray-700">
-        <strong>{{ notification.notifier.username }}</strong> {{ notification.data.message }}
+        <strong>{{ notification.notifier?.username || 'Unknown User' }}</strong> {{ notification.data.message }}
       </p>
       <div v-if="notification.type === 'wishlist' || notification.type === 'birthdays'" class="mt-2 flex w-full items-center space-x-3 p-2 border border-gray-300 rounded-lg">
         <div @click="navigateTo(notificationLink)" class="flex items-center space-x-3 cursor-pointer">
@@ -42,7 +42,7 @@ export default {
       if (this.notification.type === 'wishlist') {
         return { name: 'Wishlist', params: { id: this.notification.action.wishlist_id } };
       } else if (this.notification.type === 'birthdays' || this.notification.type === 'friend') {
-        return { name: 'UsersProfile', params: { username: this.notification.notifier.username } };
+        return { name: 'UsersProfile', params: { username: this.notification.notifier?.username } };
       }
       return null;
     },
@@ -110,7 +110,7 @@ export default {
       return isPrimary ? 'bg-primaryColor text-white py-1 px-3 rounded-full' : 'bg-gray-200 text-gray-700 py-1 px-3 rounded-full';
     },
     async handleAction(action) {
-      const friendId = this.notification.notifier.id;
+      const friendId = this.notification.notifier?.id;
       try {
         if (action.text === 'Accept') {
           await this.$axios.put(`${this.$baseURL}/friends/${friendId}`, { status: 'accepted' }, {
@@ -124,6 +124,10 @@ export default {
           console.log('Friend request declined');
         } else if (action.text === 'Share address') {
           this.$emit('shareAddress', this.notification.action_id);
+        }
+         else if (action.text === 'Cancel reservation') {
+          
+          this.$emit('cancelReservation', this.notification.action_id);
         }
       } catch (error) {
         console.error('Error handling action:', error);

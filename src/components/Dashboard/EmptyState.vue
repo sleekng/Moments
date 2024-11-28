@@ -3,7 +3,7 @@
     <div class="flex flex-col items-center justify-center p-6" style="width: 352px;">
       <img src="/assets/gift-empty.svg" alt="Gift Box" class="w-[83.32px] h-[93.92px] mb-[20px]" />
       <div class="text-center">
-        <h2 class="text-[#2d3036ff] font-semibold text-[22px]">{{ title }}</h2>
+        <h2 class="text-[#2d3036ff] font-semibold lg:text-[22px]">{{ title }}</h2>
         <p class="text-[#616874ff] mt-[4px] text-[16px]"><span class=" font-bold">{{ userOwnsWishlist ? '' : currentUserUsername }}</span> {{ message }}</p>
       </div>
       <button 

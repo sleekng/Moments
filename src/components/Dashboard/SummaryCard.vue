@@ -1,5 +1,5 @@
 <template>
-  <div class=" px-2 py-4 lg:p-6 bg-white inline-flex space-x-2 lg:space-x-4 items-center rounded-lg  transition-shadow duration-300 border">
+  <div class=" px-2 py-4 lg:p-6 bg-white inline-flex flex-col lg:flex-row space-y-2 space-x-2 lg:space-x-4 lg:items-center rounded-lg  transition-shadow duration-300 border">
     <div>
         <div :class="iconBgClass + ' w flex items-center justify-center rounded-full w-12 h-12'">
       <img :src="icon" :alt="title" class="h-6 w-6" />

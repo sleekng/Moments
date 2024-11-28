@@ -11,27 +11,38 @@
     <!-- Conditional Image and Menu-option for Dashboard -->
     <div class="relative mb-4">
       <img class="w-full h-56 object-cover rounded-md" :src="wishlist.photo || categoryImage" alt="Wishlist Image" />
-      <button v-if="isDashboard" @click.stop="toggleMenu" class="absolute z-40 top-2 right-2 p-1 bg-gray-200 rounded-full toggle-menu-button transition-opacity opacity-0 group-hover:opacity-100">
+      <button v-if="!isExplore" @click.stop="toggleMenu" class="absolute z-40 top-2 right-2 p-1 bg-gray-200 rounded-full toggle-menu-button transition-opacity opacity-0 group-hover:opacity-100">
         <img src="/assets/frame-1618868216.svg" alt="Menu" class="h-6 w-6" />
       </button>
 
       <!-- DropdownMenu -->
-      <div v-if="isDropdownOpen" @mouseleave="closeMenu" class="w-60 bg-white rounded-lg shadow-lg p-2 border border-gray-200 absolute top-8 z-50 -right-20">
-        <div class="flex relative items-center p-2 group moment-text-effect-parent cursor-pointer">
-          <i class="fa-regular fa-arrow-up-from-bracket moment-text-effect-child"></i>
-          <span class="ml-2 text-gray-800 moment-text-effect-child w-full font-medium">Share wishlist with friends</span>
-        </div>
-        <div class="flex relative items-center p-2 group moment-text-effect-parent cursor-pointer border-t border-gray-200" @click.stop="$emit('editWishlist', wishlist)">
-          <i class="fa-light fa-pen-to-square moment-text-effect-child"></i>
-          <span class="ml-2 text-gray-800 moment-text-effect-child w-full font-medium">Edit wishlist</span>
-        </div>
-        <div class="flex relative items-center p-2 group moment-text-effect-parent cursor-pointer border-t border-gray-200" @click.stop="$emit('deleteWishlist', wishlist.id)">
-          <i class="fa-light fa-light fa-circle-xmark moment-text-effect-child"></i>
-          <span class="ml-2 text-gray-800 moment-text-effect-child w-full font-medium">Delete</span>
-        </div>
-      </div>
+       <div v-if="isDashboard">
+         <div v-if="isDropdownOpen" @mouseleave="closeMenu" class="w-60 bg-white rounded-lg shadow-lg p-2 border border-gray-200 absolute top-8 z-50 right-4">
+           <div @click.stop="shareWishlist" class="flex relative items-center p-2 group moment-text-effect-parent cursor-pointer">
+             <i class="fa-regular fa-arrow-up-from-bracket moment-text-effect-child"></i>
+             <span class="ml-2 text-gray-800 moment-text-effect-child w-full font-medium">Share wishlist with friends</span>
+           </div>
+           <div class="flex relative items-center p-2 group moment-text-effect-parent cursor-pointer border-t border-gray-200" @click.stop="$emit('editWishlist', wishlist)">
+             <i class="fa-light fa-pen-to-square moment-text-effect-child"></i>
+             <span class="ml-2 text-gray-800 moment-text-effect-child w-full font-medium">Edit wishlist</span>
+           </div>
+           <div class="flex relative items-center p-2 group moment-text-effect-parent cursor-pointer border-t border-gray-200" @click.stop="$emit('deleteWishlist', wishlist.id)">
+             <i class="fa-light fa-light fa-circle-xmark moment-text-effect-child"></i>
+             <span class="ml-2 text-gray-800 moment-text-effect-child w-full font-medium">Delete</span>
+           </div>
+         </div>
+       </div>
+       <div v-if="!isDashboard && !isExplore">
+         <div v-if="isDropdownOpen" @mouseleave="closeMenu" class="w-60 bg-white rounded-lg shadow-lg p-2 border border-gray-200 absolute top-8 z-50 right-4">
+           <div @click.stop="shareWishlist" class="flex relative items-center p-2 group moment-text-effect-parent cursor-pointer">
+             <i class="fa-regular fa-arrow-up-from-bracket moment-text-effect-child"></i>
+             <span class="ml-2 text-gray-800 moment-text-effect-child w-full font-medium">Share wishlist</span>
+           </div>
+          
+         </div>
+       </div>
     </div>
-
+    
     <!-- Content -->
     <div class="flex flex-col space-y-2">
       <!-- Tag -->
@@ -66,6 +77,10 @@ import { eventBus } from '@/eventBus.js';
 export default {
   name: 'WishlistCard',
   props: {
+    user: {
+      type: Object,
+      required: true
+    },
     wishlist: {
       type: Object,
       required: true,
@@ -74,7 +89,17 @@ export default {
       required: true,
     },
   },
+
+  data(){
+    return{
+      currentUser: null,
+    }
+  },
+  
   computed: {
+    isWishOwner() {
+            return this.wishlist.user?.username === this.currentUser.username;
+        },
     isDashboard() {
       return this.$route.path === '/dashboard';
     },
@@ -104,15 +129,31 @@ export default {
       return categoryImages[this.wishlist.category.slug];
     },
   },
+  async created() {
+    this.loadCurrentUser(); // Load user data when component is created
+  },
   methods: {
+        
+    loadCurrentUser() {
+      const userData = JSON.parse(localStorage.getItem('user'));
+      if (userData) {
+        this.currentUser = userData;
+      }
+    },
     toggleMenu() {
       this.$emit('toggleDropdown', this.wishlist.id);
     },
     closeMenu() {
       this.$emit('closeDropdown', this.wishlist.id);
     },
+    shareWishlist(){
+      this.$emit('shareWishlist', this.wishlist.id, this.user.username ? this.user.username:this.currentUser.username);
+    },
     viewWishlist() {
-      this.$router.push({ name: 'Wishlist', params: { id: this.wishlist.id } });
+      const routeParams = this.isWishOwner
+        ? { id: this.wishlist.id, username: this.currentUser.username }
+        : { id: this.wishlist.id, username: this.user.username };
+      this.$router.push({ name: 'Wishlist', params: routeParams });
     },
     async toggleLike() {
       try {

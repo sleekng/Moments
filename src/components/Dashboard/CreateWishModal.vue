@@ -11,12 +11,11 @@
             </div>
             <img src="/assets/close.svg" alt="Close" class="h-6 w-6 cursor-pointer" @click="close" />
           </div>
-
           <div class="grid md:grid-cols-3 gap-4 p-6">
             
             <div class="md:col-span-1">
               <div class="bg-gray-100 rounded-lg overflow-hidden w-[200px] h-[200px] flex items-center justify-center">
-                <img :src="imagePreview || '/assets/wishlist-category-placeholder.svg'" alt="Placeholder" class="object-cover w-full h-full" />
+                <img :src="imagePreview || selectedWishlist.photo" alt="Placeholder" class="object-cover w-full h-full" />
               </div>
               <label class="my-4 py-2 bg-gray-200 rounded-full block text-center cursor-pointer w-[200px]">
                 Upload photo
@@ -49,6 +48,10 @@
                     <select v-model="form.currency" class="absolute right-3 top-1/2 transform bg-transparent -translate-y-1/2">
                       <option value="NGN">NGN</option>
                       <option value="USD">USD</option>
+                      <option value="EUR">EUR</option>
+                      <option value="GBP">GBP</option>
+                      <option value="CAD">CAD</option>
+                      <option value="GHS">GHS</option>
                     </select>
                   </div>
                 </div>
@@ -124,6 +127,10 @@ export default {
       required: true,
     },
     wish: {
+      type: Object,
+      default: null,
+    },
+    selectedWishlist: {
       type: Object,
       default: null,
     }
@@ -225,8 +232,17 @@ export default {
     async saveWish() {
       const formData = new FormData();
       formData.append('wishlistId', this.wishlistId);
+      
 
-      if (this.imageFile) formData.append('photo', this.imageFile);
+      if (this.imageFile) {
+        formData.append('photo', this.imageFile);
+      } else {
+        // Fetch the category image and convert it to a Blob
+        const response = await fetch(this.selectedWishlist.photo);
+        const blob = await response.blob();
+        const file = new File([blob], 'category-image.jpg', { type: blob.type });
+        formData.append('photo', file);
+      }
       formData.append('name', this.form.name);
       formData.append('quantity', this.form.quantity);
       formData.append('amount', this.form.amount);

@@ -9,6 +9,7 @@
       
       <div v-if="!isSearching">
         <FriendorWishlist 
+           @shareWishlist = "shareWishlist"
           v-if="currentWishlistsHaveItems" 
           :activeTab="activeTab" 
           :wishlists="currentWishlists" 
@@ -106,6 +107,10 @@
     },
   },
     methods: {
+
+      shareWishlist(wishlistId, wishlistUser){
+      this.$emit('shareWishlist', wishlistId, wishlistUser);
+    },
 
       handleFriendRequestSent({ friend, message }) {
       // Update the searchResults array to reflect the new friendship status

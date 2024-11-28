@@ -14,7 +14,7 @@
        
       />
 
-      <div class="grid grid-cols-2 w-full lg:grid-cols-4 gap-4 lg:gap-6 px-4 lg:px-12 py-6 pb-12 bg-white rounded-b-lg" @mouseleave="handleCloseDropdown">
+      <div class="grid grid-cols-2 w-full lg:grid-cols-4 gap-4 lg:gap-6 px-4 lg:px-12 py-6 pb-12 bg-white rounded-b-lg " @mouseleave="handleCloseDropdown">
         <!-- Empty State Centered -->
         <div v-if="activeTab === 'myWishes' && myWishes.length === 0" class="col-span-2 lg:col-span-4 flex justify-center">
           <EmptyState 
@@ -29,7 +29,7 @@
         </div>
 
         <div v-if="activeTab === 'myWishes' && myWishes.length > 0 && currentUser?.username === currentWishlist?.user.username" 
-             class="flex flex-col items-center justify-center bg-gray-100 rounded-lg p-4 py-8 cursor-pointer min-h-[360px]" 
+             class="flex flex-col items-center justify-center bg-gray-100 rounded-lg p-4 py-8 cursor-pointer lg:min-h-[360px] " 
              @click="showCreateWishModal = true">
           <div class="flex items-center justify-center w-12 h-12 bg-black rounded-full mb-4">
             <img src="/assets/add.svg" alt="Add" class="h-5 w-5">
@@ -69,12 +69,14 @@
           @closeDropdown="handleCloseDropdown" 
           @editWish="openEditWishModal"
           @reserved="reservedWish"
+          @updateSavedStatus="handleUpdateSavedStatus"
         />
       </div>
     </div>
 
     <!-- Modals -->
     <WishDetailView 
+    :isWishSaved="isWishSaved"
       @deleteWish="handleDeleteWish" 
       @editWish="openEditWishModal" 
       @wishUpdated="handleWishUpdate"
@@ -85,11 +87,14 @@
        @reserved="reservedWish"
        @requestAddress="requestAddress"
        :isRequestingAddress="isRequestingAddress"
+       @updateSavedStatus="handleUpdateSavedStatus"
+
     />
 
     <CreateWishModal  
       v-if="showCreateWishModal"     
       @createWish="createdWish"
+      :selectedWishlist="currentWishlist"
       @updateWish="updatedWish"
       :wishlistId="currentWishlist.id"
       :wish="editingWish"
@@ -161,6 +166,8 @@ export default {
   },
   data() {
     return {
+      savedWishes: new Set(), // Add this to track saved wishes
+      isWishSaved:false,
       giftReservedWish:null,
       isRequestingAddress:false,
       showGiftReservedModal: false,
@@ -222,6 +229,22 @@ export default {
     this.loadData();
   },
   methods: {
+    handleUpdateSavedStatus(wishId, isSaved) {
+      this.loadData();
+    },
+
+    async fetchSavedWishes() {
+        try {
+            const response = await this.$axios.get(`${this.$baseURL}/saved-wishes`, {
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+            });
+            if (response.data.success) {
+                this.savedWishes = new Set(response.data.data.map(wish => wish.id));
+            }
+        } catch (error) {
+            console.error('Error fetching saved wishes:', error);
+        }
+    },
 
     reservedWish(wish){
       this.giftReservedWish = wish
@@ -322,8 +345,9 @@ export default {
       this.showWishDetailsModal = false;
       this.showCreateWishModal = true;
     },
-    prevWish(wishId) {
+    prevWish(wishId, isWishSaved) {
       this.showWishDetailsModal = true;
+      this.isWishSaved = isWishSaved
       this.showPrevWish = this.wishes.find(w => w.id === wishId);
     },
     closeWishDetailsModal() {

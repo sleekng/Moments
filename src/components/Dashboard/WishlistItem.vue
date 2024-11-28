@@ -3,28 +3,28 @@
     <div class="w-36 h-36">
       <img :src="imgSrc" alt="Wishlist Image" class="w-full h-full rounded-xl object-cover bg-slate-300">
     </div>
-    <div class="grid md:grid-cols-12 gap-6 grid-cols-1 w-full items-center">
+    <div class="grid lg:grid-cols-12 lg:gap-6 grid-cols-1 w-full items-center">
       <!-- First Column with Vertical Border -->
-      <div class="flex-1 flex flex-col justify-between space-y-8 col-span-4 lg:px-6 pb-4 lg:pb-0 lg:border-r">
-        <div>
-          <h2 class="text-lg font-semibold text-gray-900 place-items-start">{{ title }}</h2>
+      <div class="flex-1 flex w-full flex-col justify-between space-y-2 lg:space-y-8 col-span-4 lg:px-6 pb-4 lg:pb-0 lg:border-r">
+        <div class="w-full">
+          <h2 class="lg:text-lg mt-2 font-semibold text-gray-900 place-items-start">{{ title }}</h2>
         </div>
-        <div class="flex justify-between lg:space-x-8 md:space-x-4">
+        <div class="flex justify-between space-x-3   lg:space-x-8 md:space-x-4">
           <div>
             <p class="text-sm text-gray-500 mb-2">Likes</p>
             <p class="text-xl font-bold text-gray-900">{{ likes ? likes : 0 }}</p>
           </div>
           <div>
             <p class="text-sm text-gray-500 mb-2">Views</p>
-            <p class="text-xl font-bold text-gray-900">{{ views ? views : 0 }}</p>
+            <p class="lg:text-xl font-bold text-gray-900">{{ views ? views : 0 }}</p>
           </div>
           <div>
-            <p class="text-sm text-gray-500 mb-2">Saves</p>
-            <p class="text-xl font-bold text-gray-900">{{ saves ? saves : 0 }}</p>
+            <p class="lg:text-sm text-gray-500 mb-2">Saves</p>
+            <p class="lg:text-xl font-bold text-gray-900">{{ saves ? saves : 0 }}</p>
           </div>
           <div>
             <p class="text-sm text-gray-500 mb-2">Created</p>
-            <p class="text-xl font-bold text-gray-900">{{ created }}</p>
+            <p class="lg:text-xl font-bold text-gray-900">{{ created }}</p>
           </div>
         </div>
       </div>
@@ -36,12 +36,12 @@
           <div v-for="wish in topWishes" :key="wish.id" class="relative">
             <div class="bg-white cursor-pointer rounded-lg shadow-lg overflow-hidden w-[90px] relative card group">
               <div class="relative">
-                <img :src="wish.photo || '/assets/wishlist-category-placeholder.svg'" alt="Wishlist Item" class="lg:w-24 lg:h-24 w-16 object-cover">
+                <img :src="wish.photo || '/assets/wishlist-category-placeholder.svg'" alt="Wishlist Item" class="lg:w-24 lg:h-24 w- object-cover">
               </div>
               <!-- Wish Detail -->
               <div class="absolute bottom-0 left-0 p-1 bg-gradient-to-t from-black z-50 to-transparent w-full text-white">
-                <h2 class="text-[8px] font-semibold">{{ wish.name }}</h2>
-                <div class="flex justify-between items-center mt-2">
+                <h2 class="text-[8px] font-semibold ">{{ wish.name }}</h2>
+                <div class="flex justify-between items-center mt-1">
                   <div class="flex items-center">
                     <img src="/assets/heart.svg" alt="Likes" class="w-3 h-3 mr-2">
                     <span class="text-[9px]">{{ likes }}</span>

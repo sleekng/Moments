@@ -13,7 +13,7 @@
       </div>
     </div>
     <div class="pt-20 h-[650px] pb-10 overflow-y-auto">
-      <NotificationItem v-for="notification in filteredNotifications" :key="notification.id" :notification="notification" @shareAddress="shareAddress" />
+      <NotificationItem v-for="notification in filteredNotifications" :key="notification.id" :notification="notification" @shareAddress="shareAddress" @cancelReservation="cancelReservation" />
       <div v-if="filteredNotifications.length === 0" class="flex flex-col items-center justify-center h-full">
         <img src="/assets/notification-bell.svg" alt="No Notifications" class="w-12 h-12 mb-4" />
         <p class="text-center text-gray-500">You don't have any notifications at the moment.</p>
@@ -56,6 +56,10 @@ export default {
     },
     shareAddress(wishID) {
       this.$emit('shareAddress', wishID);
+    },
+    cancelReservation(wishID) {
+      
+      this.$emit('cancelReservation', wishID);
     }
   }
 };

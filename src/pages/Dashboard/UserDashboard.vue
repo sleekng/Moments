@@ -16,6 +16,8 @@
               <div class="text-lg font-medium text-center text-gray-800 leading-relaxed">Make a New wishlist</div>
             </div>
             <WishlistCard
+            :user="user"
+            @shareWishlist = "shareWishlist"
               v-for="wishlist in wishlists"
               :key="wishlist.id"
               :wishlist="wishlist"
@@ -44,7 +46,7 @@
   
         <div v-if="activeTab === 'reserved'">
           
-          <ReservedWishes v-if="reservedWishes.length > 0" @editWish="openEditWishModal" @deleteWish="handleDeleteWish" :wishes="reservedWishes" @preview="prevWish" />
+          <ReservedWishes v-if="reservedWishes.length > 0" @editWish="openEditWishModal" @deleteWish="handleDeleteWish" :wishes="reservedWishes" @preview="prevWish" @newUpdate="newUpdate" />
           <EmptyState 
             v-else 
             title="No wishes reserved by you" 
@@ -54,7 +56,7 @@
         </div>
   
         <div v-if="activeTab === 'saved'">
-          <SavedWishes v-if="savedwishes.length > 0" :wishes="savedwishes" @editWish="openEditWishModal" @deleteWish="handleDeleteWish" @preview="savedPrevWish" />
+          <SavedWishes v-if="savedwishes.length > 0" :wishes="savedwishes" @editWish="openEditWishModal" @deleteWish="handleDeleteWish" @preview="savedPrevWish" @newUpdate="newUpdate" />
           <EmptyState 
             v-else 
             title="No saved wishes" 
@@ -90,7 +92,7 @@
          <WelcomeModal v-if="showWelcomeModal" @close="closeWelcomeModal" />
 
       <Congratulations v-if="showInitialModal" @close="closeInitialModal" />
-      <WishDetailView  :isRequestingAddress="isRequestingAddress"     @requestAddress="requestAddress" @editWish="openEditWishModal" v-if="showWishDetailsModal" @close="closeWishDetailsModal" :wish="showPrevWish ? showPrevWish : showSavedPrevWish" @unSaveWish="unSaveWish" />
+      <WishDetailView :isWishSaved="isWishSaved" :isRequestingAddress="isRequestingAddress"     @requestAddress="requestAddress" @editWish="openEditWishModal" v-if="showWishDetailsModal" @close="closeWishDetailsModal" :wish="showPrevWish ? showPrevWish : showSavedPrevWish" @unSaveWish="unSaveWish"  @newUpdate="newUpdate" />
 
 
       <AnalyticsModal
@@ -144,6 +146,7 @@ export default {
   data() {
     return {
       showWelcomeModal: false,
+      isWishSaved: false,
       isRequestingAddress:false,
       user: {
         username: '',
@@ -232,6 +235,16 @@ export default {
 
 
   methods: {
+    newUpdate(){
+  
+      this.loadUserData();
+      this.fetchAnalyticsData();
+
+      this.loadData();
+    },
+    shareWishlist(wishlistId, wishlistUser){
+      this.$emit('shareWishlist', wishlistId, wishlistUser);
+    },
     closeBirthdayModal() {
       this.showBirthdayModal = false;
     },
@@ -445,12 +458,14 @@ export default {
       this.fetchAnalyticsData()
       this.showAnalyticsModal = true;
     },
-    prevWish(wishId) {
+    prevWish(wishId , isWishSaved) {
       this.showWishDetailsModal = true;
+      this.isWishSaved = isWishSaved
       this.showPrevWish = this.reservedWishes.find(w => w.id === wishId);
     },
-    savedPrevWish(wishId) {
+    savedPrevWish(wishId, isWishSaved) {
       this.showWishDetailsModal = true;
+      this.isWishSaved = isWishSaved
       this.showSavedPrevWish = this.savedwishes.find(w => w.id === wishId);
     },
     closeWishDetailsModal() {

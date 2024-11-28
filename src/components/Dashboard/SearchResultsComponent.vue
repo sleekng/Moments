@@ -20,7 +20,7 @@
       <div v-for="friend in results" :key="friend.id" 
       class="flex flex-col sm:flex-row justify-between w-full p-4 border-b border-gray-300">
         
-        <router-link :to="`user/${friend.username}`" class="flex lg:items-center space-x-4 cursor-pointer" >
+        <router-link :to="`/${friend.username}`" class="flex lg:items-center space-x-4 cursor-pointer" >
           <img :src="friend.avatar || '/assets/profile-7.svg'" 
                alt="Profile" 
                class="lg:w-20 lg:h-20 w-16 h-16 rounded-full" />
@@ -67,7 +67,7 @@
       
      <div v-else class="grid grid-cols-4 gap-4">
     
-      <div v-for="wishlist in results" :key="wishlist.id"  @click="viewWishlist(wishlist.id)" class="card group hover:border-primaryColor h-full cursor-pointer" :class="['bg-white rounded-lg shadow-md p-4 border', isDropdownOpen ? 'border-primaryColor' : 'border-gray-100']">
+      <div v-for="wishlist in results" :key="wishlist.id"  @click="viewWishlist(wishlist.id,wishlist.user.username)" class="card group hover:border-primaryColor h-full cursor-pointer" :class="['bg-white rounded-lg shadow-md p-4 border', isDropdownOpen ? 'border-primaryColor' : 'border-gray-100']">
     <div  class="flex items-center space-x-2 mt-2 pb-2">
       <div class="flex items-center space-x-2">
         <img :src="wishlist.user.avatar || '/assets/avatar.svg'" alt="Avatar" class="w-6 h-6 rounded-full">
@@ -192,8 +192,16 @@
           return 'Send friend request';
       }
     },
-    viewWishlist(wishlistId) {
-      this.$router.push({ name: 'Wishlist', params: { id: wishlistId } });
+    viewWishlist(wishlistId, wishlistUser) {
+/*       this.$router.push({ name: 'Wishlist', params: { id: wishlistId } }); */
+
+
+      window.location.href = this.$router.resolve({
+        name: "Wishlist",
+        params: { id: wishlistId , username: wishlistUser},
+      }).href;
+
+
     },
     async handleFriendAction(friend) {
       if (friend.friendship_status === 'accepted' || 

@@ -25,12 +25,25 @@ import NotFound from '@/pages/NotFound.vue';
 const routes = [
   { path: '/', name: 'Home', component: Home },
   { path: '/explore', name: 'explore', component: UserExplore },
-  { path: '/account', name: 'Account', component: Account },
+
+      {
+      path: '/account',
+      component: Account,
+      children: [
+        {
+          path: 'delivery',
+          component: () => import('@/components/Dashboard/AddressSettings.vue'),
+          name: 'AddressSettings'
+        },
+        // other child routes for Account.vue
+      ]
+    },
+
   { path: '/archived', name: 'Archived', component: Archived },
   { path: '/view-archived', name: 'ArchivedView', component: ArchivedView },
   { path: '/dashboard', name: 'dashboard', component: UserDashboard },
-  { path: '/wishlist/:id', name: 'Wishlist', component: Wishlist, props: true },
-  { path: '/user/:username', name: 'UsersProfile', component: UsersProfile, props: true },
+  { path: '/wishlist/:id/:username', name: 'Wishlist', component: Wishlist, props: true },
+  { path: '/:username', name: 'UsersProfile', component: UsersProfile, props: true },
 /*   { path: '/wishlist', name: 'Wishlist', component: Wishlist }, */
   { path: '/friends', name: 'Friends', component: Friends },
   { path: '/profile', name: 'Profile', component: Profile },

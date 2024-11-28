@@ -1,7 +1,7 @@
 <template>
 <!-- Wishes Grid -->
 <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 px-4 lg:px-12 py-6 pb-12 bg-white rounded-b-lg" @mouseleave="handleCloseDropdown">
-    <WishCard  v-for="(wish, index) in wishes" :status="'saved'" :key="index" :wish="wish" @preview="preview" :openDropdownId="openDropdownId" @toggleDropdown="handleToggleDropdown" @closeDropdown="handleCloseDropdown" />
+    <WishCard  @cancelReservation="cancelReservation"  v-for="(wish, index) in wishes" :status="'saved'" :key="index" :wish="wish" @preview="preview" :openDropdownId="openDropdownId" @toggleDropdown="handleToggleDropdown" @closeDropdown="handleCloseDropdown" @newUpdate="newUpdate"  @reserved="newUpdate" />
 </div>
 </template>
 
@@ -29,9 +29,19 @@ export default {
     },
 
     methods: {
-        preview(wishId) {
-        this.$emit('preview', wishId)
-        console.log(wishId)
+        handleUpdateSavedStatus(wishId, isSaved) {
+      const wish = this.wishes.find(w => w.id === wishId);
+      if (wish) {
+        wish.isSaved = isSaved;
+        
+      }
+    },
+        newUpdate(){
+            alert('working')
+            this.$emit('newUpdate');
+        },
+        preview(wishId, isWishSaved) {
+        this.$emit('preview', wishId, isWishSaved)
         },
         handleToggleDropdown(wishId) {
             this.openDropdownId = this.openDropdownId === wishId ? null : wishId;

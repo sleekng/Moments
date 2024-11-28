@@ -1,11 +1,11 @@
 <template>
   <div class="lg:bg-gray-100 h-screen overflow-y-auto">
-    <AppHeader @showCategoryModal="$emit('showCategoryModal')" />
+    <AppHeader @showCategoryModal="$emit('showCategoryModal')" @navigateToAddressSettings="setCurrentPage('delivery')" />
     <div class="container mx-auto py-20 hidden lg:block">
       <div class="max-w-screen-lg mx-auto rounded-lg bg-white shadow-lg p-10 mt-12">
         <div class="flex gap-8 items-start mb-10">
           <!-- Users profile image -->
-          <img :src="avatar" alt="Profile" class="lg:w-20 lg:h-20 w-24 h-24 rounded-full" />
+          <img :src="avatar" alt="Profile" class="lg:w-20 lg:h-20 w-24 h-24 rounded-full border  border-gray-200" />
           <div>
             <h1 class="text-2xl font-medium text-gray-900">Your Account</h1>
             <p class="text-gray-600 mt-1">Update your username and manage your account</p>
@@ -79,6 +79,13 @@ export default {
         default:
           return 'AccountSettings';
       }
+    }
+  },
+  created() {
+    // Set the current page based on the query parameter
+    const page = this.$route.query.page;
+    if (page) {
+      this.setCurrentPage(page);
     }
   },
   

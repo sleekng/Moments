@@ -14,6 +14,8 @@
 
         <div v-if="wishlists.length > 0" class="grid grid-cols-1 lg:grid-cols-4 gap-6 lg:px-12 py-8 rounded-b-lg bg-white">
           <WishlistCard
+            :user="user"
+              @shareWishlist = "shareWishlist"
             v-for="wishlist in wishlists"
             :key="wishlist.id"
             :wishlist="wishlist"
@@ -93,9 +95,21 @@
     },
    
     async mounted() {
-      await this.fetchUserData();
+      this.checkUserAndRedirect();
+      
     },
     methods: {
+      shareWishlist(wishlistId, wishlistUser){
+      this.$emit('shareWishlist', wishlistId, wishlistUser);
+    },
+      async checkUserAndRedirect() {
+      const loggedInUser = JSON.parse(localStorage.getItem('user'));
+      if (loggedInUser && loggedInUser.username === this.username) {
+        this.$router.push('/dashboard');
+      }else{
+        await this.fetchUserData();
+      }
+    },
       async fetchUserData() {
         try {
           const response = await this.$axios.get(`${this.$baseURL}/users/${this.username}`, {

@@ -22,9 +22,8 @@
         Verify Email
     </button>
 
-    <a href="#" class="text-center text-sm text-gray-600 mt-4">
-        Back to sign in
-    </a>
+    <router-link to="/login" class="text-center text-sm text-gray-600 mt-4">Back to sign in</router-link>
+
 
     <div v-if="message" class="mt-4 text-sm" :class="{'text-green-600': success, 'text-red-600': !success}">
         {{ message }}

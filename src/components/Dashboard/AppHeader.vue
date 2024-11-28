@@ -2,12 +2,11 @@
   <header class="flex justify-between items-center bg-white px-4 lg:px-16 border-b border-gray-300 fixed w-full top-0 z-50 lg:h-20 h-14">
     <!-- Logo and Navigation Toggle for Mobile -->
     <div class="flex items-center lg:hidden">
-      <img @click="toggleMobileMenu" src="/assets/mobile-nav.svg" alt="Menu" class="h-5 w-5 mr-4 cursor-pointer" />
+      <img @click="toggleMobileMenu" src="/assets/mobile-nav.svg" alt="Menu" class="h-5 w-5 mr-4 cursor-pointer " />
       <router-link to="/">
         <img src="/assets/logo.svg" alt="Moments Hub Logo" class="h-8" />
       </router-link>
     </div>
-
 
     <!-- Logo and Navigation for Desktop -->
     <div class="hidden lg:flex items-center h-full">
@@ -60,8 +59,8 @@
         <img v-if="showNotifications" src="/assets/notification-arrow.svg" alt="Notifications" class="h-6 w-6 absolute" />
 
         <!-- Notifications Dropdown -->
-        <div v-if="showNotifications"   class="absolute -right-20 top-10 w-[450px] bg-white border overflow-hidden rounded-lg shadow-lg z-50">
-          <NotificationDropdown :notifications="notifications" @shareAddress="showShareAddressModalMethod" />
+        <div v-if="showNotifications" class="absolute -right-20 top-10 w-[450px] bg-white border overflow-hidden rounded-lg shadow-lg z-50">
+          <NotificationDropdown :notifications="notifications" @shareAddress="showShareAddressModalMethod" @cancelReservation="cancelReservation" />
         </div>
       </div>
 
@@ -100,22 +99,22 @@
   </header>
 
   <!--Mobile Notification and Profile Section -->
-  <div v-if="showNotifications"  class="fixed left-0 lg:hidden top-12 w-full h-screen bg-white border overflow-hidden rounded-lg shadow-lg z-40">
-    <NotificationDropdown  :notifications="notifications" @shareAddress="showShareAddressModalMethod" />
+  <div v-if="showNotifications" class="fixed left-0 lg:hidden top-12 w-full h-screen bg-white border overflow-hidden rounded-lg shadow-lg z-40">
+    <NotificationDropdown :notifications="notifications" @shareAddress="showShareAddressModalMethod" @cancelReservation="cancelReservation" />
   </div>
 
   <!-- Mobile Menu -->
-  <div v-if="showMobileMenu" @click="toggleMobileMenu" class="fixed inset-0 z-50 bg-gray-900 bg-opacity-50 flex flex-col lg:hidden">
+  <div v-if="showMobileMenu" @click.stop="toggleMobileMenu" class="fixed inset-0 z-50 bg-gray-900 bg-opacity-50 flex flex-col lg:hidden">
     <div class="bg-white w-72 h-screen space-y-2 shadow-lg">
       <div class="flex items-center p-6 justify-between">
         <div class="flex items-center">
           <img :src="user.avatar || '/assets/profile.svg'" alt="Profile" class="w-12 h-12 rounded-full mr-4" />
           <div>
-            <p class="text-lg font-semibold text-gray-900">{{ user.first_name }} {{ user.last_name }}</p>
+            <p class="text-base font-semibold text-gray-900">{{ user.first_name }} {{ user.last_name }}</p>
             <p class="text-sm text-gray-500">@{{ user.username }}</p>
           </div>
         </div>
-        <img @click="toggleMobileMenu" src="/assets/close.svg" alt="Close" class="h-5 w-5 cursor-pointer self-start" />
+        <img @click.stop="toggleMobileMenu" src="/assets/close.svg" alt="Close" class="h-5 w-5 z-50 relative cursor-pointer self-start" />
       </div>
       <hr class="my-4" />
       <div class="px-6">
@@ -134,7 +133,7 @@
       </div>
     </div>
   </div>
-  <ShareAddressModal @close="closeShareAddressModal" :fetchAddresses="fetchAddresses" :wishID="selectedWishID" :showShareAddressModal="showShareAddressModal"/>
+  <ShareAddressModal @close="closeShareAddressModal" :wishID="selectedWishID" :showShareAddressModal="showShareAddressModal"/>
 </template>
 
 <script>
@@ -152,9 +151,9 @@ export default {
   },
   data() {
     return {
-      showShareAddressModal:false,
+      showShareAddressModal: false,
       selectedWishID: null,
-      loading: false, // Add loading state
+      loading: false,
       searchQuery: '',
       showNotifications: false,
       showProfileDropdown: false,
@@ -170,19 +169,20 @@ export default {
       wishlists: [],
       filteredPeople: [],
       filteredWishlists: [],
-      notifications: [], // Add notifications array
+      notifications: [],
     };
   },
   async mounted() {
     this.loadUserData();
     this.getRecentSearches();
     document.addEventListener('click', this.handleClickOutside);
-    await this.fetchNotifications(); // Fetch notifications on mount
+    await this.fetchNotifications();
   },
   beforeDestroy() {
     document.removeEventListener('click', this.handleClickOutside);
   },
   methods: {
+    
     async fetchNotifications() {
       try {
         const response = await this.$axios.get(`${this.$baseURL}/notifications`, {
@@ -196,7 +196,6 @@ export default {
       }
     },
 
-
     closeShareAddressModal() {
       this.showShareAddressModal = false;
     },
@@ -204,26 +203,11 @@ export default {
     showShareAddressModalMethod(wishID) {
       this.selectedWishID = wishID;
       this.showShareAddressModal = true;
-      console.log('working');
-      
-      
+     
     },
 
-    
-    async fetchAddresses() {
-      try {
-        const response = await this.$axios.get(`${this.$baseURL}/addresses`,{
-                headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
-              });
-        if (response.data.success) {
-          return response.data.data;
-        }
-      } catch (error) {
-        console.error('Error fetching addresses:', error);
-        return [];
-      }
-    },
-    
+ 
+
     handleClickOutside(event) {
       const searchDropdown = this.$refs.searchDropdown;
       if (searchDropdown && !searchDropdown.contains(event.target)) {
@@ -254,7 +238,7 @@ export default {
       this.wishlists = recentSearches.wishlists;
     },
     async search(type, value) {
-      this.loading = true; // Start loading
+      this.loading = true;
       try {
         const response = await fetch(`${this.$baseURL}/explore/search?type=${type}&value=${value}`, {
           method: 'GET',
@@ -278,21 +262,52 @@ export default {
             this.filteredWishlists = result.data.map(item => ({
               name: item.title,
               id: item.id,
-              username: 'fetch username accordingly', // Placeholder for username handling
+              photo: item.photo,
+              username: item.user.username,
               wishes: item.wishes_count
             }));
           }
         }
       } catch (error) {
         console.error('Search error:', error);
-      }finally {
-        this.loading = false; // End loading
+      } finally {
+        this.loading = false;
+      }
+    },
+    async cancelReservation(wishId) {
+      alert('working')
+      eventBus.setLoading(true);
+      try {
+        await this.$axios.put(
+          `${this.$baseURL}/wishes/${wishId}`,
+          { 
+            status: null,
+            delivery_address:null
+           },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            },
+          }
+        );
+       
+        eventBus.onSuccess("Wish reservation Cancelled.");
+      } catch (error) {
+        console.error("Error canceling reservation:", error);
+        const errorMsg =
+          error.response?.data?.message ||
+          "Error canceling reservation. Please try again.";
+        eventBus.onError(errorMsg);
+      } finally {
+        eventBus.setLoading(false);
       }
     },
     showRecentSearches() {
       this.showSearchDropdown = true;
-      this.filteredPeople = [];
-      this.filteredWishlists = [];
+      if (!this.searchQuery) {
+        this.filteredPeople = [];
+        this.filteredWishlists = [];
+      }
     },
     filterResults() {
       const query = this.searchQuery.toLowerCase();
@@ -300,7 +315,8 @@ export default {
         this.search('friends', query);
         this.search('wishlists', query);
       } else {
-        this.showRecentSearches();
+        this.filteredPeople = [];
+        this.filteredWishlists = [];
       }
     },
     selectResult(result, type) {

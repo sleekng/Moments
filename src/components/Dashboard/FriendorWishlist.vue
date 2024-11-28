@@ -4,7 +4,10 @@
       <div v-if="activeTab === 'Wishes' && wishlists.trending" class="mb-8">
         <div class="lg:text-2xl text-lg font-bold mb-4">Trending Wishlist Everyone's Talking About!</div>
         <div class="flex w-full overflow-x-auto space-x-6">
+      
           <WishlistCard v-for="wishlist in wishlists.trending" 
+           :user="wishlist.user"
+            @shareWishlist = "shareWishlist"
                         :key="wishlist.id" 
                         :wishlist="wishlist" 
                         :openDropdownId="openDropdownId" 
@@ -19,6 +22,8 @@
         <div class="lg:text-2xl text-lg font-bold mb-4">Recently Added Wishlist You Can't Miss</div>
         <div class="flex w-full overflow-x-auto space-x-6">
           <WishlistCard v-for="wishlist in wishlists.recent" 
+            @shareWishlist = "shareWishlist"
+            :user="wishlist.user"
                         :key="wishlist.id" 
                         :wishlist="wishlist" 
                         :openDropdownId="openDropdownId" 
@@ -33,6 +38,8 @@
         <div class="lg:text-2xl text-lg font-bold mb-4">It's Raining Birthdays</div>
         <div class="flex w-full overflow-x-auto space-x-6">
           <WishlistCard v-for="wishlist in wishlists.birthdays" 
+            @shareWishlist = "shareWishlist"
+            :user="wishlist.user"
                         :key="wishlist.id" 
                         :wishlist="wishlist" 
                         :openDropdownId="openDropdownId" 
@@ -92,6 +99,9 @@
       };
     },
     methods: {
+      shareWishlist(wishlistId, wishlistUser){
+      this.$emit('shareWishlist', wishlistId, wishlistUser);
+    },
       preview(wishId) {
         this.$emit('preview', wishId);
       },

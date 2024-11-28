@@ -32,7 +32,7 @@
       @click="handleSubmit" 
       :disabled="isSubmitting"
       :class="opacity"
-      class="max-w-fit px-24 py-3 bg-primaryColor text-white font-semibold text-lg rounded-full shadow-lg"
+      class="max-w-fit lg:px-24 px-8 py-2 md:py-3 bg-primaryColor text-white font-semibold text-lg rounded-full shadow-lg"
     >
       Log into Account
     </button>

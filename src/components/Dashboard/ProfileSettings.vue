@@ -3,7 +3,7 @@
   <div class="lg:w-3/4 space-y-8 pb-8">
     <!-- Profile Image Section -->
     <div class="flex lg:flex-row flex-col items-center gap-4">
-      <img :src="avatarSrc" alt="Avatar" class="lg:w-20 lg:h-20 w-24 h-24 rounded-full" />
+      <img :src="avatarSrc" alt="Avatar" class="lg:w-20 lg:h-20 w-24 h-24 rounded-full border  border-gray-200" />
       <input type="file" ref="fileInput" @change="handleImageUpload" style="display: none;" />
       <button @click="triggerFileInput" class="bg-gray-200 px-4 py-2 rounded-full text-gray-800">
         Change photo

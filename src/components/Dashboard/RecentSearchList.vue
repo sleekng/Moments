@@ -20,8 +20,8 @@
       <div v-if="wishlists.length" class="space-y-2">
         <p class="font-medium text-sm text-gray-500">Wishlist</p>
         <div v-for="wishlist in wishlists" :key="wishlist.name" class="flex items-center justify-between cursor-pointer">
-          <div class="flex items-center space-x-2" @click="viewWishlist(wishlist)">
-            <img src="/assets/wishlist-category-placeholder.svg" class="w-8 h-8" alt="Wishlist Icon">
+          <div class="flex items-center space-x-2" @click="viewWishlist(wishlist,wishlist.username )">
+            <img :src="wishlist.photo || '/assets/wishlist-category-placeholder.svg'" class="w-8 h-8 object-cover" alt="Wishlist Icon">
             <div>
               <span class="text-sm text-gray-700">{{ wishlist.name }}</span>
               <p class="text-xs text-gray-500">{{ wishlist.username }} • {{ wishlist.wishes }} Wishes</p>
@@ -45,10 +45,16 @@ export default {
     wishlists: Array
   },
   methods: {
-    viewWishlist(wishlist) {
-      this.$emit('selectResult', wishlist, 'wishlists');
-      // Use window.location.href to force a full page reload for wishlist
-      window.location.href = this.$router.resolve({ name: 'Wishlist', params: { id: wishlist.id } }).href;
+    viewWishlist(wishlist,wishlistUser) {
+
+      window.location.href = this.$router.resolve({
+        name: "Wishlist",
+        params: { id: wishlist.id , username: wishlistUser},
+      }).href;
+
+
+
+
     },
     viewPerson(person) {
       this.$emit('selectResult', person, 'people');
@@ -60,7 +66,6 @@ export default {
     removeWishlist(wishlist) {
       this.$emit('removeWishlist', wishlist);
     }
-    
   }
 };
 </script>

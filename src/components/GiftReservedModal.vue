@@ -36,7 +36,7 @@
             
           </div>
 
-          <div  class="flex justify-between">
+          <div  class="flex justify-between space-x-2">
             <button
                @click="$emit('close')"
               class="flex-1  text-gray-800 bg-[#F0F1F2] hover:shadow-lg transition-all font-medium py-3 px-4 rounded-full text-center focus:outline-none"
@@ -68,7 +68,7 @@
     name: 'GiftReservedModal',
     props: {
       wish:{
-        type: Object,
+        type: Object, 
       },
       title: {
         type: String,
@@ -80,7 +80,7 @@
       },
       imageSrc: {
         type: String,
-        default: '/assets/modal-illustration.svg',
+        default: '/assets/gif/Gift_animation.gif',
       },
       updateType: {
         type: String,

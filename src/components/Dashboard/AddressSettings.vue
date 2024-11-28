@@ -297,6 +297,7 @@ components:{
       this.private=option
     },
     async removeAddress(id) {
+      eventBus.setLoading(true);
       try {
         await fetch(`${this.$baseURL}/addresses/${id}`, {
           method: 'DELETE',
@@ -308,7 +309,9 @@ components:{
         await this.fetchAddresses();
       } catch (error) {
         console.error('Error removing address:', error);
-      }
+      } finally {
+    eventBus.setLoading(false);
+  }
     },
     randomCity() {
       const cities = ['Los Angeles', 'New York City', 'Houston', 'Chicago', 'Miami'];

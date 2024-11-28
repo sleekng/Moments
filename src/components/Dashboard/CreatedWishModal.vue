@@ -69,7 +69,7 @@
       },
       imageSrc: {
         type: String,
-        default: '/assets/modal-illustration.svg',
+        default: '/assets/gif/Gift_animation.gif',
       },
       updateType: {
         type: String,
