@@ -276,7 +276,7 @@
               <div class="mb-1 mt-4 text-2xl font-bold">{{ wish.name }}</div>
               <div class="flex items-center space-x-2">
                 <span class="text-xl font-semibold"
-                  >{{ wish.currency }} {{ wish.amount }}</span
+                  >{{ getCurrencySymbol(wish.currency) }} {{ wish.amount }}</span
                 >
                 <img
                   src="/assets/ellipse-18.svg"
@@ -559,14 +559,14 @@
               "
               class=""
             >
-              <div class="flex items-center text-sm lg:text-base">
+              <div class="flex items-center overflow-auto text-sm lg:text-base">
                 <div
-                  class="inline-flex items-center space-x-2 rounded-full px-4 py-2 bg-[#FEF8EF] mr-2"
+                  class="inline-flex  items-center space-x-2 rounded-full px-4 py-2 bg-[#FEF8EF] mr-2"
                 >
                   <i
                     class="fa-light fa-solid fa-circle-check text-[#DE900B]"
                   ></i>
-                  <span class="text-[#DE900B] font-medium">Reserved by</span>
+                  <span class="text-[#DE900B] whitespace-nowrap font-medium">Reserved by</span>
                   <div class="flex items-center space-x-2">
                     <img
                       :src="wish.gifter?.avatar || '/assets/avatar.svg'"
@@ -1087,6 +1087,14 @@ export default {
       isReceiving: false, // New data property to track Fulfilling state
       isUnReceiving: false, // New data property to track Fulfilling state
       localIsWishSaved: this.isWishSaved,
+      currencySymbols: {
+        NGN: '₦',
+        USD: '$',
+        EUR: '€',
+        GBP: '£',
+        CAD: 'C$',
+        GHS: '₵'
+      }
     };
   },
   // Add a watch to update local state when prop changes
@@ -1120,6 +1128,9 @@ export default {
     },
   },
   methods: {
+    getCurrencySymbol(currency) {
+      return this.currencySymbols[currency] || currency;
+    },
     async toggleSaveWish() {
       eventBus.setLoading(true);
       try {

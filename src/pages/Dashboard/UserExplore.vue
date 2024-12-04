@@ -1,8 +1,11 @@
 <template>
   <div class="bg-gray-100">
     <AppHeader @showCategoryModal="$emit('showCategoryModal')" />
-    <div v-if="!loading" class="px-4 md:px-16 lg:pt-20 lg:py-20">
-      <div class="flex justify-center items-center pt-20 mt-10 rounded-t-lg bg-black lg:bg-white">
+    <div class="flex lg:hidden justify-center items-center pt-20 w-full mt-10 rounded-t-lg bg-black lg:bg-white">
+      <SearchComponent :loading="isSearchingLoading" @startSearch="startSearch" @selectOption="selectOption" :selectedOption="selectedOption" />
+    </div>
+    <div v-if="!loading" class=" md:px-16 lg:pt-20 lg:py-20">
+      <div class="lg:flex hidden justify-center items-center pt-20 mt-10 rounded-t-lg bg-black lg:bg-white">
         <SearchComponent :loading="isSearchingLoading" @startSearch="startSearch" @selectOption="selectOption" :selectedOption="selectedOption" />
       </div>
       <TabNavigationsWishlist2 v-if="!isSearching" :activeTab="activeTab" @switchTab="setActiveTab" class="pt-4 lg:pt-20" />

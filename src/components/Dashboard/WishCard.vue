@@ -10,14 +10,11 @@
           alt="Wish Item"
           class="w-full h-[360px] object-cover"
         />
+        
         <button
           @click.stop="toggleMenu"
           v-if="
-            (isWishOwner &&
-              (wish.status === null || wish.status === 'reserved') &&
-              !wish.delivery_address) ||
-            (wish.status === 'reserved' && isDashboard) ||
-            (wish.status === 'fulfiled' && isDashboard)
+            (isWishOwner && (wish.status === null || wish.status === 'reserved') && !wish.delivery_address) ||  (wish.status === 'reserved' && isDashboard) || (wish.status === 'fulfiled') 
           "
           class="absolute z-30 top-3 right-2 p-1 bg-gray-200 rounded-full toggle-menu-button transition-opacity opacity-0 group-hover:opacity-100"
         >
@@ -50,8 +47,7 @@
         <template
           v-if="
             isWishOwner &&
-            (wish.status === null || wish.status === 'reserved') &&
-            !wish.delivery_address
+            (wish.status === null || wish.status === 'reserved' || wish.status === 'fulfiled' )
           "
         >
           <div
@@ -164,8 +160,42 @@
           </div>
         </template>
 
-        <!-- DropdownMenu FulFilled for Desktop -->
-        <template v-if="wish.status == 'fulfiled' && !isMobile">
+        <!-- DropdownMenu FulFilled for Desktop not isGifter -->
+        <template v-if=" !isWishOwner && (wish.status == 'fulfiled' &&   loggedInUser != wish.gifter.username ) && !isMobile">
+          <div
+            v-if="isDropdownOpen"
+            @mouseleave="closeMenu"
+            class="w-60 bg-white rounded-lg shadow-lg p-2 border border-gray-200 absolute top-8 z-40 right-4"
+          >
+          <div
+              @click.stop="toggleShareMenu"
+              class="flex items-center p-2 group moment-text-effect-parent cursor-pointer border-t border-gray-200"
+            >
+              <i
+                class="fa-light fa-light fa-circle-xmark moment-text-effect-child"
+              ></i>
+              <span
+                class="ml-2 text-gray-800 w-full moment-text-effect-child font-medium"
+                >Share wish with friends</span
+              >
+            </div>
+            <div
+              class="flex items-center p-2 group moment-text-effect-parent cursor-pointer border-gray-200"
+            >
+              <i class="fa-regular fa-gift moment-text-effect-child"></i>
+              <span
+                class="ml-2 text-gray-800 w-full moment-text-effect-child hover:text-primaryColor font-medium"
+                >Add to my wishlist</span
+              >
+            </div>
+         
+          </div>
+        </template>
+
+        
+        
+        <!-- DropdownMenu FulFilled for Desktop isGifter -->
+        <template v-if="(wish.status == 'fulfiled' &&   loggedInUser == wish.gifter.username ) && !isMobile">
           <div
             v-if="isDropdownOpen"
             @mouseleave="closeMenu"
@@ -269,6 +299,21 @@
         </div>
       </div>
 
+      <!-- FulFilled wish indicator with none owner viewing and nonGifter -->
+      <div v-if="!isDashboard">
+        <div
+          v-if="
+            !isWishOwner &&
+            wish.status == 'fulfiled' &&
+            loggedInUser != wish.gifter.username
+          "
+          class="absolute top-4 left-2 lg:left-4 bg-[#EFF9F3] text-[#1FB356] py-1 px-2 lg:px-4 rounded-full flex items-center"
+        >
+          <i class="fa-light mr-2 fa-solid fa-circle-check"></i>
+          <span class="font-medium text-xs lg:text-sm">Recieved</span>
+        </div>
+      </div>
+
       <!-- FulFilled wish indicator with none owner viewing on Dashboard -->
       <div v-if="isDashboard">
         <div
@@ -330,7 +375,7 @@
 
         <h2 class="text-sm lg:text-lg font-semibold">{{ wish.name }}</h2>
         <p class="text-sm md:text-lg">
-          {{ formattedAmount }} {{ wish.currency }}
+          {{ getCurrencySymbol(wish.currency) }} {{ formattedAmount }}
         </p>
         <div class="flex justify-between items-center mt-2">
           <div class="flex items-center" @click.stop="toggleLike">
@@ -345,7 +390,7 @@
             <span>{{ wish.likes_count }}</span>
           </div>
           <div class="flex space-x-2 md:space-x-4">
-            <button
+            <button v-if="wish.status != 'fulfiled'"
               @click.stop="toggleSaveWish"
               class="border-white border w-8 h-8 lg:w-10 lg:h-10 rounded-full focus:outline-none shadow-sm"
             >
@@ -421,6 +466,7 @@
         </div>
       </div>
     </div>
+    
 
             <!-- DropdownMenu Reserved as Modal on Mobile -->
         <div v-if="isDropdownOpen && isMobile" class="fixed px-4 inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
@@ -480,7 +526,25 @@
         </div>
 
                 <!-- DropdownMenu Fulfilled as Modal on Mobile -->
-         <div v-if="isDropdownOpen && isMobile && wish.status == 'fulfiled'" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+         <div v-if="isDropdownOpen && isMobile && (wish.status == 'fulfiled' &&   loggedInUser == wish.gifter.username ) " class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div class="bg-white rounded-lg shadow-lg p-6 relative max-w-sm w-full">
+            <button @click="closeMenu" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
+              <i class="fas fa-times"></i>
+            </button>
+            <div class="flex flex-col space-y-4">
+              <div class="flex items-center p-2 cursor-pointer">
+                <i class="fa-regular fa-gift"></i>
+                <span class="ml-2 text-gray-800 font-medium">Add to my wishlist</span>
+              </div>
+              <div @click.stop="$emit('removeFromFulfiled', wish)" class="flex items-center p-2 cursor-pointer">
+                <i class="fa-light fa-light fa-circle-xmark"></i>
+                <span class="ml-2 text-gray-800 font-medium">Remove from fulfilled</span>
+              </div>
+            </div>
+          </div>
+        </div>
+                <!-- DropdownMenu Fulfilled as Modal on Mobile -->
+         <div v-if="isDropdownOpen && isMobile && (wish.status == 'fulfiled' &&   loggedInUser == wish.gifter.username ) " class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div class="bg-white rounded-lg shadow-lg p-6 relative max-w-sm w-full">
             <button @click="closeMenu" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
               <i class="fas fa-times"></i>
@@ -612,6 +676,14 @@ export default {
   ], // Declare emits
   data() {
     return {
+      currencySymbols: {
+        NGN: '₦',
+        USD: '$',
+        EUR: '€',
+        GBP: '£',
+        CAD: 'C$',
+        GHS: '₵'
+      },
       savedwishes: [],
       isReserving: false, // New data property to track reservation state
       isShareMenuOpen: false,
@@ -647,6 +719,9 @@ export default {
     window.removeEventListener("resize", this.handleResize);
   },
   methods: {
+    getCurrencySymbol(currency) {
+      return this.currencySymbols[currency] || currency;
+    },
     handleResize() {
       this.isMobile = window.innerWidth <= 768;
     },

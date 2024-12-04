@@ -16,17 +16,17 @@
 
         <!-- Action Buttons Mobile-->
         <div
-          class="flex justify-center md:justify-start lg:mt-4 md:mt-0 space-x-4 lg:hidden hover:shadow-xl hover:text-primaryColor transition-all"
+          class="flex justify-center md:justify-start lg:mt-4 md:mt-0 space-x-4 lg:hidden  hover:text-primaryColor transition-all"
         >
           <button
             v-if="isDashboard"
             @click="showAnalyticsModal"
-            class="bg-gray-100 text-[#2D3036] py-2 px-4 md:px-6 rounded-full"
+            class="bg-gray-100 text-[#2D3036] py-2 px-4 md:px-6 rounded-full hover:shadow-xl"
           >
             View analytics
           </button>
-          <button class="text-[#2D3036] py-2 md:px-6 rounded-full">
-            <img src="/assets/share-arrow-svgrepo-com-1.svg" alt="Share" />
+          <button @click="toggleShareMenu" class="text-[#2D3036] py-2 md:px-6 rounded-full">
+            <img src="/assets/share-arrow-svgrepo-com-1.svg" alt="Share"  class="hover:shadow-xl" />
           </button>
         </div>
       </div>

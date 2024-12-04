@@ -18,7 +18,7 @@
       </div>
       
       <!-- Recently Added Wishlist You Can't Miss -->
-      <div v-if="(activeTab === 'Wishes' || activeTab === 'Friends') && wishlists.recent" class="mb-8">
+      <div v-if="(activeTab === 'Wishes' || activeTab === 'Friends') && wishlists.recent.length > 0" class="mb-8">
         <div class="lg:text-2xl text-lg font-bold mb-4">Recently Added Wishlist You Can't Miss</div>
         <div class="flex w-full overflow-x-auto space-x-6">
           <WishlistCard v-for="wishlist in wishlists.recent" 
@@ -34,7 +34,7 @@
       </div>
       
       <!-- Its Raining Birthdays -->
-      <div v-if="(activeTab === 'Wishes' || activeTab === 'Friends') && wishlists.birthdays" class="mb-8">
+      <div v-if="(activeTab === 'Wishes' || activeTab === 'Friends') && wishlists.birthdays.length > 0" class="mb-8">
         <div class="lg:text-2xl text-lg font-bold mb-4">It's Raining Birthdays</div>
         <div class="flex w-full overflow-x-auto space-x-6">
           <WishlistCard v-for="wishlist in wishlists.birthdays" 

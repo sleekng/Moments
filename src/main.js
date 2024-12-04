@@ -15,9 +15,10 @@ const app = createApp(App);
 app.directive('user-access', UserAccess);
 
 // Set the global base URL
-app.config.globalProperties.$baseURL = 'https://be.momentshub.org/api';
-app.config.globalProperties.$website = 'http://localhost:5173';
-/* app.config.globalProperties.$baseURL = 'https://account.momentshub.org/api'; */
+/* app.config.globalProperties.$baseURL = 'https://be.momentshub.org/api';
+app.config.globalProperties.$website = 'http://localhost:5173'; */
+app.config.globalProperties.$website = 'http://momentshub.org';
+app.config.globalProperties.$baseURL = 'https://account.momentshub.org/api';
 
 // Create a new Axios instance for the app
 const axiosInstance = axios.create({

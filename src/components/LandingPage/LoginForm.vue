@@ -12,7 +12,7 @@
     </p>
 
     <div class="w-full mb-4">
-      <label class="block text-gray-700 mb-2" for="login-email">Email</label>
+      <label class="block text-gray-700 mb-2" for="login-email">Email/Username</label> 
       <input v-model="email" class="w-full p-3 bg-white border border-gray-300 rounded-md" type="email" id="login-email" />
     </div>
 

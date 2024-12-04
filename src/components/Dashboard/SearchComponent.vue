@@ -47,10 +47,10 @@
       </div>
     </div>
   
-    <div class=" bg-black h-[180px] lg:hidden block relative">
+    <div class=" bg-black h-[180px] lg:hidden block relative w-full">
       <img v-for="i in (0, 3)" :key="i" :src="`/assets/star-${i}.svg`" alt="Star" class="absolute" :style="{ top: `${Math.random() * 100}%`, left: `${Math.random() * 100}%` }" />
   
-      <div class="flex flex-col items-center gap-6 px-4">
+      <div class="flex flex-col items-center gap-6 px-4 ">
         <p class="text-center font-bold text-lg leading-tight text-white" style="font-family: Mukta;">
           Want to find a Friend or Wishlist?
         </p>

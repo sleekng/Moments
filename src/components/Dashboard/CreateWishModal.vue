@@ -36,7 +36,8 @@
                 <div class="flex-1">
                   <label class="block text-gray-700 mb-2" for="amount">Amount</label>
                   <div class="relative">
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-3">₦</span>
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3">{{ currencySymbol }}</span>
+
                     <input
                       :value="displayAmount"
                       @input="updateAmount($event.target.value)"
@@ -165,7 +166,18 @@ export default {
     },
     filteredFriends() {
       return this.friends.filter(friend => !this.selectedFriends.some(selected => selected.username === friend.username));
-    }
+    },
+    currencySymbol() {
+    const symbols = {
+      NGN: '₦',
+      USD: '$',
+      EUR: '€',
+      GBP: '£',
+      CAD: 'C$',
+      GHS: '₵'
+    };
+    return symbols[this.form.currency] || this.form.currency;
+  }
   },
   watch: {
     wish: {
@@ -174,7 +186,7 @@ export default {
         if (newWish) {
           this.form = { ...newWish };
           this.imagePreview = newWish.photo || null;
-          this.displayAmount = parseFloat(newWish.amount).toLocaleString('en-US');
+            this.displayAmount = newWish.amount ? parseFloat(newWish.amount).toLocaleString('en-US') : '';
           this.selectedFriends = newWish.friends || [];
         }
       }
@@ -196,10 +208,17 @@ export default {
       reader.readAsDataURL(file);
     },
     updateAmount(value) {
-      const rawValue = value.replace(/,/g, '');
-      this.form.amount = rawValue;
-      this.displayAmount = parseFloat(rawValue).toLocaleString('en-US');
-    },
+    // Handle empty or invalid input
+    if (!value) {
+      this.form.amount = '';
+      this.displayAmount = '';
+      return;
+    }
+    const rawValue = value.replace(/,/g, '');
+    this.form.amount = rawValue;
+    // Only format if it's a valid number
+    this.displayAmount = !isNaN(rawValue) ? parseFloat(rawValue).toLocaleString('en-US') : '';
+  },
     async fetchFriends() {
       if (this.friendSearch.length < 2) {
         this.friends = [];

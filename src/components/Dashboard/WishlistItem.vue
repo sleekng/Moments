@@ -12,14 +12,14 @@
         <div class="flex justify-between space-x-3   lg:space-x-8 md:space-x-4">
           <div>
             <p class="text-sm text-gray-500 mb-2">Likes</p>
-            <p class="text-xl font-bold text-gray-900">{{ likes ? likes : 0 }}</p>
+            <p class="lg:text-xl font-bold text-gray-900">{{ likes ? likes : 0 }}</p>
           </div>
           <div>
             <p class="text-sm text-gray-500 mb-2">Views</p>
             <p class="lg:text-xl font-bold text-gray-900">{{ views ? views : 0 }}</p>
           </div>
           <div>
-            <p class="lg:text-sm text-gray-500 mb-2">Saves</p>
+            <p class="text-sm text-gray-500 mb-2">Saves</p>
             <p class="lg:text-xl font-bold text-gray-900">{{ saves ? saves : 0 }}</p>
           </div>
           <div>
@@ -32,15 +32,19 @@
       <!-- Second Column -->
       <div class="flex flex-1 flex-col col-span-8 justify-between space-y-2 mt-4 lg:mt-0">
         <div v-if="topWishes.length" class="text-gray-500 text-lg font-semibold pr-4 justify-self-start">Top wishes</div>
-        <div v-if="topWishes.length" class="flex space-x-2 overflow-x-auto w-full h-full">
-          <div v-for="wish in topWishes" :key="wish.id" class="relative">
-            <div class="bg-white cursor-pointer rounded-lg shadow-lg overflow-hidden w-[90px] relative card group">
+        <div v-if="topWishes.length" class="flex space-x-2 lg:space-x-8 overflow-x-auto w-full h-full">
+          <div v-for="wish in topWishes" :key="wish.id" class="relative ">
+            <div class="bg-white cursor-pointer rounded-lg shadow-lg overflow-hidden lg:w-24 lg:h-24 w-16 h-16 relative card group">
               <div class="relative">
-                <img :src="wish.photo || '/assets/wishlist-category-placeholder.svg'" alt="Wishlist Item" class="lg:w-24 lg:h-24 w- object-cover">
+                <img :src="wish.photo || '/assets/wishlist-category-placeholder.svg'" alt="Wishlist Item" class=" object-cover">
               </div>
               <!-- Wish Detail -->
               <div class="absolute bottom-0 left-0 p-1 bg-gradient-to-t from-black z-50 to-transparent w-full text-white">
-                <h2 class="text-[8px] font-semibold ">{{ wish.name }}</h2>
+                <h2 class="text-[8px] font-semibold ">
+                  <span class="hidden lg:inline">{{ wish.name.split(' ').slice(0, 3).join(' ') }}{{ wish.name.split(' ').length > 3 ? '...' : '' }}</span>
+                  <span class="lg:hidden">{{ wish.name.split(' ').slice(0, 2).join(' ') }}{{ wish.name.split(' ').length > 2 ? '...' : '' }}</span>
+                </h2>
+
                 <div class="flex justify-between items-center mt-1">
                   <div class="flex items-center">
                     <img src="/assets/heart.svg" alt="Likes" class="w-3 h-3 mr-2">
