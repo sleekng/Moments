@@ -57,11 +57,12 @@
           </div>
         </div>
         <hr>
+        
         <div class="flex items-start mt-4">
           <img src="/assets/location.svg" alt="Location Icon" class="w-5 h-5 mr-2" />
           <div class="text-gray-700">
             <p>{{ publicAddress.street }}</p>
-            <p>{{ publicAddress.city }}, {{ publicAddress.country }}</p>
+            <p>{{ publicAddress.city}}, {{ publicAddress.state }}, {{ publicAddress.country }}</p>
             <p>{{ publicAddress.zip_code || 'N/A' }}</p>
             <p class="mt-2 text-sm text-gray-600">
               Phone number: <span class="text-gray-800">{{ publicAddress.phone || 'N/A' }}</span>
@@ -110,19 +111,39 @@
         </div>
 
         <div class="flex gap-4">
-          <div class="w-full">
-            <label for="country" class="block text-sm text-gray-700 mb-1">Country/Region</label>
-            <select id="country" v-model="addressForm.country" class="w-full p-3 border border-gray-300 rounded-md">
-              <option v-for="country in countries" :key="country">{{ country }}</option>
-            </select>
-          </div>
-          <div class="w-full">
-            <label for="state" class="block text-sm text-gray-700 mb-1">State</label>
-            <select id="state" v-model="addressForm.state" class="w-full p-3 border border-gray-300 rounded-md">
-              <option v-for="state in states" :key="state">{{ state }}</option>
-            </select>
-          </div>
-        </div>
+  <div class="w-full">
+    <label for="country" class="block text-sm text-gray-700 mb-1">Country/Region</label>
+    <div class="relative">
+      <select 
+        id="country" 
+        v-model="addressForm.country" 
+        @change="updateStates"
+        class="w-full p-3 border border-gray-300 rounded-md appearance-none pr-10"
+      >
+        <option v-for="country in countries" :key="country.name" :value="country.name">
+          {{ country.emoji }} {{ country.name }}
+        </option>
+      </select>
+      <img src="/assets/dropdown-3.svg" class="absolute top-4 right-4 w-4 h-4" alt="Dropdown" />
+    </div>
+  </div>
+  <div class="w-full">
+    
+    <label for="state" class="block text-sm text-gray-700 mb-1">State</label>
+    <div class="relative">
+      <select 
+        id="state" 
+        v-model="addressForm.state"
+        class="w-full p-3 border border-gray-300 rounded-md appearance-none pr-10"
+      >
+        <option v-for="state in states" :key="state.id" :value="state.name">
+          {{ state.name }}
+        </option>
+      </select>
+      <img src="/assets/dropdown-2.svg" class="absolute top-4 right-4 w-4 h-4" alt="Dropdown" />
+    </div>
+  </div>
+</div>
 
         <div class="flex gap-4">
           <div class="w-full">
@@ -153,6 +174,7 @@
 <script>
 import { eventBus } from '@/eventBus.js';
 import Loader from '@/components/Loader.vue';
+import countriesStatesData from '@/assets/countriesStates.json';
 export default {
   name: "AddressSettings",
 components:{
@@ -177,12 +199,20 @@ components:{
       },
       isEditing: false,
       editingId: null,
-      states: ['California', 'New York', 'Texas', 'Florida', 'Illinois'],
-      countries: ['United States', 'Canada', 'United Kingdom', 'Australia', 'India'],
+      states: [],
+      countries: [],
+      countryStateMap: [],
     };
   },
   async created() {
-    this.loadData()
+    this.loadData();
+    try {
+      this.countryStateMap = countriesStatesData;
+      this.countries = this.countryStateMap;
+    } catch (error) {
+      console.error('Error loading countries and states:', error);
+      this.countries = [];
+    }
   },
   computed: {
     privateAddress() {
@@ -193,6 +223,15 @@ components:{
     }
   },
   methods: {
+    updateStates() {
+      const selectedCountryObj = this.countries.find(country => country.name === this.addressForm.country);
+      if (selectedCountryObj) {
+        this.states = selectedCountryObj.states;
+      } else {
+        this.states = [];
+        this.addressForm.state = '';
+      }
+    },
 
     async loadData() {
       this.loading = true;  // Start loading

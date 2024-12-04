@@ -32,18 +32,35 @@
       </div>
 
       <div>
-        <label class="block text-gray-700 font-medium mb-1">State</label>
-        <select v-model="formData.state" class="w-full p-3 bg-gray-50 border border-gray-300 rounded-md">
-          <option v-for="option in states" :key="option" :value="option">{{ option }}</option>
-        </select>
-      </div>
+    <label class="block text-gray-700 font-medium mb-1">Country</label>
+    <div class="relative">
+      <select 
+        v-model="formData.country" 
+        @change="updateStates"
+        class="w-full p-3 bg-gray-50 border border-gray-300 rounded-md appearance-none pr-10"
+      >
+        <option v-for="country in countries" :key="country.name" :value="country.name">
+          {{ country.emoji }} {{ country.name }}
+        </option>
+      </select>
+      <img src="/assets/dropdown-3.svg" class="absolute top-4 right-4 w-4 h-4" alt="Dropdown" />
+    </div>
+  </div>
 
-      <div>
-        <label class="block text-gray-700 font-medium mb-1">Country</label>
-        <select v-model="formData.country" class="w-full uppercase p-3 bg-gray-50 border border-gray-300 rounded-md">
-          <option class="uppercase" v-for="option in countries" :key="option" :value="option">{{ option }}</option>
-        </select>
-      </div>
+  <div>{{ state }}
+    <label class="block text-gray-700 font-medium mb-1">State</label>
+    <div class="relative">
+      <select 
+        v-model="formData.state"
+        class="w-full p-3 bg-gray-50 border border-gray-300 rounded-md appearance-none pr-10"
+      >
+        <option v-for="state in states" :key="state.id" :value="state.name">
+          {{ state.name }}
+        </option>
+      </select>
+      <img src="/assets/dropdown-2.svg" class="absolute top-4 right-4 w-4 h-4" alt="Dropdown" />
+    </div>
+  </div>
     </div>
 
     <!-- Save Button -->
@@ -62,6 +79,7 @@
 
 <script>
 import { eventBus } from '@/eventBus.js';
+import countriesStatesData from '@/assets/countriesStates.json';
 export default {
   name: "ProfileSettings",
   emits: ['avatarUpdated'],  // Declare emitted events
@@ -76,8 +94,9 @@ export default {
         country: ''
       },
       genders: ['male', 'female', 'non-binary', 'other'],
-      states: ['California', 'New York', 'Texas', 'Florida', 'Illinois'],
-      countries: ['United States', 'Canada', 'United Kingdom', 'Australia', 'India'],
+      states: [],
+      countries: [],
+      countryStateMap: [],
       isSaving: false,
       uploadProgress: 0,
       isUploading: false,
@@ -86,7 +105,26 @@ export default {
   mounted() {
     this.fetchProfileData();
   },
+  async created() {
+    try {
+      this.countryStateMap = countriesStatesData;
+      this.countries = this.countryStateMap;
+    } catch (error) {
+      console.error('Error loading countries and states:', error);
+      this.countries = [];
+    }
+  },
+
   methods: {
+    updateStates() {
+    const selectedCountryObj = this.countries.find(country => country.name === this.formData.country);
+    if (selectedCountryObj) {
+      this.states = selectedCountryObj.states;
+    } else {
+      this.states = [];
+      this.formData.state = '';
+    }
+  },
     triggerFileInput() {
       this.$refs.fileInput.click();
     },
@@ -143,14 +181,24 @@ export default {
     },
 
     async fetchProfileData() {
-      const profile = JSON.parse(localStorage.getItem('user'));
-      this.formData.firstName = profile.first_name || '';
-      this.formData.lastName = profile.last_name || '';
-      this.formData.gender = profile.gender || '';
+    const profile = JSON.parse(localStorage.getItem('user'));
+    
+    // Set country first
+    this.formData.country = profile.country || '';
+    
+    // Update states based on selected country
+    if (this.formData.country) {
+      this.updateStates();
+      // Set state after states array is populated
       this.formData.state = profile.state || '';
-      this.formData.country = profile.country || '';
-      this.avatarSrc = profile.avatar || this.avatarSrc;
-    },
+    }
+
+    // Set other form data
+    this.formData.firstName = profile.first_name || '';
+    this.formData.lastName = profile.last_name || '';
+    this.formData.gender = profile.gender || '';
+    this.avatarSrc = profile.avatar || this.avatarSrc;
+  },
     async saveChanges() {
       this.isSaving = true;
       try {
