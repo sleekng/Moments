@@ -7,11 +7,11 @@
           <div class="flex justify-between items-center mb-4 p-4 bg-gray-100">
             <div class="flex items-center">
               <img src="/assets/box-gift.svg" alt="Gift Box" class="h-6 w-6 mr-1" />
-              <h3 class="text-2xl font-bold text-gray-900">{{ modalTitle }}</h3>
+              <h3 class="text-sm lg:text-2xl  font-bold text-gray-900">{{ modalTitle }}</h3>
             </div>
             <img src="/assets/close.svg" alt="Close" class="h-6 w-6 cursor-pointer" @click="close" />
           </div>
-          <div class="grid md:grid-cols-3 gap-4 p-6">
+          <div class="grid md:grid-cols-3 gap-4 px-4 lg:p-6">
             
             <div class="md:col-span-1">
               <div class="bg-gray-100 rounded-lg overflow-hidden w-[200px] h-[200px] flex items-center justify-center">

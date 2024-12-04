@@ -34,9 +34,9 @@
         <div v-if="topWishes.length" class="text-gray-500 text-lg font-semibold pr-4 justify-self-start">Top wishes</div>
         <div v-if="topWishes.length" class="flex space-x-2 lg:space-x-8 overflow-x-auto w-full h-full">
           <div v-for="wish in topWishes" :key="wish.id" class="relative ">
-            <div class="bg-white cursor-pointer rounded-lg shadow-lg overflow-hidden lg:w-24 lg:h-24 w-16 h-16 relative card group">
+            <div class="bg-white cursor-pointer rounded-lg shadow-lg overflow-hidden lg:w-24 lg:h-24 w-16 h-16 object-cover relative card group">
               <div class="relative">
-                <img :src="wish.photo || '/assets/wishlist-category-placeholder.svg'" alt="Wishlist Item" class=" object-cover">
+                <img :src="wish.photo || '/assets/wishlist-category-placeholder.svg'" alt="Wishlist Item" class=" object-cover w-16 h-16">
               </div>
               <!-- Wish Detail -->
               <div class="absolute bottom-0 left-0 p-1 bg-gradient-to-t from-black z-50 to-transparent w-full text-white">

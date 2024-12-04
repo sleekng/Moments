@@ -27,6 +27,12 @@
       </nav>
     </div>
 
+    <div class=" flex lg:hidden items-center h-full space-x-3">
+
+       <img @click="toggleNotifications" src="/assets/bell.svg" alt="Notifications" class="h-6 w-6" />
+        <router-link to="/explore" class="flex items-center h-full"><i class="fa-regular fa-magnifying-glass text-gray-700 text-xl"></i></router-link>
+    </div>
+
     <!-- Search and Action Buttons for Desktop -->
     <div class="hidden lg:flex items-center space-x-6 relative">
       <!-- Search Input -->

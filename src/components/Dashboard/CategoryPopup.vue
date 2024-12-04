@@ -1,18 +1,16 @@
 <template>
   <transition name="fade">
-    <div v-if="isVisible" class="fixed z-50 inset-0 overflow-y-auto p-4">
-      <div class="flex items-center justify-center min-h-screen px-4 lg:text-center">
+    <div v-if="isVisible" class="fixed z-50 inset-0 py-4 overflow-y-auto ">
+      <div class="flex  justify-center min-h-screen px-4 lg:text-center">
         <div class="fixed inset-0 bg-black opacity-50" @click="close"></div>
         <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all max-w-4xl w-full">
-          <div class="flex lg:flex-row flex-col lg:justify-between lg:items-center bg-[#F8F9FA] h-[73px] px-4 lg:px-[32px]">
-            <img
-              src="/assets/close.svg"
-              alt="Close"
-              class="h-6 w-6 lg:hidden mt-2 inline-block cursor-pointer"
+          <div class="flex  lg:justify-between items-center bg-[#F8F9FA] h-[73px] px-4 lg:px-[32px]">
+            <i
+              class="fa-regular fa-xmark h-6 w-6 lg:hidden mt-2 inline-block cursor-pointer"
               @click="close"
-            />
+            ></i>
             <div class="w-full flex lg:justify-center lg:h-full items-center">
-              <h3 class="text-[16px] lg:text-2xl leading-6 font-bold text-gray-900">
+              <h3 class="text-[12px] lg:text-2xl  font-bold text-gray-900">
                 What type of wishlist are you creating?
               </h3>
             </div>
@@ -38,7 +36,7 @@
           <div class="px-4 justify-center text-center w-full inline-block pt-4 pb-8 lg:py-10">
             <button
               type="button"
-              class="rounded-full border border-transparent shadow-sm lg:px-32 px-16 py-4 bg-primaryColor text-base font-medium text-white hover:shadow-lg transition-all sm:ml-3 sm:w-auto"
+              class="rounded-full border border-transparent shadow-sm lg:px-32 px-16 lg:py-4 py-2 bg-primaryColor text-base font-medium text-white hover:shadow-lg transition-all sm:ml-3 sm:w-auto"
               @click="next"
               :disabled="!selectedCategory"
             >

@@ -29,7 +29,7 @@
             @click.stop="reserveWish"
             :disabled="isReserving"
             :class="[
-              'px-6 py-2 lg:px-8 lg:py-3 rounded-full text-sm lg:text-base',
+              'px-4 py-1 lg:px-8 lg:py-3 rounded-full text-sm lg:text-base',
               isReserving
                 ? 'bg-primaryColor text-white hover:shadow-lg cursor-not-allowed'
                 : 'bg-primaryColor text-white hover:shadow-lg',
@@ -341,7 +341,7 @@
 
           <div
             v-if="wish.priority == 'low'"
-            class="inline-flex items-center bg-[#FAFFFF] border border-[#37B1B5] text-[#37B1B5] text-sm font-medium py-1 px-2 rounded-full"
+            class="inline-flex items-center bg-[#FAFFFF] border border-[#37B1B5] text-[#37B1B5] text-[12px] lg:text-sm whitespace-nowrap font-medium py-1 px-2 rounded-full"
           >
             {{ wish.priority }} priority
             <img src="/assets/gift.svg" alt="Fire" class="ml-2 w-4 h-4" />
@@ -351,7 +351,7 @@
 
           <div
             v-if="wish.priority == 'medium'"
-            class="inline-flex items-center bg-[#FCF8EE] border border-[#DAA520] text-[#DAA520] text-sm font-medium py-1 px-2 rounded-full"
+            class="inline-flex items-center bg-[#FCF8EE] border border-[#DAA520] text-[#DAA520] text-[12px] lg:text-sm whitespace-nowrap font-medium py-1 px-2 rounded-full"
           >
             {{ wish.priority }} priority
             <img src="/assets/star.svg" alt="Fire" class="ml-2 w-4 h-4" />
@@ -361,7 +361,7 @@
 
           <div
             v-if="wish.priority == 'high'"
-            class="inline-flex items-center bg-red-100 border border-red-600 text-red-600 text-sm font-medium py-1 px-2 rounded-full"
+            class="inline-flex items-center bg-red-100 border border-red-600 text-red-600 text-[12px] lg:text-sm whitespace-nowrap font-medium py-1 px-2 rounded-full"
           >
             {{ wish.priority }} priority
             <img
@@ -373,7 +373,8 @@
 
         </div>
 
-        <h2 class="text-sm lg:text-lg font-semibold">{{ wish.name }}</h2>
+        
+        <h2 class="text-sm lg:text-lg font-semibold">{{ wish.name.split(' ').slice(0, isMobile ? 2 : 4).join(' ') }}{{ wish.name.split(' ').length > (isMobile ? 2 : 4) ? '...' : '' }}</h2>
         <p class="text-sm md:text-lg">
           {{ getCurrencySymbol(wish.currency) }} {{ formattedAmount }}
         </p>

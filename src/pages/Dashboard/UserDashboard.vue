@@ -84,8 +84,7 @@
         </div>
       </div>
     </transition>
-     
-
+    
 
       <!-- Modals -->
 

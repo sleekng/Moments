@@ -3,7 +3,7 @@
     <div class="absolute bg-gray-100 w-full left-0 top-0">
       <div class="flex items-center justify-between px-4 pt-6">
         <h2 class="text-xl font-semibold mb-4" style="font-family: Mukta">Your notifications</h2>
-        <img src="/assets/settings.svg" alt="Settings" class="w-4 h-4 cursor-pointer">
+        <img src="/assets/settings.svg" alt="Settings" class="w-4 h-4 cursor-pointer" @click="navigateToSettings">
       </div>
       <div class="flex justify-between text-center px-4">
         <span :class="{'font-bold text-black border-b-4 border-black': activeTab === 'All'}" class="text-sm w-[93.5px] text-gray-500 cursor-pointer" @click="setActiveTab('All')">All</span>
@@ -51,6 +51,9 @@ export default {
     }
   },
   methods: {
+    navigateToSettings() {
+      this.$router.push({ path: '/account', query: { page: 'notification' } });
+    },
     setActiveTab(tab) {
       this.activeTab = tab;
     },
