@@ -107,6 +107,7 @@
 <script>
 import OptinLogo from '../Dashboard/OptinLogo.vue';
 import { eventBus } from '@/eventBus.js';
+import countriesStatesData from '@/assets/countriesStates.json';
 
 export default {
   components: {
@@ -131,11 +132,13 @@ export default {
   },
   async created() {
     try {
-      const response = await fetch('/src/assets/countriesStates.json');
-      this.countryStateMap = await response.json();
+      // Replace fetch with direct import
+      this.countryStateMap = countriesStatesData;
       this.countries = this.countryStateMap;
     } catch (error) {
       console.error('Error loading countries and states:', error);
+      // Provide fallback data if needed
+      this.countries = [];
     }
   },
   computed: {
