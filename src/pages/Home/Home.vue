@@ -284,7 +284,7 @@
         </div>
     </section>
 
-    <footer class="relative  py-12 px-8 flex flex-col md:flex-row   mt-10 justify-between h-[400px] items-center" style=" background-image: url('/assets/footer.svg'); background-repeat: no-repeat; background-size: cover;">
+   <!--  <footer class="relative  py-12 px-8 flex flex-col md:flex-row   mt-10 justify-between h-[400px] items-center" style=" background-image: url('/assets/footer.svg'); background-repeat: no-repeat; background-size: cover;">
         <div class="container mx-auto  ">
 
             <div class=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 relative">
@@ -305,7 +305,41 @@
                 </div>
             </div>
         </div>
-    </footer>
+    </footer> -->
+
+<!--     <footer class="relative  px-60 flex flex-col md:flex-row mt-10 justify-between h-[400px] items-center" style="background-image: url('/footer.svg'); background-repeat: no-repeat; background-size: cover;"> -->
+    <footer class="relative px-4 md:px-60 flex flex-col md:flex-row mt-10 justify-between items-center bg-primaryColor py-12">
+    <div class="container mx-auto flex flex-col sm:flex-row justify-between space-y-4 sm:space-y-0">
+        <!-- Left Section -->
+        <div class="flex bg-white w-full sm:w-[352px] h-[327px] p-8 justify-between rounded-[32px] flex-col  sm:items-start space-y-2">
+            <div class="flex flex-col space-y-4">
+                <div class="flex">
+                    <img src="/assets/logo.svg" alt="Moments Logo" class="w-44" />
+                </div>
+                <a href="/privacy-policy" class="text-xl border-b border-black pb-2 font-bold text-[#240328]">Privacy policy →</a>
+            </div>
+            <p class="text-xs text-[#240328]">© 2024 All Rights Reserved. Moments Hub</p>
+        </div>
+
+        <!-- Center Section -->
+        <div class="flex bg-white w-full sm:w-[406px] h-[327px] p-8 justify-center rounded-[32px] flex-col items-center sm:items-start space-y-2">
+            <span class="text-[62px]  leading-[60px] font-black text-[#240328]">Where wishlists come alive!</span>
+        </div>
+
+        <!-- Right Section -->
+        <div class="flex bg-white w-full sm:w-[140px] sm:h-[327px] p-8 justify-center rounded-[32px] sm:flex-col flex-row items-center space-x-8 sm:space-x-0 sm:space-y-8">
+            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
+                <i class="fab fa-facebook text-gray-800 text-3xl hover:text-gray-600"></i>
+            </a>
+            <a href="https://x.com" target="_blank" rel="noopener noreferrer">
+                <i class="fab fa-x-twitter text-gray-800 text-3xl hover:text-gray-600"></i>
+            </a>
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
+                <i class="fab fa-instagram text-gray-800 text-3xl hover:text-gray-600"></i>
+            </a>
+        </div>
+    </div>
+</footer>
 
 </div>
 </template>
