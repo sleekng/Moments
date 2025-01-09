@@ -79,31 +79,63 @@
                 <label class="block text-gray-700 mb-2" for="comment">Comment (Optional)</label>
                 <textarea v-model="form.comment" class="w-full p-3 bg-white border border-gray-300 rounded-md" id="comment" placeholder="Additional comments about this item e.g color, size, where to get it, etc." rows="3"></textarea>
               </div>
-              <!-- Tagged Friends Section -->
-              <div>
-               <label class="text-gray-700 mb-2 flex items-center gap-1" for="tag-friends">
-                Nominate someone or multiple people to get you this item
-                 <img src="/assets/help-circle.svg" class="w-4 h-4" alt="Help" />
-               </label>
-               <input v-model="friendSearch" @input="fetchFriends" class="w-full p-3 mb-2 bg-white border border-gray-300 rounded-md" type="text" placeholder="Search friends..." />
-               <div v-if="filteredFriends.length" class="w-full p-3 bg-white border border-gray-300 rounded-md flex space-x-2 overflow-x-auto">
-                 <div v-for="friend in filteredFriends" :key="friend.username" class="bg-gray-200 p-1 rounded-full flex items-center mb-2" @click="addFriend(friend)">
-                   <img :src="friend.avatar || '/assets/avatar.svg'" class="w-4 h-4 mr-1" alt="Avatar" />
-                   <span class="text-sm mr-1">@{{ friend.username || 'unknown' }}</span>
-                   <img src="/assets/add-2.svg" class="w-3 h-3 cursor-pointer" alt="add" />
-                 </div>
-               </div>
-               <div class="grid grid-cols-3 gap-2 mt-2">
-                
-                 <div v-for="friend in selectedFriends" :key="friend.username" class="bg-gray-200 p-1 rounded-full flex whitespace-nowrap items-center justify-between" @click="removeFriend(friend)">
-                   <div class="flex items-center">
-                     <img :src="friend.avatar || '/assets/avatar.svg'" class="w-4 h-4 mr-1" alt="Avatar" />
-                     <span class="text-sm mr-1">@{{ friend.username || 'unknown' }}</span>
-                   </div>
-                   <img src="/assets/close.svg" class="w-3 h-3 cursor-pointer" alt="remove" />
-                 </div>
-               </div>
-             </div>
+
+              
+            <!-- Tagged Friends Section -->
+<div>
+  <label class="text-gray-700 mb-2 flex items-center gap-1" for="tag-friends">
+    Nominate someone or multiple people to get you this item
+    <img src="/assets/help-circle.svg" class="w-4 h-4" alt="Help" />
+  </label>
+  
+  <!-- Combined Input and Friends Container -->
+  <div class="w-full min-h-[48px] p-2 bg-white border border-gray-300 rounded-md">
+    <div class="flex flex-wrap gap-2">
+      <!-- Selected Friends Pills -->
+      <div 
+        v-for="friend in selectedFriends" 
+        :key="friend.username" 
+        class="bg-gray-100 py-1 px-3 rounded-full flex items-center gap-2"
+        @click="removeFriend(friend)"
+      >
+        <img :src="friend.avatar || '/assets/avatar.svg'" class="w-5 h-5" alt="Avatar" />
+        <span class="text-sm">@{{ friend.username || 'unknown' }}</span>
+        <img src="/assets/close.svg" class="w-3 h-3 cursor-pointer" alt="remove" />
+      </div>
+      
+      <!-- Search Input -->
+      <input 
+        v-model="friendSearch" 
+        @input="fetchFriends" 
+        class="flex-1 min-w-[120px] border-none outline-none p-1" 
+        type="text" 
+        placeholder="Search friends..." 
+      />
+        <!-- Loader Icon -->
+  <div v-if="isLoading" class="flex items-center">
+    <i class="fas fa-spinner fa-spin"></i> <!-- FontAwesome loader -->
+  </div>
+    </div>
+
+     <!-- Filtered Friends Dropdown -->
+     <div v-if="filteredFriends.length" class="mt-2 border-t border-gray-200 pt-2">
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2"> <!-- Updated for responsiveness -->
+        <div 
+          v-for="friend in filteredFriends" 
+          :key="friend.username" 
+          class="py-1 px-2 hover:text-primaryColor flex items-center gap-1 cursor-pointer" 
+          @click="addFriend(friend)"
+        >
+          <img :src="friend.avatar || '/assets/avatar.svg'" class="w-3 h-3" alt="Avatar" />
+          <span class="text-sm">@{{ friend.username || 'unknown' }}</span>
+          <img src="/assets/add-2.svg" class="w-3 h-3 ml-auto" alt="add" />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
             </div>
           </div>
 
@@ -138,6 +170,7 @@ export default {
   },
   data() {
     return {
+      isLoading: false, // Add loading state
       isVisible: true,
       imagePreview: null,
       imageFile: null,
@@ -220,8 +253,10 @@ export default {
     this.displayAmount = !isNaN(rawValue) ? parseFloat(rawValue).toLocaleString('en-US') : '';
   },
     async fetchFriends() {
+      this.isLoading = true; // Set loading state to true
       if (this.friendSearch.length < 2) {
         this.friends = [];
+        this.isLoading = false; // Reset loading state
         return;
       }
 
@@ -238,6 +273,8 @@ export default {
         this.friends = response.data.data || [];
       } catch (error) {
         console.error('Error fetching friends:', error.message);
+      }finally {
+        this.isLoading = false; // Reset loading state
       }
     },
     addFriend(friend) {

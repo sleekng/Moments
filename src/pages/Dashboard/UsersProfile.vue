@@ -9,7 +9,9 @@
           :reservedWishesCount="reservedWishes.length"
           :activeTab="activeTab"
           @switchTab="setActiveTab"
-          :user="user"
+          
+             :user="user"
+             @sort="handleSort"
         />
 
         <div v-if="wishlists.length > 0" class="grid grid-cols-1 lg:grid-cols-4 gap-6 lg:px-12 py-8 rounded-b-lg bg-white">
@@ -182,6 +184,32 @@
       },
       setActiveTab(tab) {
         this.activeTab = tab;
+      },
+
+      
+      handleSort({ sortBy, sortOrder }) {
+        this.wishlists.sort((a, b) => {
+          let comparison = 0;
+          
+          switch (sortBy) {
+            case 'title':
+              comparison = a.title.localeCompare(b.title);
+              break;
+            case 'event_date':
+              comparison = new Date(a.date) - new Date(b.date);
+              break;
+            case 'likes':
+              comparison = a.likes_count - b.likes_count;
+              break;
+            case 'views':
+              comparison = a.views_count - b.views_count;
+              break;
+            default:
+              comparison = 0;
+          }
+          
+          return sortOrder === 'asc' ? comparison : -comparison;
+        });
       },
     },
   };

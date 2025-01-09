@@ -4,104 +4,92 @@
     <div v-if="!loading" class="px-4 lg:px-16 pt-10 lg:pt-20">
 
       <ProfileDetails :user="user" @showAnalyticsModal="ToggleAnalyticsModal" :myWishlistCount="wishlists.length" />
-      <TabNavigationsWishlist :myWishlistCount="wishlists.length" :savedwishesCount="savedwishes.length" :reservedWishesCount="reservedWishes.length" :activeTab="activeTab" @switchTab="setActiveTab" />
+      <TabNavigationsWishlist :myWishlistCount="wishlists.length" :savedwishesCount="savedwishes.length"
+        :reservedWishesCount="reservedWishes.length" :activeTab="activeTab" @switchTab="setActiveTab" @sort="handleSort" />
 
 
-        <div v-if="activeTab === 'myWishes'">
-          <div v-if="wishlists.length > 0" class="grid grid-cols-1 lg:grid-cols-4 gap-6 lg:px-12 py-8 rounded-b-lg bg-white">
-            <div class="flex flex-col items-center justify-center bg-gray-100 h-full rounded-lg p-4 py-8 cursor-pointer" @click="$emit('showCategoryModal')">
-              <div class="flex items-center justify-center w-12 h-12 bg-black rounded-full mb-4">
-                <img src="/assets/add.svg" alt="Add" class="h-5 w-5" />
-              </div>
-              <div class="text-lg font-medium text-center text-gray-800 leading-relaxed">Make a New wishlist</div>
+      <div v-if="activeTab === 'myWishes'">
+        <div v-if="wishlists.length > 0"
+          class="grid grid-cols-1 lg:grid-cols-4 gap-6 lg:px-12 py-8 rounded-b-lg bg-white">
+          <div class="flex flex-col items-center justify-center bg-gray-100 h-full rounded-lg p-4 py-8 cursor-pointer"
+            @click="$emit('showCategoryModal')">
+            <div class="flex items-center justify-center w-12 h-12 bg-black rounded-full mb-4">
+              <img src="/assets/add.svg" alt="Add" class="h-5 w-5" />
             </div>
-            <WishlistCard
-            :user="user"
-            @shareWishlist = "shareWishlist"
-              v-for="wishlist in wishlists"
-              :key="wishlist.id"
-              :wishlist="wishlist"
-              :openDropdownId="openDropdownId"
-              @toggleDropdown="handleToggleDropdown"
-              @closeDropdown="handleCloseDropdown"
-              @deleteWishlist="handleDeleteWishlist"
-              @editWishlist="handleEditWishlist"
-              @viewWishlist="navigateToAllWishes"
-            />
+            <div class="text-lg font-medium text-center text-gray-800 leading-relaxed">Make a New wishlist</div>
           </div>
-          <div  v-else>
-            
-  
-            <EmptyState 
-              
-              title="Your wishlist is empty" 
-              message="Go ahead and create your first wishlist" 
-              @button-click="$emit('showCategoryModal')" 
-              :showButton="true"
-              :userOwnsWishlist="true"
-              buttonText="Create Wishlist"
-            />
-          </div>
+          <WishlistCard :user="user" @shareWishlist="shareWishlist" v-for="wishlist in wishlists" :key="wishlist.id"
+            :wishlist="wishlist" :openDropdownId="openDropdownId" @toggleDropdown="handleToggleDropdown"
+            @closeDropdown="handleCloseDropdown" @deleteWishlist="handleDeleteWishlist"
+            @editWishlist="handleEditWishlist" @viewWishlist="navigateToAllWishes" @wishlistArchived="wishlistArchived" />
         </div>
-  
-        <div v-if="activeTab === 'reserved'">
-          
-          <ReservedWishes v-if="reservedWishes.length > 0" @editWish="openEditWishModal" @deleteWish="handleDeleteWish" :wishes="reservedWishes" @preview="prevWish" @newUpdate="newUpdate" />
-          <EmptyState 
-            v-else 
-            title="No wishes reserved by you" 
-            message="Reserve a wish for your friends to surprise them." 
-            :showButton="false"
-          />
-        </div>
-  
-        <div v-if="activeTab === 'saved'">
-          <SavedWishes v-if="savedwishes.length > 0" :wishes="savedwishes" @editWish="openEditWishModal" @deleteWish="handleDeleteWish" @preview="savedPrevWish" @newUpdate="newUpdate" />
-          <EmptyState 
-            v-else 
-            title="No saved wishes" 
-            message="Save your favorite wishes here to easily find them later." 
-            :showButton="false"
-          />
-        </div>
+      <div v-else>
 
-
-        <transition name="fade">
-      <div v-if="showBirthdayModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-        <div class="bg-white rounded-lg shadow-lg p-6 max-w-sm w-full">
-          <div class="relative">
-            <img src="/assets/gif/birthday-notify.svg" alt="Celebration" class="w-full h-64 object-cover rounded-t-lg" />
-            <button @click="closeBirthdayModal" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
-              <img src="./assets/close.svg" alt="Close" class="w-6 h-6" />
-            </button>
-          </div>
-          <div class="text-center mt-4">
-            <h2 class="text-2xl font-semibold text-gray-800">Happy Birthday, {{ user.first_name }}! 🎂</h2>
-            <p class="mt-2 text-gray-600">
-              Birthdays are for celebrating all the amazing things about you! We hope your day is filled with joy, laughter, and cake (of course!)
-            </p>
-          </div>
-        </div>
+          <EmptyState title="Your wishlist is empty" message="Go ahead and create your first wishlist"
+            @button-click="$emit('showCategoryModal')" :showButton="true" :userOwnsWishlist="true"
+            buttonText="Create Wishlist" />
       </div>
-    </transition>
-    
+      </div>
+
+      <div v-if="activeTab === 'reserved'">
+
+        <ReservedWishes v-if="reservedWishes.length > 0" @editWish="openEditWishModal" @deleteWish="handleDeleteWish"
+          :wishes="reservedWishes" @preview="prevWish" @newUpdate="newUpdate" />
+        <EmptyState v-else title="No wishes reserved by you" message="Reserve a wish for your friends to surprise them."
+          :showButton="false" />
+      </div>
+
+      <div v-if="activeTab === 'saved'">
+        <SavedWishes v-if="savedwishes.length > 0" :wishes="savedwishes" @editWish="openEditWishModal"
+          @deleteWish="handleDeleteWish" @preview="savedPrevWish" @newUpdate="newUpdate" />
+        <EmptyState v-else title="No saved wishes" message="Save your favorite wishes here to easily find them later."
+          :showButton="false" />
+      </div>
+
+
+      <transition name="fade">
+        <div v-if="showBirthdayModal"
+          class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div class="bg-white rounded-lg shadow-lg p-6 max-w-sm w-full">
+            <div class="relative">
+              <img src="/assets/gif/birthday-notify.svg" alt="Celebration"
+                class="w-full h-64 object-cover rounded-t-lg" />
+              <button @click="closeBirthdayModal" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
+                <img src="./assets/close.svg" alt="Close" class="w-6 h-6" />
+              </button>
+            </div>
+            <div class="text-center mt-4">
+              <h2 class="text-2xl font-semibold text-gray-800">Happy Birthday, {{ user.first_name }}! 🎂</h2>
+              <p class="mt-2 text-gray-600">
+                Birthdays are for celebrating all the amazing things about you! We hope your day is filled with joy,
+                laughter, and cake (of course!)
+              </p>
+            </div>
+          </div>
+        </div>
+      </transition>
+
 
       <!-- Modals -->
 
-         <WelcomeModal v-if="showWelcomeModal" @close="closeWelcomeModal" />
+      <WelcomeModal v-if="showWelcomeModal" @close="closeWelcomeModal" />
 
       <Congratulations v-if="showInitialModal" @close="closeInitialModal" />
-      <WishDetailView :isWishSaved="isWishSaved" :isRequestingAddress="isRequestingAddress"     @requestAddress="requestAddress" @editWish="openEditWishModal" v-if="showWishDetailsModal" @close="closeWishDetailsModal" :wish="showPrevWish ? showPrevWish : showSavedPrevWish" @unSaveWish="unSaveWish"  @newUpdate="newUpdate" />
+      <WishDetailView :isWishSaved="isWishSaved" :isRequestingAddress="isRequestingAddress"
+        @requestAddress="requestAddress" @editWish="openEditWishModal" v-if="showWishDetailsModal"
+        @close="closeWishDetailsModal" :wish="showPrevWish ? showPrevWish : showSavedPrevWish" @unSaveWish="unSaveWish"
+        @newUpdate="newUpdate" />
 
 
-      <AnalyticsModal
-        v-if="showAnalyticsModal"
-        :analyticsData="analyticsData"
-        @close="closeAnalyticsModal"
-      />
-      <CreateWishModal v-if="showCreateWishModal" :wish="editingWish" @addWish="AddWish" @close="closeCreateWishModal" />
-      <DeleteConfirmationModal v-if="showDeleteModal" :title="'WishList'" :description="'Are you sure you want to delete this wishlist? This action cannot be undone.'"   @confirm="confirmDelete" @cancel="cancelDelete" />
-      <DeleteConfirmationModal v-if="showDeleteWishModal" :title="'Wish'" :description="'Are you sure you want to delete this wish? This action cannot be undone.'"   @confirm="confirmDelete" @cancel="cancelDelete" />
+      <AnalyticsModal v-if="showAnalyticsModal" :analyticsData="analyticsData" @close="closeAnalyticsModal" />
+      <CreateWishModal v-if="showCreateWishModal" :wish="editingWish" @addWish="AddWish"
+        @close="closeCreateWishModal" />
+      <DeleteConfirmationModal v-if="showDeleteModal" :title="'WishList'"
+        :description="'Are you sure you want to delete this wishlist? This action cannot be undone.'"
+        @confirm="confirmDelete" @cancel="cancelDelete" />
+      <DeleteConfirmationModal v-if="showDeleteWishModal" :title="'Wish'"
+        :description="'Are you sure you want to delete this wish? This action cannot be undone.'"
+        @confirm="confirmDelete" @cancel="cancelDelete" />
     </div>
   </div>
   <Loader :show="loading" />
@@ -141,12 +129,12 @@ export default {
     WishDetailView,
     AnalyticsModal,
   },
-  
+
   data() {
     return {
       showWelcomeModal: false,
       isWishSaved: false,
-      isRequestingAddress:false,
+      isRequestingAddress: false,
       user: {
         username: '',
         first_name: '',
@@ -184,7 +172,7 @@ export default {
       savedwishes: [],
       reservedWishes: [],
       loading: false,  // Add loading state
-      
+
     };
   },
   computed: {
@@ -219,29 +207,33 @@ export default {
     if (this.$route.query.showCongratulations === 'true') {
       this.showInitialModal = true;
     }
-        // Show welcome modal once after registration
-        if (!localStorage.getItem('welcomeShown')) {
+    // Show welcome modal once after registration
+    if (!localStorage.getItem('welcomeShown')) {
       this.showWelcomeModal = true;
       localStorage.setItem('welcomeShown', 'true');
     }
-    
+
     this.fetchAnalyticsData();
 
     this.loadData();
-    
+
   },
 
 
 
   methods: {
-    newUpdate(){
-  
+    wishlistArchived(){
+      this.loadData();
+
+    },
+    newUpdate() {
+
       this.loadUserData();
       this.fetchAnalyticsData();
 
       this.loadData();
     },
-    shareWishlist(wishlistId, wishlistUser){
+    shareWishlist(wishlistId, wishlistUser) {
       this.$emit('shareWishlist', wishlistId, wishlistUser);
     },
     closeBirthdayModal() {
@@ -252,50 +244,50 @@ export default {
     },
     async unSaveWish(wish) {
       console.log(wish);
-      
-            eventBus.setLoading(true);
-            try {
-                await this.$axios.post(
-                    `${this.$baseURL}/saved-wishes`, {
-                        'wish_id': wish.id
-                    }, {
-                        headers: {
-                            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-                        },
-                    }
-                );
 
-                eventBus.onSuccess('Wish Saved.');
-                wish.status = null;
-            } catch (error) {
-                console.error("Error Saving Wish:", error);
-                const errorMsg = error.response?.data?.message || 'Error Saving Wish. Please try again.';
-                eventBus.onError(errorMsg);
-            } finally {
-                eventBus.setLoading(false);
-            }
-        },
+      eventBus.setLoading(true);
+      try {
+        await this.$axios.post(
+          `${this.$baseURL}/saved-wishes`, {
+          'wish_id': wish.id
+        }, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          },
+        }
+        );
+
+        eventBus.onSuccess('Wish Saved.');
+        wish.status = null;
+      } catch (error) {
+        console.error("Error Saving Wish:", error);
+        const errorMsg = error.response?.data?.message || 'Error Saving Wish. Please try again.';
+        eventBus.onError(errorMsg);
+      } finally {
+        eventBus.setLoading(false);
+      }
+    },
 
 
 
     async requestAddress(wishID) {
-      
-          this.isRequestingAddress = true
-            try {
-                
-              await this.$axios.post(`${this.$baseURL}/wishes/${wishID}/address`,{} ,{
-              headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
-            });
 
-            eventBus.onSuccess('Address request sent successfully.');
-            
-            } catch (error) {
-              console.error("Error requesting address:", error);
-                const errorMsg = error.response?.data?.message || 'Error requesting address. Please try again.';
-            } finally {
-                this.isRequestingAddress =false
-            }
-        },
+      this.isRequestingAddress = true
+      try {
+
+        await this.$axios.post(`${this.$baseURL}/wishes/${wishID}/address`, {}, {
+          headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+        });
+
+        eventBus.onSuccess('Address request sent successfully.');
+
+      } catch (error) {
+        console.error("Error requesting address:", error);
+        const errorMsg = error.response?.data?.message || 'Error requesting address. Please try again.';
+      } finally {
+        this.isRequestingAddress = false
+      }
+    },
 
 
     async loadData() {
@@ -322,8 +314,8 @@ export default {
 
 
     navigateToAllWishes(wishlistId) {
-    this.$router.push({ name: 'Wishlist', params: { id: wishlistId } });
-  },
+      this.$router.push({ name: 'Wishlist', params: { id: wishlistId } });
+    },
 
     async fetchSavedWishes() {
       try {
@@ -345,17 +337,17 @@ export default {
 
 
     AddWish(updatedWish) {
-    const index = this.reservedWishes.findIndex(wish => wish.id === updatedWish.id);
-    if (index !== -1) {
-      this.reservedWishes.splice(index, 1, updatedWish);
-    } else {
-      this.wishes.push(updatedWish);
-    }
-    this.closeCreateWishModal();
-  },
+      const index = this.reservedWishes.findIndex(wish => wish.id === updatedWish.id);
+      if (index !== -1) {
+        this.reservedWishes.splice(index, 1, updatedWish);
+      } else {
+        this.wishes.push(updatedWish);
+      }
+      this.closeCreateWishModal();
+    },
 
 
-  async confirmDelete() {
+    async confirmDelete() {
       eventBus.setLoading(true);
       try {
         await this.$axios.delete(`${this.$baseURL}/wishes/${this.wishToDelete}`, {
@@ -363,7 +355,7 @@ export default {
         });
         this.loadData()
 
-       
+
         eventBus.onSuccess('Wish deleted successfully.');
       } catch (error) {
         console.error('Error deleting wish:', error.response?.data?.message || error.message);
@@ -385,10 +377,10 @@ export default {
     },
 
     openEditWishModal(wish) {
-    this.editingWish = { ...wish }; // Ensure you pass a copy of the wish to avoid direct mutation
-    this.showWishDetailsModal = false
-    this.showCreateWishModal = true;
-  },
+      this.editingWish = { ...wish }; // Ensure you pass a copy of the wish to avoid direct mutation
+      this.showWishDetailsModal = false
+      this.showCreateWishModal = true;
+    },
 
     handleEditWishlist(wishlist) {
       this.$emit('showCreateWishlistModal', wishlist.category, wishlist);
@@ -438,7 +430,7 @@ export default {
         this.showDeleteModal = false;
       }
     },
-  
+
     closeAnalyticsModal() {
       this.showAnalyticsModal = false;
     },
@@ -457,7 +449,7 @@ export default {
       this.fetchAnalyticsData()
       this.showAnalyticsModal = true;
     },
-    prevWish(wishId , isWishSaved) {
+    prevWish(wishId, isWishSaved) {
       this.showWishDetailsModal = true;
       this.isWishSaved = isWishSaved
       this.showPrevWish = this.reservedWishes.find(w => w.id === wishId);
@@ -483,15 +475,66 @@ export default {
     setActiveTab(tab) {
       this.activeTab = tab;
     },
+    handleSort({ sortBy, sortOrder }) {
+      let arrayToSort = [];
+      
+      switch (this.activeTab) {
+        case 'myWishes':
+          arrayToSort = this.wishlists;
+          break;
+        case 'reserved':
+          arrayToSort = this.reservedWishes;
+          break;
+        case 'saved':
+          arrayToSort = this.savedwishes;
+          break;
+      }
+
+      arrayToSort.sort((a, b) => {
+        let comparison = 0;
+        
+        switch (sortBy) {
+          case 'title':
+            comparison = a.title.localeCompare(b.title);
+            break;
+          case 'name':
+            comparison = a.name.localeCompare(b.name);
+            break;
+          case 'amount':
+            comparison = (parseFloat(a.amount) || 0) - (parseFloat(b.amount) || 0);
+            break;
+          case 'reserved_date':
+            comparison = new Date(a.reserved_at) - new Date(b.reserved_at);
+            break;
+          case 'saved_date':
+            comparison = new Date(a.created_at) - new Date(b.created_at);
+            break;
+          case 'event_date':
+            comparison = new Date(a.date) - new Date(b.date);
+            break;
+          case 'likes':
+            comparison = a.likes_count - b.likes_count;
+            break;
+          case 'views':
+            comparison = a.views_count - b.views_count;
+            break;
+          default:
+            comparison = 0;
+        }
+        
+        return sortOrder === 'asc' ? comparison : -comparison;
+      });
+    },
   },
 };
 </script>
-  
+
 <style scoped>
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.5s;
 }
+
 .fade-enter,
 .fade-leave-to {
   opacity: 0;

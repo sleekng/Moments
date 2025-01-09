@@ -30,42 +30,56 @@
 
 
       <!-- Sort By Dropdown -->
-      <div class="relative flex items-center space-x-2 z-40" @mouseleave="toggleDropdown">
-        <img src="/assets/sort-vertical-svgrepo-com-1.svg" alt="Sort Icon" class="lg:h-4 lg:w-4 h-8 w-8 mr-2 lg:mr-auto" @click="toggleDropdown">
-        <span class="text-base hidden lg:inline font-medium text-[#616874] cursor-pointer" @click="toggleDropdown">Sort by</span>
-        <img src="/assets/dropdown.svg" alt="Dropdown Icon" class="h-4 w-4 hidden lg:inline" @click="toggleDropdown">
+      <div class="relative flex items-center space-x-2 z-40" >
         
-        <!-- Dropdown -->
-        <div v-if="isDropdownOpen"  class="w-52 absolute top-6 -right-5 bg-white rounded-lg shadow-lg p-2 border border-gray-200">
-          <div class="flex items-center my-1 p-2 rounded-lg cursor-pointer bg-purple-50" @mouseover="hover($event)" @mouseout="unhover($event)">
-            <span class="ml-2 text-primaryColor hover:text-primaryColor w-full font-medium">Pirority</span>
-            <img src="/assets/check.svg" class="w-3 h-3 ml-auto" alt="Check">
+        <i class="fa-regular text-gray-600 fa-arrow-up-arrow-down" @click="toggleDropdown"></i>
+        <span class="text-base hidden lg:inline font-medium text-[#616874] cursor-pointer" @click="toggleDropdown">Sort by</span>
+        <i class="fa-regular text-gray-600 fa-angles-up-down" @click="toggleDropdown"></i>
+        
+        <!-- Dropdown for all tabs -->
+        <div v-if="isDropdownOpen"  class="w-52 absolute top-6 -right-3 bg-white rounded-lg shadow-lg p-2 border border-gray-200">
+          <div class="flex items-center my-1 p-2 rounded-lg cursor-pointer hover:bg-primaryColor/10"
+               :class="{'bg-primaryColor/10': sortBy === 'priority'}"
+               @click="setSorting('priority')">
+            <span class="ml-2" :class="sortBy === 'priority' ? 'text-primaryColor' : 'text-gray-800'">Priority</span>
+            <img v-if="sortBy === 'priority'" src="/assets/check.svg" class="w-3 h-3 ml-auto" alt="Check">
+          </div>
+          <div class="flex items-center my-1 p-2 rounded-lg cursor-pointer hover:bg-primaryColor/10"
+               :class="{'bg-primaryColor/10': sortBy === 'name'}"
+               @click="setSorting('name')">
+            <span class="ml-2" :class="sortBy === 'name' ? 'text-primaryColor' : 'text-gray-800'">Name</span>
+            <img v-if="sortBy === 'name'" src="/assets/check.svg" class="w-3 h-3 ml-auto" alt="Check">
+          </div>
+          <div class="flex items-center my-1 p-2 rounded-lg cursor-pointer hover:bg-primaryColor/10"
+               :class="{'bg-primaryColor/10': sortBy === 'likes'}"
+               @click="setSorting('likes')">
+            <span class="ml-2" :class="sortBy === 'likes' ? 'text-primaryColor' : 'text-gray-800'">Number of likes</span>
+            <img v-if="sortBy === 'likes'" src="/assets/check.svg" class="w-3 h-3 ml-auto" alt="Check">
+          </div>
+          <div class="flex items-center my-1 p-2 rounded-lg cursor-pointer hover:bg-primaryColor/10"
+               :class="{'bg-primaryColor/10': sortBy === 'amount'}"
+               @click="setSorting('amount')">
+            <span class="ml-2" :class="sortBy === 'amount' ? 'text-primaryColor' : 'text-gray-800'">Amount</span>
+            <img v-if="sortBy === 'amount'" src="/assets/check.svg" class="w-3 h-3 ml-auto" alt="Check">
+          </div>
+          <div class="flex items-center my-1 p-2 rounded-lg cursor-pointer hover:bg-primaryColor/10"
+               :class="{'bg-primaryColor/10': sortBy === 'quantity'}"
+               @click="setSorting('quantity')">
+            <span class="ml-2" :class="sortBy === 'quantity' ? 'text-primaryColor' : 'text-gray-800'">Quantity</span>
+            <img v-if="sortBy === 'quantity'" src="/assets/check.svg" class="w-3 h-3 ml-auto" alt="Check">
           </div>
           <hr>
-          <div class="flex items-center my-1 p-2 rounded-lg cursor-pointer bg-purple-50" @mouseover="hover($event)" @mouseout="unhover($event)">
-            <span class="ml-2 text-primaryColor hover:text-primaryColor w-full font-medium">Name</span>
-            <img src="/assets/check.svg" class="w-3 h-3 ml-auto" alt="Check">
+          <div class="flex items-center my-1 p-2 rounded-lg cursor-pointer mt-2"
+               :class="{'bg-primaryColor/10': sortOrder === 'asc'}"
+               @click="setSortOrder('asc')">
+            <span class="ml-2" :class="sortOrder === 'asc' ? 'text-primaryColor' : 'text-gray-800'">Ascending</span>
+            <img v-if="sortOrder === 'asc'" src="/assets/check-2.svg" class="w-3 h-3 ml-auto" alt="Check">
           </div>
-          <hr>
-          <div class="flex items-center my-1 p-2 rounded-lg cursor-pointer" @mouseover="hover($event)" @mouseout="unhover($event)">
-            <span class="ml-2 text-gray-800 hover:text-primaryColor w-full font-medium">Number of likes</span>
-          </div>
-          <hr>
-          <div class="flex items-center my-1 p-2 rounded-lg cursor-pointer" @mouseover="hover($event)" @mouseout="unhover($event)">
-            <span class="ml-2 text-gray-800 hover:text-primaryColor w-full font-medium">Amount</span>
-          </div>
-          <hr>
-          <div class="flex items-center my-1 p-2 rounded-lg cursor-pointer" @mouseover="hover($event)" @mouseout="unhover($event)">
-            <span class="ml-2 text-gray-800 hover:text-primaryColor w-full font-medium">Quantity</span>
-          </div>
-          <hr>
-          <div class="flex items-center my-1 p-2 rounded-lg cursor-pointer mt-2 bg-purple-50" @mouseover="hover($event)" @mouseout="unhover($event)">
-            <span class="ml-2 text-primaryColor hover:text-primaryColor w-full font-medium">Ascending</span>
-            <img src="/assets/check-2.svg" class="w-3 h-3 ml-auto" alt="Check">
-          </div>
-          <hr>
-          <div class="flex items-center my-1 p-2  rounded-lg cursor-pointer" @mouseover="hover($event)" @mouseout="unhover($event)">
-            <span class="ml-2 text-gray-800 hover:text-primaryColor w-full font-medium">Descending</span>
+          <div class="flex items-center my-1 p-2 rounded-lg cursor-pointer"
+               :class="{'bg-primaryColor/10': sortOrder === 'desc'}"
+               @click="setSortOrder('desc')">
+            <span class="ml-2" :class="sortOrder === 'desc' ? 'text-primaryColor' : 'text-gray-800'">Descending</span>
+            <img v-if="sortOrder === 'desc'" src="/assets/check-2.svg" class="w-3 h-3 ml-auto" alt="Check">
           </div>
         </div>
       </div>
@@ -101,7 +115,9 @@ export default {
   },
   data() {
     return {
-      isDropdownOpen: false, // Track the dropdown visibility
+      isDropdownOpen: false,
+      sortBy: 'name',
+      sortOrder: 'asc'
     };
   },
   methods: {
@@ -113,15 +129,14 @@ export default {
     toggleDropdown() {
       this.isDropdownOpen = !this.isDropdownOpen;
     },
-    closeDropdown() {
-      this.isDropdownOpen = false;
+    setSorting(type) {
+      this.sortBy = type;
+      this.$emit('sort', { sortBy: this.sortBy, sortOrder: this.sortOrder });
     },
-    hover(event) {
-      event.currentTarget.classList.add('bg-primaryMainBright');
-    },
-    unhover(event) {
-      event.currentTarget.classList.remove('bg-primaryMainBright');
-    },
+    setSortOrder(order) {
+      this.sortOrder = order;
+      this.$emit('sort', { sortBy: this.sortBy, sortOrder: this.sortOrder });
+    }
   },
 };
 </script>

@@ -3,12 +3,13 @@ import Home from '@/pages/Home/Home.vue';
 import { eventBus } from '@/eventBus.js';
 
 import UserDashboard from '@/pages/Dashboard/UserDashboard.vue';
+import OAuthCallback from '@/pages/Auth/OAuthCallback.vue'; // You'll need to create this component
 
 import UserExplore from '@/pages/Dashboard/UserExplore.vue';
 import UsersProfile from '@/pages/Dashboard/UsersProfile.vue';
 import Account from '@/pages/Dashboard/Account.vue';
 import Archived from '@/pages/Dashboard/Archived.vue';
-import ArchivedView from '@/pages/Dashboard/ArchivedView.vue';
+import ArchivedWishlist from '@/pages/Dashboard/ArchivedWishlist.vue';
 import Wishlist from '@/pages/Dashboard/Wishlist.vue';
 import Friends from '@/pages/Friends.vue';
 import Profile from '@/pages/Profile.vue';
@@ -40,9 +41,10 @@ const routes = [
     },
 
   { path: '/archived', name: 'Archived', component: Archived },
-  { path: '/view-archived', name: 'ArchivedView', component: ArchivedView },
   { path: '/dashboard', name: 'dashboard', component: UserDashboard },
   { path: '/wishlist/:id/:username', name: 'Wishlist', component: Wishlist, props: true },
+  { path: '/archived/:id', name: 'ArchivedWishlist', component: ArchivedWishlist, props: true },
+
   { path: '/:username', name: 'UsersProfile', component: UsersProfile, props: true },
 /*   { path: '/wishlist', name: 'Wishlist', component: Wishlist }, */
   { path: '/friends', name: 'Friends', component: Friends },
@@ -55,6 +57,12 @@ const routes = [
   { path: '/verification-sent', name: 'Verification Sent', component: VerificationSent },
   { path: '/basic-info', name: 'Sign Up', component: SignUp },
   { path: '/additional-info', name: 'Sign Up 2', component: SignUp2 },
+  { 
+    path: '/auth/:provider/callback', 
+    name: 'OAuthCallback', 
+    component: OAuthCallback,
+    props: true 
+  },
   { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound },
 ];
 
@@ -82,7 +90,7 @@ function clearAuthData() {
 }
 
 router.beforeEach((to, from, next) => {
-  const publicPages = ['Home', 'Login', 'Register', 'Create Option', 'Forgot Password', 'Reset Password', 'Verification Sent','Sign Up','Sign Up 2'];
+  const publicPages = ['Home', 'OAuthCallback', 'Login', 'Register', 'Create Option', 'Forgot Password', 'Reset Password', 'Verification Sent','Sign Up','Sign Up 2'];
   const authRequired = !publicPages.includes(to.name);
 
   const loggedIn = !isTokenExpired();

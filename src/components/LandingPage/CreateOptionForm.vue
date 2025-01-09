@@ -23,15 +23,19 @@
             <span class="text-gray-800 font-medium">Sign up with Apple</span>
         </button>
 
-        <button class="w-full flex items-center justify-center p-3 bg-gray-200 rounded-full shadow-sm">
-            <img src="/assets/facebook.svg" class="w-4 h-4 mr-2" alt="Facebook Icon" />
-            <span class="text-gray-800 font-medium">Sign up with Facebook</span>
-        </button>
+        <button 
+        @click="handleOAuthSignIn('facebook')" 
+        class="w-full flex items-center justify-center p-3 bg-gray-200 rounded-full shadow-sm">
+        <img src="/assets/facebook.svg" class="w-4 h-4 mr-2" alt="Facebook Icon" />
+        <span class="text-gray-800 font-medium">Sign up with Facebook</span>
+    </button>
 
-        <button class="w-full flex items-center justify-center p-3 bg-gray-200 rounded-full shadow-sm">
-            <img src="/assets/google.svg" class="w-4 h-4 mr-2" alt="Google Icon" />
-            <span class="text-gray-800 font-medium">Sign up with Google</span>
-        </button>
+    <button 
+        @click="handleOAuthSignIn('google')" 
+        class="w-full flex items-center justify-center p-3 bg-gray-200 rounded-full shadow-sm">
+        <img src="/assets/google.svg" class="w-4 h-4 mr-2" alt="Google Icon" />
+        <span class="text-gray-800 font-medium">Sign up with Google</span>
+    </button>
     </div>
 
     <div class="flex items-center my-8">
@@ -49,10 +53,28 @@
 import OptinLogo from '../Dashboard/OptinLogo.vue';
 
 export default {
-    components:{
+    components: {
         OptinLogo
     },
     name: 'SignUp',
+
+    methods: {
+        async handleOAuthSignIn(provider) {
+            try {
+                const response = await this.$axios.get(`${this.$baseURL}/oauth/${provider}/sign-in`, {
+                    params: {
+                        redirect_uri: `${this.$website}/auth/${provider}/callback`
+                    }
+                });
+                
+                if (response.data.data.redirect_url) {
+                    window.location.replace(response.data.data.redirect_url);
+                }
+            } catch (error) {
+                console.error(`${provider} authentication error:`, error);
+            }
+        }
+    }
 
 };
 </script>

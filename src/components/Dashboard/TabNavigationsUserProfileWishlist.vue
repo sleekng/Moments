@@ -22,88 +22,51 @@
         <!-- Dropdown  MyWishList -->
          <template v-if="selectedTab == 'myWishes' ">
             <div v-if="isDropdownOpen"  class="w-52 absolute top-6 -right-5 bg-white rounded-lg shadow-lg p-2 border border-gray-200">
-              <div class="flex items-center my-1 p-2 rounded-lg cursor-pointer bg-purple-50" @mouseover="hover($event)" @mouseout="unhover($event)">
-                <span class="ml-2 text-primaryColor hover:text-primaryColor w-full font-medium">Name</span>
-                <img src="/assets/check.svg" class="w-3 h-3 ml-auto" alt="Check">
+              <div class="flex items-center my-1 p-2 rounded-lg cursor-pointer hover:bg-primaryColor/10"
+                   :class="{'bg-primaryColor/10': sortBy === 'title'}"
+                   @click="setSorting('title')">
+                <span class="ml-2" :class="sortBy === 'title' ? 'text-primaryColor' : 'text-gray-800'">Name</span>
+                <img v-if="sortBy === 'title'" src="/assets/check.svg" class="w-3 h-3 ml-auto" alt="Check">
               </div>
               <hr>
-              <div class="flex items-center my-1 p-2 rounded-lg cursor-pointer" @mouseover="hover($event)" @mouseout="unhover($event)">
-                <span class="ml-2 text-gray-800 hover:text-primaryColor w-full font-medium">Event date</span>
+              <div class="flex items-center my-1 p-2 rounded-lg cursor-pointer hover:bg-primaryColor/10"
+                   :class="{'bg-primaryColor/10': sortBy === 'event_date'}"
+                   @click="setSorting('event_date')">
+                <span class="ml-2" :class="sortBy === 'event_date' ? 'text-primaryColor' : 'text-gray-800'">Event date</span>
+                <img v-if="sortBy === 'event_date'" src="/assets/check.svg" class="w-3 h-3 ml-auto" alt="Check">
               </div>
               <hr>
-              <div class="flex items-center my-1 p-2 rounded-lg cursor-pointer" @mouseover="hover($event)" @mouseout="unhover($event)">
-                <span class="ml-2 text-gray-800 hover:text-primaryColor w-full font-medium">Number of likes</span>
+              <div class="flex items-center my-1 p-2 rounded-lg cursor-pointer hover:bg-primaryColor/10"
+                   :class="{'bg-primaryColor/10': sortBy === 'likes'}"
+                   @click="setSorting('likes')">
+                <span class="ml-2" :class="sortBy === 'likes' ? 'text-primaryColor' : 'text-gray-800'">Number of likes</span>
+                <img v-if="sortBy === 'likes'" src="/assets/check.svg" class="w-3 h-3 ml-auto" alt="Check">
               </div>
               <hr>
-              <div class="flex items-center my-1 p-2 rounded-lg cursor-pointer" @mouseover="hover($event)" @mouseout="unhover($event)">
-                <span class="ml-2 text-gray-800 hover:text-primaryColor w-full font-medium">Number of views</span>
+              <div class="flex items-center my-1 p-2 rounded-lg cursor-pointer hover:bg-primaryColor/10"
+                   :class="{'bg-primaryColor/10': sortBy === 'views'}"
+                   @click="setSorting('views')">
+                <span class="ml-2" :class="sortBy === 'views' ? 'text-primaryColor' : 'text-gray-800'">Number of views</span>
+                <img v-if="sortBy === 'views'" src="/assets/check.svg" class="w-3 h-3 ml-auto" alt="Check">
               </div>
               <hr>
-              <div class="flex items-center my-1 p-2 rounded-lg cursor-pointer mt-2 bg-purple-50" @mouseover="hover($event)" @mouseout="unhover($event)">
-                <span class="ml-2 text-primaryColor font-medium hover:text-primaryColor w-full">Ascending</span>
-                <img src="/assets/check-2.svg" class="w-3 h-3 ml-auto" alt="Check">
+              <div class="flex items-center my-1 p-2 rounded-lg cursor-pointer mt-2"
+                   :class="{'primaryColor/50': sortOrder === 'asc'}"
+                   @click="setSortOrder('asc')">
+                <span class="ml-2" :class="sortOrder === 'asc' ? 'text-primaryColor' : 'text-gray-800'">Ascending</span>
+                <img v-if="sortOrder === 'asc'" src="/assets/check-2.svg" class="w-3 h-3 ml-auto" alt="Check">
               </div>
               <hr>
-              <div class="flex items-center my-1 p-2 rounded-lg cursor-pointer" @mouseover="hover($event)" @mouseout="unhover($event)">
-                <span class="ml-2 text-gray-800 hover:text-primaryColor w-full font-medium">Descending</span>
+              <div class="flex items-center my-1 p-2 rounded-lg cursor-pointer"
+                   :class="{'primaryColor/50': sortOrder === 'desc'}"
+                   @click="setSortOrder('desc')">
+                <span class="ml-2" :class="sortOrder === 'desc' ? 'text-primaryColor' : 'text-gray-800'">Descending</span>
+                <img v-if="sortOrder === 'desc'" src="/assets/check-2.svg" class="w-3 h-3 ml-auto" alt="Check">
               </div>
             </div>
          </template>
 
 
-         <!-- DropDown Resevered Wish -->
-         <template v-if="selectedTab == 'reserved'">
-            <div v-if="isDropdownOpen"  class="w-52 absolute top-6 -right-5 bg-white rounded-lg shadow-lg p-2 border border-gray-200">
-              <div class="flex items-center my-1 p-2 rounded-lg cursor-pointer bg-purple-50" @mouseover="hover($event)" @mouseout="unhover($event)">
-                <span class="ml-2 text-primaryColor hover:text-primaryColor w-full font-medium">Name</span>
-                <img src="/assets/check.svg" class="w-3 h-3 ml-auto" alt="Check">
-              </div>
-              <hr>
-              <div class="flex items-center my-1 p-2 rounded-lg cursor-pointer" @mouseover="hover($event)" @mouseout="unhover($event)">
-                <span class="ml-2 text-gray-800 hover:text-primaryColor w-full font-medium">Amount</span>
-              </div>
-              <hr>
-              <div class="flex items-center my-1 p-2 rounded-lg cursor-pointer" @mouseover="hover($event)" @mouseout="unhover($event)">
-                <span class="ml-2 text-gray-800 hover:text-primaryColor w-full font-medium">Date reserved</span>
-              </div>
-              <hr>
-              <div class="flex items-center my-1 p-2 rounded-lg cursor-pointer mt-2 bg-purple-50" @mouseover="hover($event)" @mouseout="unhover($event)">
-                <span class="ml-2 text-primaryColor hover:text-primaryColor w-full font-medium">Ascending</span>
-                <img src="/assets/check-2.svg" class="w-3 h-3 ml-auto" alt="Check">
-              </div>
-              <hr>
-              <div class="flex items-center my-1 p-2 rounded-lg cursor-pointer" @mouseover="hover($event)" @mouseout="unhover($event)">
-                <span class="ml-2 text-gray-800 hover:text-primaryColor w-full font-medium">Descending</span>
-              </div>
-            </div>
-         </template>
-
-         <!-- DropDown Saved Wish -->
-         <template v-if="selectedTab == 'saved'">
-            <div v-if="isDropdownOpen"  class="w-52 absolute top-6 -right-5 bg-white rounded-lg shadow-lg p-2 border border-gray-200">
-              <div class="flex items-center my-1 p-2 rounded-lg cursor-pointer bg-purple-50" @mouseover="hover($event)" @mouseout="unhover($event)">
-                <span class="ml-2 text-primaryColor w-full hover:text-primaryColor  font-medium">Name</span>
-                <img src="/assets/check.svg" class="w-3 h-3 ml-auto" alt="Check">
-              </div>
-              <hr>
-              <div class="flex items-center my-1 p-2 rounded-lg cursor-pointer" @mouseover="hover($event)" @mouseout="unhover($event)">
-                <span class="ml-2 text-gray-800  w-full hover:text-primaryColor font-medium">Amount</span>
-              </div>
-              <hr>
-              <div class="flex items-center my-1 p-2 rounded-lg cursor-pointer" @mouseover="hover($event)" @mouseout="unhover($event)">
-                <span class="ml-2 text-gray-800  w-full hover:text-primaryColor font-medium">Date Saved</span>
-              </div>
-              <hr>
-              <div class="flex items-center my-1 p-2 rounded-lg cursor-pointer mt-2 bg-purple-50" @mouseover="hover($event)" @mouseout="unhover($event)">
-                <span class="ml-2 text-primaryColor w-full font-medium">Ascending</span>
-                <img src="/assets/check-2.svg" class="w-3 h-3 ml-auto" alt="Check">
-              </div>
-              <hr>
-              <div class="flex items-center my-1 p-2 rounded-lg cursor-pointer" @mouseover="hover($event)" @mouseout="unhover($event)">
-                <span class="ml-2 text-gray-800  w-full hover:text-primaryColor font-medium">Descending</span>
-              </div>
-            </div>
-         </template>
 
       </div>
  
@@ -128,7 +91,9 @@ export default {
   data() {
     return {
       selectedTab: 'myWishes',
-      isDropdownOpen: false, // Track the dropdown visibility
+      isDropdownOpen: false,
+      sortBy: 'title',
+      sortOrder: 'asc',
     };
   },
   methods: {
@@ -138,11 +103,13 @@ export default {
     closeDropdown() {
       this.isDropdownOpen = false;
     },
-    hover(event) {
-      event.currentTarget.classList.add('bg-primaryMainBright');
+    setSorting(type) {
+      this.sortBy = type;
+      this.$emit('sort', { sortBy: this.sortBy, sortOrder: this.sortOrder });
     },
-    unhover(event) {
-      event.currentTarget.classList.remove('bg-primaryMainBright');
+    setSortOrder(order) {
+      this.sortOrder = order;
+      this.$emit('sort', { sortBy: this.sortBy, sortOrder: this.sortOrder });
     },
   },
 };

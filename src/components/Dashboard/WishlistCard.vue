@@ -11,33 +11,56 @@
     <!-- Conditional Image and Menu-option for Dashboard -->
     <div class="relative mb-4">
       <img class="w-full h-56 object-cover rounded-md" :src="wishlist.photo || categoryImage" alt="Wishlist Image" />
-      <button v-if="!isExplore" @click.stop="toggleMenu" class="absolute z-40 top-2 right-2 p-1 bg-gray-200 rounded-full toggle-menu-button transition-opacity opacity-0 group-hover:opacity-100">
+      <button v-if="!isExplore" @click.stop="toggleMenu" class="absolute z-30 top-2 right-2 p-1 bg-gray-200 rounded-full toggle-menu-button transition-opacity opacity-0 group-hover:opacity-100">
         <img src="/assets/frame-1618868216.svg" alt="Menu" class="h-6 w-6" />
       </button>
 
-      <!-- DropdownMenu -->
-       <div v-if="isDashboard">
+      <!-- Main dropdown container that only shows on Dashboard -->
+      <div v-if="isDashboard">
+        <!-- Dropdown menu that appears when isDropdownOpen is true and closes on mouseleave -->
+        <div v-if="isDropdownOpen" @mouseleave="closeMenu" class="w-60 bg-white rounded-lg shadow-lg p-2 border border-gray-200 absolute top-8 z-50 right-4">
+          <!-- Share wishlist option -->
+          <div @click.stop="shareWishlist" class="flex relative items-center p-2 group moment-text-effect-parent cursor-pointer">
+            <i class="fa-regular fa-arrow-up-from-bracket moment-text-effect-child"></i>
+            <span class="ml-2 text-gray-800 moment-text-effect-child w-full font-medium">Share wishlist with friends</span>
+          </div>
+
+          <!-- Edit wishlist option -->
+          <div class="flex relative items-center p-2 group moment-text-effect-parent cursor-pointer border-t border-gray-200" @click.stop="$emit('editWishlist', wishlist)">
+            <i class="fa-light fa-pen-to-square moment-text-effect-child"></i>
+            <span class="ml-2 text-gray-800 moment-text-effect-child w-full font-medium">Edit wishlist</span>
+          </div>
+
+          <!-- Archive wishlist option -->
+          <div class="flex relative items-center p-2 group moment-text-effect-parent cursor-pointer border-t border-gray-200" @click.stop="archiveWishlist">
+            <i v-if="!isArchiving" class="fa-light fa-box-archive moment-text-effect-child"></i>
+            <i v-else class="fa-solid fa-spinner fa-spin moment-text-effect-child"></i>
+            <span class="ml-2 text-gray-800 moment-text-effect-child w-full font-medium">
+              {{ isArchiving ? 'Archiving...' : 'Archive wishlist' }}
+            </span>
+          </div>
+
+          <!-- Delete wishlist option -->
+          <div class="flex relative items-center p-2 group moment-text-effect-parent cursor-pointer border-t border-gray-200" @click.stop="$emit('deleteWishlist', wishlist.id)">
+            <i class="fa-light fa-light fa-circle-xmark moment-text-effect-child"></i>
+            <span class="ml-2 text-gray-800 moment-text-effect-child w-full font-medium">Delete</span>
+          </div>
+        </div>
+      </div>
+      <div v-if="!isDashboard && !isExplore">
          <div v-if="isDropdownOpen" @mouseleave="closeMenu" class="w-60 bg-white rounded-lg shadow-lg p-2 border border-gray-200 absolute top-8 z-50 right-4">
-           <div @click.stop="shareWishlist" class="flex relative items-center p-2 group moment-text-effect-parent cursor-pointer">
-             <i class="fa-regular fa-arrow-up-from-bracket moment-text-effect-child"></i>
-             <span class="ml-2 text-gray-800 moment-text-effect-child w-full font-medium">Share wishlist with friends</span>
-           </div>
-           <div class="flex relative items-center p-2 group moment-text-effect-parent cursor-pointer border-t border-gray-200" @click.stop="$emit('editWishlist', wishlist)">
-             <i class="fa-light fa-pen-to-square moment-text-effect-child"></i>
-             <span class="ml-2 text-gray-800 moment-text-effect-child w-full font-medium">Edit wishlist</span>
-           </div>
+          <div class="flex relative items-center p-2 group moment-text-effect-parent cursor-pointer border-t border-gray-200" @click.stop="archiveWishlist">
+  
+            <i v-if="!isArchiving" class="fa-solid fa-gift mr-1 moment-text-effect-child"></i>
+            <i v-else class="fa-solid fa-spinner fa-spin moment-text-effect-child"></i>
+            <span class="ml-2 text-gray-800 moment-text-effect-child w-full font-medium">
+              {{ isArchiving ? 'Restoring...' : 'Restore' }}
+            </span>
+          </div>
            <div class="flex relative items-center p-2 group moment-text-effect-parent cursor-pointer border-t border-gray-200" @click.stop="$emit('deleteWishlist', wishlist.id)">
-             <i class="fa-light fa-light fa-circle-xmark moment-text-effect-child"></i>
-             <span class="ml-2 text-gray-800 moment-text-effect-child w-full font-medium">Delete</span>
-           </div>
-         </div>
-       </div>
-       <div v-if="!isDashboard && !isExplore">
-         <div v-if="isDropdownOpen" @mouseleave="closeMenu" class="w-60 bg-white rounded-lg shadow-lg p-2 border border-gray-200 absolute top-8 z-50 right-4">
-           <div @click.stop="shareWishlist" class="flex relative items-center p-2 group moment-text-effect-parent cursor-pointer">
-             <i class="fa-regular fa-arrow-up-from-bracket moment-text-effect-child"></i>
-             <span class="ml-2 text-gray-800 moment-text-effect-child w-full font-medium">Share wishlist</span>
-           </div>
+            <i class="fa-light fa-light fa-circle-xmark moment-text-effect-child"></i>
+            <span class="ml-2 text-gray-800 moment-text-effect-child w-full font-medium">Delete</span>
+          </div>
           
          </div>
        </div>
@@ -93,6 +116,7 @@ export default {
   data(){
     return{
       currentUser: null,
+      isArchiving: false,
     }
   },
   
@@ -154,6 +178,28 @@ export default {
         ? { id: this.wishlist.id, username: this.currentUser.username }
         : { id: this.wishlist.id, username: this.user.username };
       this.$router.push({ name: 'Wishlist', params: routeParams });
+    },
+    async archiveWishlist() {
+      if (this.isArchiving) return;
+      
+      this.isArchiving = true;
+      try {
+        const response = await this.$axios.post(`${this.$baseURL}/archived-wishlists`, {
+          wishlist_id: this.wishlist.id
+        }, {
+          headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+        });
+        
+        if (response.data.success) {
+          eventBus.onSuccess(response.data.message);
+          this.$emit('wishlistArchived', this.wishlist.id);
+        }
+      } catch (error) {
+        console.error('Error archiving wishlist:', error);
+        eventBus.onError('Failed to archive wishlist');
+      } finally {
+        this.isArchiving = false;
+      }
     },
     async toggleLike() {
       try {
