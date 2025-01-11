@@ -168,6 +168,7 @@
         anniversary: '/assets/others-3.svg',
         'baby-shower': '/assets/baby.svg',
         birthday: '/assets/13-1.svg',
+        wedding: '/assets/wedding.svg',
         book: '/assets/others-5.svg',
         fashion: '/assets/others.svg',
         gadgets: '/assets/others-4.svg',

@@ -17,7 +17,7 @@
   
   <style scoped>
   div {
-    background-image: url('/assets/teen2.svg');
+    background-image: url('/assets/Splash-screen.jpg');
   }
 
   .login-side-advert {

@@ -51,7 +51,7 @@
 
 <script>
 import OptinLogo from '../Dashboard/OptinLogo.vue';
-
+import { eventBus } from "@/eventBus.js";
 export default {
     components: {
         OptinLogo
@@ -60,6 +60,7 @@ export default {
 
     methods: {
         async handleOAuthSignIn(provider) {
+            eventBus.setLoading(true);
             try {
                 const response = await this.$axios.get(`${this.$baseURL}/oauth/${provider}/sign-in`, {
                     params: {

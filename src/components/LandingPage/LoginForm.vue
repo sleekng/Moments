@@ -37,7 +37,20 @@
       Log into Account
     </button>
 
-    <div class="text-center text-sm text-gray-600 mt-8">
+    <div class="mt-8 flex items-center space-x-2 justify-center">
+      <span class="h-[1px] bg-[#F0F2F5] w-28 md:w-40"></span>
+      <span class=" text-sm text-[#667185]">Or</span>
+      <span class="h-[1px] bg-[#F0F2F5] w-28 md:w-40"></span>
+    </div>
+
+    <div class="flex justify-center space-x-4 p-4 rounded">
+      <img src="/assets/facebook.svg" class="w-8 h-8 rounded-full p-1 border" alt="Facebook Icon" />
+      <button   @click="handleOAuthSignIn('google')" >
+        <img src="/assets/google.svg" class="w-8 h-8 rounded-full p-1 border" alt="Google Icon" />
+      </button>
+      <img src="/assets/apple.svg" class="w-8 h-8 rounded-full p-1 border" alt="Apple Icon" />
+    </div>
+    <div class="text-center text-sm create-bt  text-gray-600 mt-4">
       New to Moments Hub? 
       
       <router-link class="text-primaryColor font-medium" to="/register">
@@ -66,6 +79,22 @@ export default {
     };
   },
   methods: {
+    async handleOAuthSignIn(provider) {
+      eventBus.setLoading(true);
+            try {
+                const response = await this.$axios.get(`${this.$baseURL}/oauth/${provider}/sign-in`, {
+                    params: {
+                        redirect_uri: `${this.$website}/auth/${provider}/callback`
+                    }
+                });
+                
+                if (response.data.data.redirect_url) {
+                    window.location.replace(response.data.data.redirect_url);
+                }
+            } catch (error) {
+                console.error(`${provider} authentication error:`, error);
+            }
+        },
     togglePassword() {
       this.showPassword = !this.showPassword;
     },

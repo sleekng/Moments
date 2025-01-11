@@ -66,6 +66,7 @@ export default {
         anniversary: '/assets/others-3.svg',
         'baby-shower': '/assets/baby.svg',
         birthday: '/assets/13-1.svg',
+        wedding: '/assets/wedding.svg',
         book: '/assets/others-5.svg',
         fashion: '/assets/others.svg',
         gadgets: '/assets/others-4.svg',
@@ -102,6 +103,9 @@ export default {
             }
           });
           this.categories = response.data.data;
+        
+          console.log(this.categories);
+          
           // Store fetched categories in localStorage for future use
           localStorage.setItem('categories', JSON.stringify(this.categories));
         } catch (error) {

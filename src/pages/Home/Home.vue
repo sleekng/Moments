@@ -2,7 +2,8 @@
 <div class="bg-primaryBackground">
     <!-- Header section -->
     <section class=" w-full">
-        <div class="  overflow-hidden relative w-full  ">
+        <div class="  overflow-hidden relative w-full top-screen h-[800px]">
+            
             <!-- Header with Login and Signup buttons -->
             <header class="flex justify-between items-center p-4 lg:px-8">
                 <img src="/assets/Logo-1.svg" alt="Logo" class="w-24 h-10">
@@ -12,7 +13,7 @@
                 </div>
             </header>
 
-            <div class="flex flex-col items-center  py-28 md:py-8 2xl:py-10 px-4">
+            <div class="flex flex-col items-center  py-28 md:py-28 2xl:py-10 px-4">
                 <div class="text-center flex justify-center flex-col items-center  mx-auto mb-4 space-y-2 relative">
                     <h1 class="2xl:text-4xl max-w-lg text-[64px]  font-semibold text-gray-900  leading-none relative">
                         <img class=" particle-7" src="/assets/balloon-svgrepo-com1.svg" alt="particle-7">
@@ -29,9 +30,9 @@
                 <div class="relative w-full max-w-4xl mx-auto mt-10 lg:mt-16 flex justify-center overflow-hidden">
                     <!-- Rotated Images Section -->
                     <div class="relative w-full max-w-[90vw] h-[24vh] lg:h-[50vh] flex justify-center items-center overflow-hidden">
-                        <img src="/assets/home-rotate.png" alt="Image 1" class="absolute smooth-rotate w-full h-auto max-w-[700px] top-10 lg:top-20 transform -translate-y-1/2" />
+                        <img src="/assets/rotatery-1.png" alt="Image 1" class="absolute smooth-rotate w-full h-auto max-w-[700px] top-10 lg:top-20 transform -translate-y-1/2" />
                     </div>
-                    <img src="/assets/frame-1618868348.svg" alt="Background Decor" class="absolute -bottom-5 md:-bottom-20 left-1/2 z-50 transform -translate-x-1/2 w-full" />
+                    <img src="/assets/frame-1618868348.svg" alt="Background Decor" class="absolute inset-x-0 -bottom-3 sm:-bottom-4 lg:-bottom-6 left-1/2 z-50 transform -translate-x-1/2 w-full" />
                 </div>
             </div>
 
@@ -271,10 +272,10 @@
                 <p class="text-lg text-gray-600">
                     Are you ready to elevate your wishlist game? Join Moment Hub today and become part of a vibrant community where sharing, discovering, and gifting. Let’s make every moment a celebration!
                 </p>
-                <button class="bg-primaryColor text-white font-medium text-lg py-3 px-10 rounded-full flex items-center space-x-2 transition-transform transform hover:scale-105 max-w-fit">
+                <RouterLink to="/Login" class="bg-primaryColor text-white font-medium text-lg py-3 px-10 rounded-full flex items-center space-x-2 transition-transform transform hover:scale-105 max-w-fit">
                     <span>Start wishing now</span>
                     <img src="/assets/frame-1618868561.svg" alt="Arrow Icon" class="w-4 h-auto" />
-                </button>
+                </RouterLink>
 
             </div>
             <!-- Image corresponding to the final step -->
@@ -307,11 +308,10 @@
         </div>
     </footer> -->
 
-<!--     <footer class="relative  px-60 flex flex-col md:flex-row mt-10 justify-between h-[400px] items-center" style="background-image: url('/footer.svg'); background-repeat: no-repeat; background-size: cover;"> -->
-    <footer class="relative px-4 md:px-60 flex flex-col md:flex-row mt-10 justify-between items-center bg-primaryColor py-12">
-    <div class="container mx-auto flex flex-col sm:flex-row justify-between space-y-4 sm:space-y-0">
+    <footer class="relative lg:px-60 px-4 mt-10 py-10 h-[400px] items-center" style="background-image: url('/assets/footer-bg.svg'); background-repeat: no-repeat; background-size: cover;">
+    <div class="container mx-auto grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8">
         <!-- Left Section -->
-        <div class="flex bg-white w-full sm:w-[352px] h-[327px] p-8 justify-between rounded-[32px] flex-col  sm:items-start space-y-2">
+        <div class="flex bg-white w-full h-[327px] p-8 col-span-4 justify-between rounded-[32px] flex-col items-center sm:items-start space-y-2">
             <div class="flex flex-col space-y-4">
                 <div class="flex">
                     <img src="/assets/logo.svg" alt="Moments Logo" class="w-44" />
@@ -322,21 +322,23 @@
         </div>
 
         <!-- Center Section -->
-        <div class="flex bg-white w-full sm:w-[406px] h-[327px] p-8 justify-center rounded-[32px] flex-col items-center sm:items-start space-y-2">
-            <span class="text-[62px]  leading-[60px] font-black text-[#240328]">Where wishlists come alive!</span>
+        <div class="flex bg-white w-full h-[327px] p-8 col-span-5 justify-center rounded-[32px] flex-col items-center sm:items-start space-y-2">
+            <span class="text-[62px] leading-[60px] font-black text-[#240328]">Where wishlists come alive!</span>
         </div>
 
         <!-- Right Section -->
-        <div class="flex bg-white w-full sm:w-[140px] sm:h-[327px] p-8 justify-center rounded-[32px] sm:flex-col flex-row items-center space-x-8 sm:space-x-0 sm:space-y-8">
-            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
-                <i class="fab fa-facebook text-gray-800 text-3xl hover:text-gray-600"></i>
-            </a>
-            <a href="https://x.com" target="_blank" rel="noopener noreferrer">
-                <i class="fab fa-x-twitter text-gray-800 text-3xl hover:text-gray-600"></i>
-            </a>
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
-                <i class="fab fa-instagram text-gray-800 text-3xl hover:text-gray-600"></i>
-            </a>
+        <div class="flex bg-white w-full h-[327px] p-8 justify-center col-span-3 rounded-[32px] flex-col items-center space-y-8">
+            <div class="flex flex-row md:flex-col space-x-8 md:space-x-0 md:space-y-8">
+                <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
+                    <i class="fab fa-facebook text-gray-800 text-3xl hover:text-gray-600"></i>
+                </a>
+                <a href="https://x.com" target="_blank" rel="noopener noreferrer">
+                    <i class="fab fa-x-twitter text-gray-800 text-3xl hover:text-gray-600"></i>
+                </a>
+                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
+                    <i class="fab fa-instagram text-gray-800 text-3xl hover:text-gray-600"></i>
+                </a>
+            </div>
         </div>
     </div>
 </footer>
