@@ -2,7 +2,7 @@
 <div class="bg-primaryBackground">
     <!-- Header section -->
     <section class=" w-full">
-        <div class="  overflow-hidden relative w-full top-screen h-[800px]">
+        <div class="  overflow-hidden relative w-full top-screen h-[800px] sm:h-screen">
             
             <!-- Header with Login and Signup buttons -->
             <header class="flex justify-between items-center p-4 lg:px-8">
@@ -14,8 +14,8 @@
             </header>
 
             <div class="flex flex-col items-center  py-28 md:py-28 2xl:py-10 px-4">
-                <div class="text-center flex justify-center flex-col items-center  mx-auto mb-4 space-y-2 relative">
-                    <h1 class="2xl:text-4xl max-w-lg text-[64px]  font-semibold text-gray-900  leading-none relative">
+                <div class="text-center scale-105 flex justify-center flex-col items-center  mx-auto mb-4 space-y-2 relative">
+                    <h1 class="2xl:text-4xl max-w-sm sm:max-w-lg text-[64px]  font-semibold text-gray-900  leading-none relative">
                         <img class=" particle-7" src="/assets/balloon-svgrepo-com1.svg" alt="particle-7">
                         Make Every Moment Memorable
                         <span class="text-primaryColor absolute">.</span>
@@ -27,12 +27,12 @@
                     <img src="/assets/frame-1618868561.svg" alt="Arrow Icon" class="w-4 h-auto" />
                 </RouterLink>
 
-                <div class="relative w-full max-w-4xl mx-auto mt-10 lg:mt-16 flex justify-center overflow-hidden">
+                <div class="relative w-full max-w-4xl mx-auto mt-10 lg:mt-8 flex justify-center overflow-hidden">
                     <!-- Rotated Images Section -->
                     <div class="relative w-full max-w-[90vw] h-[24vh] lg:h-[50vh] flex justify-center items-center overflow-hidden">
-                        <img src="/assets/rotatery-1.png" alt="Image 1" class="absolute smooth-rotate w-full h-auto max-w-[700px] top-10 lg:top-20 transform -translate-y-1/2" />
+                        <img src="/assets/rotatery-1.png" alt="Image 1" class="absolute smooth-rotate w-full h-auto max-w-[700px] top-10 lg:top-12 transform -translate-y-1/2" />
                     </div>
-                    <img src="/assets/frame-1618868348.svg" alt="Background Decor" class="absolute inset-x-0 -bottom-3 sm:-bottom-4 lg:-bottom-6 left-1/2 z-50 transform -translate-x-1/2 w-full" />
+                    <img src="/assets/frame-1618868348.svg" alt="Background Decor" class="absolute inset-x-0 -bottom-8 sm:-bottom-8 lg:-bottom-2 left-1/2 z-50 transform -translate-x-1/2 w-full" />
                 </div>
             </div>
 
@@ -308,7 +308,7 @@
         </div>
     </footer> -->
 
-    <footer class="relative lg:px-60 px-4 mt-10 py-10 h-[400px] items-center" style="background-image: url('/assets/footer-bg.svg'); background-repeat: no-repeat; background-size: cover;">
+    <footer class="relative lg:px-60 px-4 mt-10 py-10 h-[400px] items-center bg-[url('/assets/footer-bg.svg')] bg-no-repeat bg-cover">
     <div class="container mx-auto grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8">
         <!-- Left Section -->
         <div class="flex bg-white w-full h-[327px] p-8 col-span-4 justify-between rounded-[32px] flex-col items-center sm:items-start space-y-2">
