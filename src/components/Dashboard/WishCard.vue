@@ -375,7 +375,7 @@
 
         
         <h2 class="text-sm lg:text-lg font-semibold">{{ wish.name.split(' ').slice(0, isMobile ? 2 : 4).join(' ') }}{{ wish.name.split(' ').length > (isMobile ? 2 : 4) ? '...' : '' }}</h2>
-        <p class="text-sm md:text-lg">
+        <p v-if="wish.amount" class="text-sm md:text-lg">
           {{ getCurrencySymbol(wish.currency) }} {{ formattedAmount }}
         </p>
         <div class="flex justify-between items-center mt-2">

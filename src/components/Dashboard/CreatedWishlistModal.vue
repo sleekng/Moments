@@ -31,13 +31,13 @@
             @click="shareWishlist"
             class="flex-1 ml-2 text-white bg-primaryColor hover:shadow-lg transition-all font-medium py-3 px-4 rounded-full text-center focus:outline-none"
           >
-            {{ makeAWishText }}l
+            {{ makeAWishText }}
           </button>
           <button v-if="!wishlistUpdated"
             @click="makeAWish"
             class="flex-1 ml-2 text-white bg-primaryColor hover:shadow-lg transition-all font-medium py-3 px-4 rounded-full text-center focus:outline-none"
           >
-            {{ makeAWishText }}l
+            {{ makeAWishText }}
           </button>
         </div>
       </div>

@@ -13,13 +13,13 @@
 
     <div class="w-full mb-4">
       <label class="block text-gray-700 mb-2" for="login-email">Email/Username</label> 
-      <input v-model="email" class="w-full p-3 bg-white border border-gray-300 rounded-md" type="email" id="login-email" />
+      <input v-model="email" class="w-full p-3 bg-white border border-gray-300 rounded-md" type="email" id="login-email" @keyup.enter="handleSubmit" />
     </div>
 
     <div class="w-full mb-4 relative">
       <label class="block text-gray-700 mb-2" for="login-password">Password</label>
       <div class="relative">
-        <input v-model="password" class="w-full p-3 bg-white border border-gray-300 rounded-md" :type="showPassword ? 'text' : 'password'" id="login-password" />
+        <input v-model="password" class="w-full p-3 bg-white border border-gray-300 rounded-md" :type="showPassword ? 'text' : 'password'" id="login-password" @keyup.enter="handleSubmit" />
         <i :class="showPassword ? 'fa-solid fa-eye-slash' : 'fa-regular fa-eye'" @click="togglePassword" class="absolute top-4 right-3 cursor-pointer"></i>
       </div>
     </div>

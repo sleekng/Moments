@@ -109,6 +109,7 @@
     <CreateWishModal
       v-if="showCreateWishModal"
       @createWish="createdWish"
+      :selectedWishlist="currentWishlist"
       @updateWish="UpdatedWish"
       :wishlistId="currentWishlistId"
       @close="closeCreateWishModal"
@@ -152,6 +153,7 @@ export default {
       wishlistUpdated: false,
       createdWishlistId: null,
       currentWishlistId: null,
+      currentWishlist: null,
       showCreateWishModal: false,
       user: null,
     };
@@ -207,6 +209,20 @@ export default {
     eventBus.onError = this.handleError;
   },
   methods: {
+
+    closeCreateWishModal(){
+      this.showCreateWishModal = false
+    },
+    async fetchWishlistDetails(wishlistId) {
+      try {
+        const response = await this.$axios.get(`${this.$baseURL}/wishlists/${wishlistId}`, {
+          headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+        });
+        this.currentWishlist = response.data.data;
+      } catch (error) {
+        console.error('Error fetching wishlist details:', error);
+      }
+    },
     toggleShareMenu(wishlistId, wishlistUser) {
       this.currentWishlistId = wishlistId;
       this.wishlistUser = wishlistUser
@@ -284,15 +300,25 @@ export default {
       this.wishUpdated = true;
     },
 
-    openCreateWishModal() {
+    async openCreateWishModal() {
       console.log(
-        "Opening wish modal for wishlist ID:",
+        "Opening wish modal for wishlist ID: App",
         this.currentWishlistId
       ); // Debugging
       this.wishlistCreated = false;
       this.wishlistUpdated = false;
       this.editingWish = null;
-      this.showCreateWishModal = true;
+      await Promise.all([
+          this.fetchWishlistDetails(this.currentWishlistId),
+        ]);
+
+        this.$router.push({
+      name: "Wishlist",
+      params: { id: this.createdWishlistId, username: this.user.username },
+    }).then(() => {
+      this.showCreateWishModal = true; // Trigger the modal to show after navigation
+    });
+   /*    this.showCreateWishModal = true; */
     },
     closeCategoryModal() {
       this.showCategoryModal = false;

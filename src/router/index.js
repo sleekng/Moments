@@ -71,7 +71,7 @@ const router = createRouter({
   routes
 });
 
-function isTokenExpired() {
+export function isTokenExpired() {
   const token = localStorage.getItem('authToken');
   const user = localStorage.getItem('user');
   const tokenExpiration = localStorage.getItem('tokenExpiration');
@@ -94,10 +94,11 @@ router.beforeEach((to, from, next) => {
   const authRequired = !publicPages.includes(to.name);
 
   const loggedIn = !isTokenExpired();
+  
 
   eventBus.setLoading(true);
 
-  if (loggedIn && publicPages.includes(to.name) && !['Verification Sent', 'Sign Up', 'Sign Up 2'].includes(to.name)) {
+  if (loggedIn && publicPages.includes(to.name) && !['Verification Sent','Home', 'Sign Up', 'Sign Up 2'].includes(to.name)) {
     // Redirect logged-in users to the dashboard if they try to access public pages, except specified ones
     return next({ name: 'dashboard' });
   }

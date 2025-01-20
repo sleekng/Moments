@@ -400,6 +400,7 @@ export default {
                 const errorMsg = error.response?.data?.message || 'Error requesting address. Please try again.';
             } finally {
                 this.isRequestingAddress =false
+                this.showGiftReservedModal =false
             }
         },
 

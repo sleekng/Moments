@@ -275,10 +275,10 @@
 
               <div class="mb-1 mt-4 text-2xl font-bold">{{ wish.name }}</div>
               <div class="flex items-center space-x-2">
-                <span class="text-xl font-semibold"
+                <span v-if="wish.amount" class="text-xl font-semibold"
                   >{{ getCurrencySymbol(wish.currency) }} {{ wish.amount }}</span
                 >
-                <img
+                <img v-if="wish.amount"
                   src="/assets/ellipse-18.svg"
                   alt="Separator"
                   class="w-1 h-1"

@@ -77,7 +77,7 @@
         <div class="relative">
           <select v-model="selectedCountry" @change="updateStates" class="w-full p-3 bg-white border border-gray-300 rounded-md appearance-none pr-10" id="country">
             <option v-for="country in countries" :key="country.name" :value="country.name">
-              {{ country.emoji }} {{ country.name }}
+            {{ country.name }}
             </option>
           </select>
           <img src="/assets/dropdown-3.svg" class="absolute top-4 right-4 w-4 h-4" alt="Dropdown" />

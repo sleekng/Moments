@@ -90,13 +90,13 @@
           <div class="py-2">
             <RouterLink to="/archived" class="px-4 py-2 cursor-pointer block hover:bg-gray-100">Archived wishes</RouterLink>
             <RouterLink to="/account" class="px-4 block py-2 cursor-pointer hover:bg-gray-100">Account settings</RouterLink>
-          </div>
+          </div> 
           <hr />
           <div class="py-2">
-            <div class="px-4 py-2 cursor-pointer flex items-center justify-between hover:bg-gray-100">
+            <a href="/" target="_blank" class="px-4 py-2 cursor-pointer flex items-center justify-between hover:bg-gray-100">
               <span>How it works</span>
               <img src="/assets/Gotoweb.svg" alt="External Link" class="w-4 h-4" />
-            </div>
+            </a>
             <div @click="signOut" class="px-4 py-2 cursor-pointer hover:bg-gray-100">Sign out</div>
           </div>
         </div>
@@ -131,10 +131,10 @@
       </div>
       <hr class="my-4" />
       <div class="px-6">
-        <div class="flex justify-between items-center py-2">
+        <a  href="/" target="_blank" class="flex justify-between items-center py-2">
           <span class="text-lg font-medium">How it works</span>
           <img src="/assets/Gotoweb.svg" alt="External Link" class="w-4 h-4" />
-        </div>
+        </a>
         <button @click="signOut" class="block py-2 font-medium text-lg">Sign Out</button>
       </div>
     </div>

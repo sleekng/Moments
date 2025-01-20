@@ -1,17 +1,24 @@
 <template>
 <div class="bg-primaryBackground">
     <!-- Header section -->
+    <!-- Header with Login and Signup buttons -->
+    <header class="flex lg:sticky top-0 bg-primaryBackground z-[90] justify-between items-center p-4 lg:px-8">
+        <img src="/assets/Logo-1.svg" alt="Logo" class="w-24 h-10">
+        <div v-if="loggedIn"  class="flex space-x-4">
+            <button @click.prevent="scrollToSection" class="hidden lg:block text-gray-900 py-2 px-2 sm:px-2 rounded-full text-sm sm:text-base">Features</button>
+           <button @click.prevent="scrollToGiftGiving" class="hidden lg:block text-gray-900 py-2 rounded-full text-sm sm:text-base">How it works</button>
+            <RouterLink to="/Login" class="bg-secondaryColor hover:shadow-lg text-white py-2 px-4 sm:px-4 rounded-full text-sm sm:text-base">Log in</RouterLink>
+            <RouterLink to="/create-option" class="bg-primaryColor hover:shadow-lg text-white py-2 px-4 sm:px-4 rounded-full text-sm sm:text-base">Sign up</RouterLink>
+        </div>
+        <div v-else  class="flex space-x-4">
+            <RouterLink to="/dashboard" class="text-gray-900 py-2 px-2 sm:px-2 rounded-full font-bold text-sm sm:text-base">Dashboard</RouterLink>
+          
+          
+        </div>
+    </header>
     <section class=" w-full">
-        <div class="  overflow-hidden relative w-full top-screen h-[800px] sm:h-screen">
+        <div class="  overflow-hidden relative w-full top-screen h-[600px] sm:h-screen 2xl:h-[600px]">
             
-            <!-- Header with Login and Signup buttons -->
-            <header class="flex justify-between items-center p-4 lg:px-8">
-                <img src="/assets/Logo-1.svg" alt="Logo" class="w-24 h-10">
-                <div class="flex space-x-4">
-                    <RouterLink to="/Login" class="bg-secondaryColor hover:shadow-lg text-white py-2 px-4 sm:px-4 rounded-full text-sm sm:text-base">Log in</RouterLink>
-                    <RouterLink to="/create-option" class="bg-primaryColor hover:shadow-lg text-white py-2 px-4 sm:px-4 rounded-full text-sm sm:text-base">Sign up</RouterLink>
-                </div>
-            </header>
 
             <div class="flex flex-col items-center  py-28 md:py-28 2xl:py-10 px-4">
                 <div class="text-center scale-105 flex justify-center flex-col items-center  mx-auto mb-4 space-y-2 relative">
@@ -29,7 +36,7 @@
 
                 <div class="relative w-full max-w-4xl mx-auto mt-10 lg:mt-8 flex justify-center overflow-hidden">
                     <!-- Rotated Images Section -->
-                    <div class="relative w-full max-w-[90vw] h-[24vh] lg:h-[50vh] flex justify-center items-center overflow-hidden">
+                    <div class="relative w-full max-w-[90vw] h-[24vh] lg:h-[50vh] scale-105 lg:scale-100 flex justify-center items-center overflow-hidden">
                         <img src="/assets/rotatery-1.png" alt="Image 1" class="absolute smooth-rotate w-full h-auto max-w-[700px] top-10 lg:top-12 transform -translate-y-1/2" />
                     </div>
                     <img src="/assets/frame-1618868348.svg" alt="Background Decor" class="absolute inset-x-0 -bottom-8 sm:-bottom-8 lg:-bottom-2 xl:-bottom-10 left-1/2 z-50 transform -translate-x-1/2 w-full" />
@@ -48,7 +55,7 @@
         </div>
     </section>
 
-    <section class="lg:py-24 px-4 md:px-24">
+    <section id="explore-section" class="lg:py-24 px-4 md:px-24">
         <div class="text-center max-w-full mx-auto mb-10 space-y-4">
             <h2 class="text-4xl md:text-5xl font-semibold text-gray-900 leading-tight">
                 Explore endless <br> possibilities <span class="text-pink-500">.</span>
@@ -150,7 +157,7 @@
     </section>
 
     <!-- Main section containing multiple flexbox layouts with custom spacing -->
-    <section class="flex flex-col lg:py-12 pt-10  space-y-8 px-4 lg:px-8">
+    <section id="gift-giving-section"  class="flex flex-col lg:py-24 pt-10  space-y-8 px-4 lg:px-8">
 
         <!-- Title Section with centered heading -->
         <div class="text-center max-w-full mx-auto mb-4 space-y-4">
@@ -160,7 +167,7 @@
         </div>
 
         <!-- Step 1: Create Your Profile -->
-        <div class="bg-[#dcd3f0]  card sticky top-1 md:top-10 p-4 md:py-2 rounded-2xl flex flex-col lg:flex-row items-center justify-between space-y-8 md:space-y-0 md:space-x-8 container mx-auto md:px-24">
+        <div class="bg-[#dcd3f0]  card sticky top-16 md:top-10 p-4 md:py-2 rounded-2xl flex flex-col lg:flex-row items-center justify-between space-y-8 md:space-y-0 md:space-x-8 container mx-auto md:px-24">
             <!-- Content description section -->
             <div class="flex flex-col md:items-start md:text-left space-y-4 max-w-xl">
                 <!-- Numbered step with star icon -->
@@ -307,8 +314,8 @@
             </div>
         </div>
     </footer> -->
-
-    <footer class="relative lg:px-60 px-4 mt-10 py-10 h-[400px] items-center bg-[url('/assets/footer-bg.svg')] bg-no-repeat bg-cover">
+    
+    <footer class="relative lg:px-60 px-4 mt-10 py-10 lg:h-[400px] items-center bg-[url('/assets/footer-mobile.svg')] lg:bg-[url('/assets/footer-bg.svg')] bg-no-repeat bg-cover">
     <div class="container mx-auto grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8">
         <!-- Left Section -->
         <div class="flex bg-white w-full h-[327px] p-8 col-span-4 justify-between rounded-[32px] flex-col items-center sm:items-start space-y-2">
@@ -327,7 +334,7 @@
         </div>
 
         <!-- Right Section -->
-        <div class="flex bg-white w-full h-[327px] p-8 justify-center col-span-3 rounded-[32px] flex-col items-center space-y-8">
+        <div class="flex bg-white w-full h-[327px] p-8 justify-center col-span-5 lg:col-span-3 rounded-[32px] flex-col items-center space-y-8">
             <div class="flex flex-row md:flex-col space-x-8 md:space-x-0 md:space-y-8">
                 <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
                     <i class="fab fa-facebook text-gray-800 text-3xl hover:text-gray-600"></i>
@@ -347,8 +354,31 @@
 </template>
 
 <script>
+import { isTokenExpired } from '@/router/index.js'; //
 export default {
     name: 'HeroSection',
+
+    computed: {
+        loggedIn() {
+            return isTokenExpired(); // Use isTokenExpired to determine loggedIn status
+        }
+    },
+
+    methods: {
+        scrollToSection() {
+            const section = document.getElementById('explore-section');
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth' });
+            }
+        },
+    scrollToGiftGiving() {
+        const section = document.getElementById('gift-giving-section');
+        if (section) {
+            section.scrollIntoView({ behavior: 'smooth' });
+        }
+    }
+        
+    }
 
 };
 </script>

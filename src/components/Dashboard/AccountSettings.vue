@@ -23,8 +23,8 @@
           <p class="text-sm text-gray-600 mt-1">Format: MM/DD</p>
         </div>
         <div>
-          <label class="block text-gray-700 font-medium">Email</label>
-          <input type="email" v-model="userData.email" class="w-full p-3 mt-2 bg-gray-50 border border-gray-300 rounded-md" />
+          <label class="block  text-gray-700 font-medium">Email</label>
+          <input  disabled type="email" v-model="userData.email" class="w-full p-3 mt-2 bg-gray-50 border border-gray-300 rounded-md" />
         </div>
       </div>
       <div class="justify-end flex">

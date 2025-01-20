@@ -92,6 +92,19 @@ export default {
       if (storedCategories) {
         // Use stored categories
         this.categories = JSON.parse(storedCategories);
+
+         // Fetch categories from API
+         const response = await this.$axios.get(`${this.$baseURL}/categories`, {
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+            }
+          });
+          this.categories = response.data.data;
+            
+          // Store fetched categories in localStorage for future use
+          localStorage.setItem('categories', JSON.stringify(this.categories));
       } else {
         try {
           // Fetch categories from API
@@ -103,9 +116,7 @@ export default {
             }
           });
           this.categories = response.data.data;
-        
-          console.log(this.categories);
-          
+            
           // Store fetched categories in localStorage for future use
           localStorage.setItem('categories', JSON.stringify(this.categories));
         } catch (error) {

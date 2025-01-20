@@ -17,17 +17,18 @@
       <input v-model="email" class="w-full p-3 bg-white border border-gray-300 rounded-md" type="email" id="register-email" placeholder="Janedoe@email.com" />
     </div>
 
+
     <!-- Password Input -->
-    <div class="w-full mb-4 relative">
+<!--     <div class="w-full mb-4 relative">
       <label class="block text-gray-700 mb-2" for="register-password">Password</label>
       <div class="relative">
         <input v-model="password" class="w-full p-3 bg-white border border-gray-300 rounded-md" :type="showPassword ? 'text' : 'password'" id="register-password" placeholder="***************" @input="checkPasswordStrength" />
         <i :class="showPassword ? 'fa-solid fa-eye-slash' : 'fa-regular fa-eye'" @click="togglePassword" class="absolute top-4 right-3 cursor-pointer"></i>
       </div>
-    </div>
+    </div> -->
 
     <!-- Password Strength -->
-    <div v-if="passwordStrength" class="w-full mb-4">
+<!--     <div v-if="passwordStrength" class="w-full mb-4">
       <div class="flex flex-col items-start">
         <div class="h-2 rounded-md w-full mb-2" :class="passwordStrengthClass"></div>
         <span class="text-sm text-black font-bold">Password Strength: {{ passwordStrength }}
@@ -41,6 +42,30 @@
         <span class="text-sm password-check-text text-black font-bold"> Your password must be at least 8 characters and should include a combination of an uppercase and lowercase.</span>
       </div>
     </div>
+
+ -->
+
+
+
+    <!-- Password Input -->
+    <div class="w-full mb-4 relative">
+      <label class="block text-gray-700 mb-2" for="register-password">Password</label>
+      <div class="relative">
+        <input v-model="password" class="w-full p-3 bg-white border border-gray-300 rounded-md" :type="showPassword ? 'text' : 'password'" id="register-password" placeholder="***************" />
+        <i :class="showPassword ? 'fa-solid fa-eye-slash' : 'fa-regular fa-eye'" @click="togglePassword" class="absolute top-4 right-3 cursor-pointer"></i>
+      </div>
+    </div>
+
+    <!-- Password Strength -->
+    <!-- Removed password strength check -->
+    <div class="w-full mb-4">
+      <div class="flex flex-col items-start">
+     <!--    <div class="h-2 rounded-md w-full mb-2 bg-[#F3F4F5]"></div> -->
+        <span class="text-sm password-check-text text-black font-bold"> Your password must be at least 8 characters and should include a combination of an uppercase and lowercase.</span>
+      </div>
+    </div>
+
+
 
     <!-- Confirm Password Input -->
     <div class="w-full mb-4 relative">
@@ -58,8 +83,7 @@
 
     <button @click="handleSubmit" 
             :disabled="isSubmitting"
-            :style="{ opacity: isSubmitting ? 0.4 : 1 }"
-            class="max-w-fit px-24 py-3 bg-primaryColor text-white font-semibold text-lg rounded-full shadow-lg">
+            class="max-w-fit px-24 py-3 bg-primaryColor   text-white font-semibold text-lg rounded-full shadow-lg">
       Create Account
     </button>
 
@@ -98,6 +122,8 @@ export default {
     toggleConfirmPassword() {
       this.showConfirmPassword = !this.showConfirmPassword;
     },
+
+
     checkPasswordStrength() {
       const length = this.password.length;
       const hasUpperCase = /[A-Z]/.test(this.password);
@@ -116,6 +142,7 @@ export default {
         this.passwordStrengthClass = 'bg-green-500';
       }
     },
+
     handleSubmit() {
       if (this.password === this.confirmPassword) {
         this.isSubmitting = true;
