@@ -22,7 +22,7 @@
           <!-- Share wishlist option -->
           <div @click.stop="shareWishlist" class="flex relative items-center p-2 group moment-text-effect-parent cursor-pointer">
             <i class="fa-regular fa-arrow-up-from-bracket moment-text-effect-child"></i>
-            <span class="ml-2 text-gray-800 moment-text-effect-child w-full font-medium">Share wishlist with friends</span>
+            <span class="ml-2 text-gray-800 moment-text-effect-child w-full font-sm">Share wishlist with friends</span>
           </div>
 
           <!-- Edit wishlist option -->
@@ -45,9 +45,9 @@
             <i class="fa-light fa-light fa-circle-xmark moment-text-effect-child"></i>
             <span class="ml-2 text-gray-800 moment-text-effect-child w-full font-medium">Delete</span>
           </div>
-        </div>
+        </div> 
       </div>
-      <div v-if="!isDashboard && !isExplore">
+      <div v-if="isArchived">
          <div v-if="isDropdownOpen" @mouseleave="closeMenu" class="w-60 bg-white rounded-lg shadow-lg p-2 border border-gray-200 absolute top-8 z-50 right-4">
           <div class="flex relative items-center p-2 group moment-text-effect-parent cursor-pointer border-t border-gray-200" @click.stop="archiveWishlist">
   
@@ -60,6 +60,16 @@
            <div class="flex relative items-center p-2 group moment-text-effect-parent cursor-pointer border-t border-gray-200" @click.stop="$emit('deleteWishlist', wishlist.id)">
             <i class="fa-light fa-light fa-circle-xmark moment-text-effect-child"></i>
             <span class="ml-2 text-gray-800 moment-text-effect-child w-full font-medium">Delete</span>
+          </div>
+          
+         </div>
+       </div>
+      <div v-if="UsersProfile">
+         <div v-if="isDropdownOpen" @mouseleave="closeMenu" class="w-60 bg-white rounded-lg shadow-lg p-2 border border-gray-200 absolute top-8 z-50 right-4">
+                  <!-- Share wishlist option -->
+          <div @click.stop="shareWishlist" class="flex relative items-center p-2 group moment-text-effect-parent cursor-pointer">
+            <i class="fa-regular fa-arrow-up-from-bracket moment-text-effect-child"></i>
+            <span class="ml-2 text-gray-800 moment-text-effect-child w-full font-medium">Share wishlist</span>
           </div>
           
          </div>
@@ -126,6 +136,12 @@ export default {
         },
     isDashboard() {
       return this.$route.path === '/dashboard';
+    },
+    isArchived() {
+      return this.$route.path === '/archived';
+    },
+    UsersProfile() {
+      return this.$route.name === 'UsersProfile';
     },
     isExplore() {
       return this.$route.path === '/explore';

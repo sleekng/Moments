@@ -3,7 +3,7 @@
     <!-- Header section -->
     <!-- Header with Login and Signup buttons -->
     <header class="flex lg:sticky top-0 bg-primaryBackground z-[90] justify-between items-center p-4 lg:px-8">
-        <img src="/assets/Logo-1.svg" alt="Logo" class="w-24 h-10">
+        <a href="/"><img src="/assets/Logo-1.svg" alt="Logo" class="w-24 h-10"></a>
         <div v-if="loggedIn"  class="flex space-x-4">
             <button @click.prevent="scrollToSection" class="hidden lg:block text-gray-900 py-2 px-2 sm:px-2 rounded-full text-sm sm:text-base">Features</button>
            <button @click.prevent="scrollToGiftGiving" class="hidden lg:block text-gray-900 py-2 rounded-full text-sm sm:text-base">How it works</button>
@@ -18,7 +18,7 @@
     </header>
     <section class=" w-full">
         <div class="  overflow-hidden relative w-full top-screen h-[600px] sm:h-screen 2xl:h-[600px]">
-            
+            <img src="/assets/frame-1618868348.svg" alt="Background Decor" class="absolute inset-x-0 -bottom-8 sm:-bottom-8 lg:-bottom-2 xl:-bottom-10 left-1/2 z-50 transform -translate-x-1/2 w-full" />
 
             <div class="flex flex-col items-center  py-28 md:py-28 2xl:py-10 px-4">
                 <div class="text-center scale-105 flex justify-center flex-col items-center  mx-auto mb-4 space-y-2 relative">
@@ -39,7 +39,7 @@
                     <div class="relative w-full max-w-[90vw] h-[24vh] lg:h-[50vh] scale-105 lg:scale-100 flex justify-center items-center overflow-hidden">
                         <img src="/assets/rotatery-1.png" alt="Image 1" class="absolute smooth-rotate w-full h-auto max-w-[700px] top-10 lg:top-12 transform -translate-y-1/2" />
                     </div>
-                    <img src="/assets/frame-1618868348.svg" alt="Background Decor" class="absolute inset-x-0 -bottom-8 sm:-bottom-8 lg:-bottom-2 xl:-bottom-10 left-1/2 z-50 transform -translate-x-1/2 w-full" />
+                 
                 </div>
             </div>
 
@@ -55,7 +55,7 @@
         </div>
     </section>
 
-    <section id="explore-section" class="lg:py-24 px-4 md:px-24">
+    <section id="explore-section" class="lg:py-24 mt-20 lg:mt-0 px-4 md:px-24">
         <div class="text-center max-w-full mx-auto mb-10 space-y-4">
             <h2 class="text-4xl md:text-5xl font-semibold text-gray-900 leading-tight">
                 Explore endless <br> possibilities <span class="text-pink-500">.</span>
@@ -157,7 +157,7 @@
     </section>
 
     <!-- Main section containing multiple flexbox layouts with custom spacing -->
-    <section id="gift-giving-section"  class="flex flex-col lg:py-24 pt-10  space-y-8 px-4 lg:px-8">
+    <section id="gift-giving-section"  class="flex flex-col mt-20 lg:mt-0 lg:py-24 pt-10  space-y-8 px-4 lg:px-8">
 
         <!-- Title Section with centered heading -->
         <div class="text-center max-w-full mx-auto mb-4 space-y-4">
@@ -315,40 +315,49 @@
         </div>
     </footer> -->
     
-    <footer class="relative lg:px-60 px-4 mt-10 py-10 lg:h-[400px] items-center bg-[url('/assets/footer-mobile.svg')] lg:bg-[url('/assets/footer-bg.svg')] bg-no-repeat bg-cover">
-    <div class="container mx-auto grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8">
-        <!-- Left Section -->
-        <div class="flex bg-white w-full h-[327px] p-8 col-span-4 justify-between rounded-[32px] flex-col items-center sm:items-start space-y-2">
-            <div class="flex flex-col space-y-4">
-                <div class="flex">
-                    <img src="/assets/logo.svg" alt="Moments Logo" class="w-44" />
-                </div>
-                <a href="/privacy-policy" class="text-xl border-b border-black pb-2 font-bold text-[#240328]">Privacy policy →</a>
-            </div>
-            <p class="text-xs text-[#240328]">© 2024 All Rights Reserved. Moments Hub</p>
+    <footer class="w-full h-auto relative mt-10 py-10  overflow-hidden bg-[url('/assets/footer-mobile.svg')] bg-no-repeat bg-cover lg:bg-[url('/assets/footer-bg.svg')]">
+    <div class="max-w-[1440px] mx-auto py-8 px-4 lg:py-[73px] lg:px-[205px] flex flex-col lg:flex-row gap-4 lg:gap-[32px] relative">
+      <!-- Left Section -->
+      <div class="bg-white w-full lg:w-[374px] h-auto lg:h-[327px] rounded-[32px] p-6 lg:p-[32px] flex flex-col justify-between">
+        <div>
+          <img src="/assets/logo.svg" alt="Logo" class="w-[127px] h-[45.96px] lg:w-[173px] lg:h-[62.6px]" />
+          <div class="flex items-center gap-2 lg:gap-[8px] p-1 lg:p-[4px] mt-8 lg:mt-[32px] cursor-pointer">
+            <a href="/privacy" class="text-lg lg:text-xl border-b border-black pb-1 lg:pb-2 font-bold text-[#240328]">Privacy policy →</a>
+          </div>
         </div>
+        <div class="font-mukta text-[14px] lg:text-[16px] text-[#404040]">
+          © 2024 All Rights Reserved. Moments hub
+        </div>
+      </div>
 
-        <!-- Center Section -->
-        <div class="flex bg-white w-full h-[327px] p-8 col-span-5 justify-center rounded-[32px] flex-col items-center sm:items-start space-y-2">
-            <span class="text-[62px] leading-[60px] font-black text-[#240328]">Where wishlists come alive!</span>
-        </div>
+      <!-- Middle Section -->
+      <div class="bg-white w-full lg:w-[451px] h-auto lg:h-[327px] rounded-[32px] p-6 lg:p-[41px_32px] flex items-center">
+        <h1 class="font-mukta text-[44px] lg:text-[65px] font-extrabold leading-[50px] lg:leading-[70px] text-[#271e11]">
+          Where<br />
+          wishlists<br />
+          come alive!
+        </h1>
+      </div>
 
-        <!-- Right Section -->
-        <div class="flex bg-white w-full h-[327px] p-8 justify-center col-span-5 lg:col-span-3 rounded-[32px] flex-col items-center space-y-8">
-            <div class="flex flex-row md:flex-col space-x-8 md:space-x-0 md:space-y-8">
-                <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
-                    <i class="fab fa-facebook text-gray-800 text-3xl hover:text-gray-600"></i>
-                </a>
-                <a href="https://x.com" target="_blank" rel="noopener noreferrer">
-                    <i class="fab fa-x-twitter text-gray-800 text-3xl hover:text-gray-600"></i>
-                </a>
-                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
-                    <i class="fab fa-instagram text-gray-800 text-3xl hover:text-gray-600"></i>
-                </a>
-            </div>
-        </div>
+      <!-- Right Section -->
+      <div class="bg-white w-full lg:w-[140.69px] h-auto lg:h-[327px] rounded-[32px] p-6 lg:p-[44px_46px] flex flex-row lg:flex-col justify-between">
+        <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
+            <i class="fab fa-facebook text-gray-800 text-5xl hover:text-gray-600"></i>
+        </a>
+        <a href="https://x.com" target="_blank" rel="noopener noreferrer">
+            <i class="fab fa-x-twitter text-gray-800 text-5xl hover:text-gray-600"></i>
+        </a>
+        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
+            <i class="fab fa-instagram text-gray-800 text-5xl hover:text-gray-600"></i>
+        </a>
+      </div>
+
+      <!-- Back to Top Button -->
+      <button @click="scrollToTop" class="lg:absolute bottom-[67px] right-[108px] rounded-full bg-transparent flex items-center justify-center cursor-pointer">
+        <img src="/assets/back-to-top.svg" alt="Back to top" class="w-[60px] h-[60px]" />
+      </button>
     </div>
-</footer>
+  </footer>
 
 </div>
 </template>
@@ -376,7 +385,10 @@ export default {
         if (section) {
             section.scrollIntoView({ behavior: 'smooth' });
         }
-    }
+    },
+    scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
         
     }
 

@@ -8,7 +8,7 @@
       <div class="space-y-8">
         <div>
           <label class="block text-gray-700 font-medium">Username</label>
-          <input type="text" v-model="userData.username" class="w-full p-3 mt-2 bg-gray-50 border border-gray-300 rounded-md" />
+          <input type="text" v-model="userData.username" class="w-full p-3 mt-2  border border-gray-300 rounded-md" />
           <div class="mt-2 flex items-center text-sm text-gray-600">
             <span>Your Moments Hub URL: https://momentshub.org/{{ userData.username }}</span>
             <img src="/assets/copy.svg" alt="Copy" class="w-4 h-4 ml-1 cursor-pointer">
@@ -24,7 +24,7 @@
         </div>
         <div>
           <label class="block  text-gray-700 font-medium">Email</label>
-          <input  disabled type="email" v-model="userData.email" class="w-full p-3 mt-2 bg-gray-50 border border-gray-300 rounded-md" />
+          <input  disabled type="email" v-model="userData.email" class="w-full p-3 mt-2 bg-gray-200  border border-gray-300 rounded-md" />
         </div>
       </div>
       <div class="justify-end flex">

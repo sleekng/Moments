@@ -22,6 +22,7 @@ import VerificationSent from '@/pages/Auth/VerificationSent.vue';
 import SignUp from '@/pages/Auth/SignUp.vue';
 import SignUp2 from '@/pages/Auth/SignUp2.vue';
 import NotFound from '@/pages/NotFound.vue';
+import Privacy from '@/pages/Home/Termsandcondition.vue';
 
 const routes = [
   { path: '/', name: 'Home', component: Home },
@@ -57,6 +58,7 @@ const routes = [
   { path: '/verification-sent', name: 'Verification Sent', component: VerificationSent },
   { path: '/basic-info', name: 'Sign Up', component: SignUp },
   { path: '/additional-info', name: 'Sign Up 2', component: SignUp2 },
+  { path: '/privacy', name: 'Privacy', component: Privacy},
   { 
     path: '/auth/:provider/callback', 
     name: 'OAuthCallback', 
@@ -90,7 +92,7 @@ function clearAuthData() {
 }
 
 router.beforeEach((to, from, next) => {
-  const publicPages = ['Home', 'OAuthCallback', 'Login', 'Register', 'Create Option', 'Forgot Password', 'Reset Password', 'Verification Sent','Sign Up','Sign Up 2'];
+  const publicPages = ['Home','Privacy', 'OAuthCallback', 'Login', 'Register', 'Create Option', 'Forgot Password', 'Reset Password', 'Verification Sent','Sign Up','Sign Up 2'];
   const authRequired = !publicPages.includes(to.name);
 
   const loggedIn = !isTokenExpired();
@@ -98,7 +100,7 @@ router.beforeEach((to, from, next) => {
 
   eventBus.setLoading(true);
 
-  if (loggedIn && publicPages.includes(to.name) && !['Verification Sent','Home', 'Sign Up', 'Sign Up 2'].includes(to.name)) {
+  if (loggedIn && publicPages.includes(to.name) && !['Verification Sent','Home','Privacy', 'Sign Up', 'Sign Up 2'].includes(to.name)) {
     // Redirect logged-in users to the dashboard if they try to access public pages, except specified ones
     return next({ name: 'dashboard' });
   }

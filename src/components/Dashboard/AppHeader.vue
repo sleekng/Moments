@@ -88,7 +88,7 @@
           </div>
           <hr />
           <div class="py-2">
-            <RouterLink to="/archived" class="px-4 py-2 cursor-pointer block hover:bg-gray-100">Archived wishes</RouterLink>
+            <RouterLink to="/archived" class="px-4 py-2 cursor-pointer block hover:bg-gray-100">Archived wishlist</RouterLink>
             <RouterLink to="/account" class="px-4 block py-2 cursor-pointer hover:bg-gray-100">Account settings</RouterLink>
           </div> 
           <hr />
