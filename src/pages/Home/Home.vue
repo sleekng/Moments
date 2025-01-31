@@ -17,10 +17,9 @@
         </div>
     </header>
     <section class=" w-full">
-        <div class="  overflow-hidden relative w-full top-screen h-[600px] sm:h-screen 2xl:h-[600px]">
+        <div class="  overflow-hidden relative w-full top-screen h-screen ">
          <!--    <img src="/assets/frame-1618868348.svg" alt="Background Decor" class="absolute inset-x-0 -bottom-8 sm:-bottom-8 lg:-bottom-2 xl:-bottom-10 left-1/2 z-50 transform -translate-x-1/2 w-full" /> -->
-
-            <div class="flex flex-col items-center  py-28 md:py-28 2xl:py-10 px-4">
+            <div class="flex flex-col items-center  mt-24  px-4">
                 <div class="text-center scale-105 flex justify-center flex-col items-center  mx-auto mb-4 space-y-2 relative">
                     <h1 class="2xl:text-4xl max-w-sm sm:max-w-lg text-[64px]  font-semibold text-gray-900  leading-none relative">
                         <img class=" particle-7" src="/assets/balloon-svgrepo-com1.svg" alt="particle-7">
