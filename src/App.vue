@@ -1,7 +1,7 @@
 <template>
   <div v-if="isLoading" class="progress-bar"></div>
   <div :class="{ 'blurred-content': isLoading }">
-    <Alert ref="alertComponent" />
+    <Alert ref="alertComponent" class=" fixed top-4 right-2 lg:top-10 lg:right-10 z-[999]" />
 
     <RouterView
       @shareWishlist="toggleShareMenu"

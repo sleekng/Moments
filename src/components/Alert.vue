@@ -1,7 +1,20 @@
 <template>
-  <div v-if="visible" :class="['alert', alertType]">
-    <span>{{ message }}</span>
-    <button class="close-btn" @click="closeAlert">&times;</button>
+  <div v-if="visible"  >
+    <div  :class="alertBG" >
+      <div :class="alertClasses">
+        <i :class="iconClass" class=" text-xl"></i>
+        <div class="flex-1 flex items-center gap-4">
+          <span class="font-medium">{{ message }}</span>
+          <div class="px-2 cursor-pointer hover:bg-gray-100 rounded">
+          </div>
+        </div>
+        <i 
+          class="fas fa-times w-4 h-4 cursor-pointer opacity-80 hover:opacity-100 transition-opacity"
+          @click="closeAlert"
+        ></i>
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -9,6 +22,7 @@
 import { eventBus } from '@/eventBus.js';
 
 export default {
+  name: 'Alert',
   data() {
     return {
       visible: false,
@@ -16,8 +30,20 @@ export default {
     };
   },
   computed: {
-    alertType() {
-      return eventBus.type === 'success' ? 'alert-success' : 'alert-error';
+    alertClasses() {
+      return [
+        'flex items-center p-3 rounded-lg gap-2',
+        eventBus.type === 'success' ? 'bg-[#f6fff9] ' : 'bg-[#FFF7F7]  text-[#E32E2E]'
+      ];
+    },
+    alertBG() {
+      return [
+        'rounded-lg pl-2',
+        eventBus.type === 'success' ? 'bg-green-600' : 'bg-red-600'
+      ];
+    },
+    iconClass() {
+      return eventBus.type === 'success' ? 'fas fa-check-circle text-green-600' : 'fas fa-exclamation-circle  text-red-600';
     }
   },
   methods: {
@@ -26,7 +52,7 @@ export default {
       this.visible = true;
       setTimeout(() => {
         this.visible = false;
-      }, 5000); // Auto-hide after 5 seconds
+      }, 5000);
     },
     closeAlert() {
       this.visible = false;
@@ -43,32 +69,5 @@ export default {
 </script>
 
 <style scoped>
-.alert {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  color: white;
-  padding: 15px;
-  border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  z-index: 3000;
-  transition: opacity 0.5s ease;
-}
-
-.alert-success {
-  background-color: green;
-}
-
-.alert-error {
-  background-color: red;
-}
-
-.close-btn {
-  background: none;
-  border: none;
-  color: white;
-  font-size: 1em;
-  margin-left: 10px;
-  cursor: pointer;
-}
+/* No additional styles needed as TailwindCSS is used */
 </style>

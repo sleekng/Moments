@@ -22,7 +22,8 @@ import VerificationSent from '@/pages/Auth/VerificationSent.vue';
 import SignUp from '@/pages/Auth/SignUp.vue';
 import SignUp2 from '@/pages/Auth/SignUp2.vue';
 import NotFound from '@/pages/NotFound.vue';
-import Privacy from '@/pages/Home/Termsandcondition.vue';
+import Privacy from '@/pages/Home/privacy.vue';
+import TermsandCondition from '@/pages/Home/Termsandcondition.vue';
 
 const routes = [
   { path: '/', name: 'Home', component: Home },
@@ -59,6 +60,7 @@ const routes = [
   { path: '/basic-info', name: 'Sign Up', component: SignUp },
   { path: '/additional-info', name: 'Sign Up 2', component: SignUp2 },
   { path: '/privacy', name: 'Privacy', component: Privacy},
+  { path: '/terms-condition', name: 'TermsandCondition', component: TermsandCondition},
   { 
     path: '/auth/:provider/callback', 
     name: 'OAuthCallback', 
@@ -92,7 +94,7 @@ function clearAuthData() {
 }
 
 router.beforeEach((to, from, next) => {
-  const publicPages = ['Home','Privacy', 'OAuthCallback', 'Login', 'Register', 'Create Option', 'Forgot Password', 'Reset Password', 'Verification Sent','Sign Up','Sign Up 2'];
+  const publicPages = ['Home','Privacy', 'TermsandCondition', 'OAuthCallback', 'Login', 'Register', 'Create Option', 'Forgot Password', 'Reset Password', 'Verification Sent','Sign Up','Sign Up 2'];
   const authRequired = !publicPages.includes(to.name);
 
   const loggedIn = !isTokenExpired();

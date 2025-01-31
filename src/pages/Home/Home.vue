@@ -18,7 +18,7 @@
     </header>
     <section class=" w-full">
         <div class="  overflow-hidden relative w-full top-screen h-[600px] sm:h-screen 2xl:h-[600px]">
-            <img src="/assets/frame-1618868348.svg" alt="Background Decor" class="absolute inset-x-0 -bottom-8 sm:-bottom-8 lg:-bottom-2 xl:-bottom-10 left-1/2 z-50 transform -translate-x-1/2 w-full" />
+         <!--    <img src="/assets/frame-1618868348.svg" alt="Background Decor" class="absolute inset-x-0 -bottom-8 sm:-bottom-8 lg:-bottom-2 xl:-bottom-10 left-1/2 z-50 transform -translate-x-1/2 w-full" /> -->
 
             <div class="flex flex-col items-center  py-28 md:py-28 2xl:py-10 px-4">
                 <div class="text-center scale-105 flex justify-center flex-col items-center  mx-auto mb-4 space-y-2 relative">
@@ -321,9 +321,11 @@
       <div class="bg-white w-full lg:w-[374px] h-auto lg:h-[327px] rounded-[32px] p-6 lg:p-[32px] flex flex-col justify-between">
         <div>
           <img src="/assets/logo.svg" alt="Logo" class="w-[127px] h-[45.96px] lg:w-[173px] lg:h-[62.6px]" />
-          <div class="flex items-center gap-2 lg:gap-[8px] p-1 lg:p-[4px] mt-8 lg:mt-[32px] cursor-pointer">
+          <div class="flex flex-col  gap-2 lg:gap-[8px] p-1 lg:p-[4px] mt-8 lg:mt-[32px] cursor-pointer">
             <a href="/privacy" class="text-lg lg:text-xl border-b border-black pb-1 lg:pb-2 font-bold text-[#240328]">Privacy policy →</a>
+            <a href="/terms-condition" class="text-lg lg:text-xl border-b border-black pb-1 lg:pb-2 font-bold text-[#240328]">Terms and Conditions →</a>
           </div>
+          
         </div>
         <div class="font-mukta text-[14px] lg:text-[16px] text-[#404040]">
           © 2024 All Rights Reserved. Moments hub

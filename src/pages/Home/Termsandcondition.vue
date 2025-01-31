@@ -214,9 +214,11 @@
       <div class="bg-white w-full lg:w-[374px] h-auto lg:h-[327px] rounded-[32px] p-6 lg:p-[32px] flex flex-col justify-between">
         <div>
           <img src="/assets/logo.svg" alt="Logo" class="w-[127px] h-[45.96px] lg:w-[173px] lg:h-[62.6px]" />
-          <div class="flex items-center gap-2 lg:gap-[8px] p-1 lg:p-[4px] mt-8 lg:mt-[32px] cursor-pointer">
+          <div class="flex flex-col  gap-2 lg:gap-[8px] p-1 lg:p-[4px] mt-8 lg:mt-[32px] cursor-pointer">
             <a href="/privacy" class="text-lg lg:text-xl border-b border-black pb-1 lg:pb-2 font-bold text-[#240328]">Privacy policy →</a>
+            <a href="/terms-condition" class="text-lg lg:text-xl border-b border-black pb-1 lg:pb-2 font-bold text-[#240328]">Terms and Conditions →</a>
           </div>
+          
         </div>
         <div class="font-mukta text-[14px] lg:text-[16px] text-[#404040]">
           © 2024 All Rights Reserved. Moments hub
@@ -251,6 +253,7 @@
       </button>
     </div>
   </footer>
+
     </div>
   </template>
   

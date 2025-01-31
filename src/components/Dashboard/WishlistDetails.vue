@@ -1,61 +1,87 @@
 <template>
-  <div v-if="selectedWishlist" class="flex justify-center w-full items-start p-12 bg-white mt-6 rounded-t-lg relative">
-    <!-- Update the template to use properties from the wishlist prop -->
-    <div class="flex flex-col items-center">
-      <div class="relative">
-        <img :src="selectedWishlist.photo || '/assets/wishlist-category-placeholder.svg'" alt="Wishlist Category"
-          class="w-40 h-40 lg:w-52 lg:h-52 object-cover bg-gray-100 rounded-full">
-      </div>
-      <div class="mt-4 inline-flex flex-col space-y-4 text-center">
-        <div class=" lg:max-w-xl inline-flex flex-col space-y-4 text-center">
 
-          <div>
-            <div
-              class="inline-flex items-center justify-center bg-primaryMainBright text-primaryColor py-2 px-4 rounded-full text-sm font-medium">
-              <span>{{ selectedWishlist.category.name }}</span>
+
+    <div v-if="selectedWishlist" class="wishlist-cover mt-10 rounded-t-lg px-4 lg:p-12 pt-8 pb-4" 
+    :style="{ 
+      background: selectedWishlist.category.name === 'Birthday' 
+        ? 'linear-gradient(180deg, rgba(247,204,253,1) 10.74%, rgba(252,236,255,1) 103.53%)'
+        : 'linear-gradient(180deg, rgba(155,201,255,1) 85.76%, rgba(210,241,255,1) 103.38%)'
+    }">
+
+
+
+    <div class="flex flex-col md:flex-row gap-8 relative">
+      <!-- Left Content -->
+      <div class="flex flex-col gap-3 flex-1 z-40">
+        <!-- Profile Image -->
+        <div class="w-[120px] h-[120px] rounded-full bg-[#f8f9fa] overflow-hidden">
+          <img :src="selectedWishlist.photo || '/assets/wishlist-category-placeholder.svg'" alt="Profile" class="w-full h-full object-cover"/>
+        </div>
+        <!-- Content Section -->
+        <div class="mt-4">
+          <div class="space-y-2">
+            <h1 style="font-family: Mukta; font-weight: 600; font-size: 26px; line-height: 120%; color: #26052b;">
+              {{ selectedWishlist.title }}
+            </h1>
+            <p style="font-family: Mukta; font-weight: 400; font-size: 16px; line-height: 150%; color: #210d23;">
+              {{ selectedWishlist.description }}
+            </p>
+          </div>
+
+          <div class="flex items-center gap-1.5 mt-4">
+            <i class="fa-regular fa-calendar-days" style="font-size: 18px; color: #140d14;"></i>
+            <span style="font-family: Mukta; font-weight: 500; font-size: 16px; line-height: 150%; color: #140d14;">
+              {{ new Date(selectedWishlist.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) }}
+            </span>
+          </div>
+
+          <div class="flex items-center gap-4 mt-4">
+            <div class="flex items-center gap-1" @click.stop="toggleLike">
+              <i :class="selectedWishlist.liked_by_me ? 'fas fa-heart text-red-500' : 'far fa-heart'" style="font-size: 14px;"></i>
+              <span style="font-family: Mukta; font-weight: 400; font-size: 14px; line-height: 150%; color: #140d14;">
+                {{ selectedWishlist.likes_count }} Likes
+              </span>
+            </div>
+            
+            <div class="w-[0.8px] h-4 bg-[#2b2b2b]"></div>
+            
+            <div class="flex items-center gap-1.5">
+              <i class="fa-regular fa-eye" style="font-size: 14px; color: #140d14;"></i>
+              <span style="font-family: Mukta; font-weight: 400; font-size: 14px; line-height: 150%; color: #140d14;">
+                {{ selectedWishlist.views_count }} Views
+              </span>
             </div>
           </div>
-          <div class="space-y-1">
-            <h2 class="lg:text-3xl font-semibold text-gray-900">{{ selectedWishlist.title }}</h2>
-            <p class="text-gray-600 text-sm lg:text-base ">{{ selectedWishlist.description }}</p>
-          </div>
         </div>
-        <div>
-          <div
-            class="mt-4 inline-flex px-2 pr-4 items-center justify-center space-x-2 bg-gray-900 text-white py-2 rounded-full">
-            <div class="bg-white text-gray-900 w-7 h-7 flex items-center justify-center rounded-full font-semibold">{{
-              new Date(selectedWishlist.date).getDate() }}</div>
-            <span>{{ new Date(selectedWishlist.date).toLocaleString('default', { month: 'short' }) }}, {{ new
-              Date(selectedWishlist.date).getFullYear() }}</span>
-          </div>
-        </div>
-        <div class="mt-4 flex space-x-4 justify-center">
+      </div>
 
-          <div class="flex items-center" @click.stop="toggleLike">
-            <i :class="selectedWishlist.liked_by_me ? 'fa-solid fa-heart text-red-500' : 'fa-light fa-heart'"
-              class="mr-1 cursor-pointer text-[14px]"></i>
-            <span>{{ selectedWishlist.likes_count }}</span>
-          </div>
-          <div class="flex items-center text-gray-600 space-x-1">
-            <img src="/assets/eye.svg" alt="Views" class="w-4 h-4">
-            <span>{{ selectedWishlist.views_count }} Views</span>
-          </div>
-        </div>
+      <!-- Right Actions -->
+      <!-- Right Actions -->
+      <div class="flex gap-3.5 right-0 z-40 absolute">
+        <button v-if="canShow" @click="$emit('editWishlist', selectedWishlist)"
+          class="h-10 px-7 rounded-full bg-[#f0f1f2] border border-[#fef4ff]"
+          style="font-family: Mukta; font-weight: 500; font-size: 16px; line-height: 150%; color: #2d3036;">
+          Edit
+        </button>
+        <button @click="toggleShareMenu"
+          class="h-10 px-7 rounded-full bg-[#f0f1f2] border border-[#fef4ff]"
+          style="font-family: Mukta; font-weight: 500; font-size: 16px; line-height: 150%; color: #2d3036;">
+          Share <span class=" hidden  lg:inline">wishlist</span>
+        </button>
       </div>
     </div>
 
-    <div class="lg:flex space-x-4 absolute right-10 hidden ">
-      <button v-if="canShow" @click="$emit('editWishlist', selectedWishlist)"
-        class="bg-gray-200 py-2 px-6 rounded-full text-sm font-medium text-gray-900">
-        Edit
-      </button>
-      <button @click="toggleShareMenu" class="bg-gray-200 py-2 px-6 rounded-full text-sm font-medium text-gray-900">
-        Share wishlist
-      </button>
-
-
-    </div>
-
+    <!-- Gift Image -->
+    <img  v-if="selectedWishlist.category.name == 'Birthday'"
+      src="@/assets/images/gift-birthday.svg" 
+      alt="Gift"
+      class="absolute lg:top-[32px] top-[190px] right-[-25px] lg:w-[423px] lg:h-[403px] w-[200px]  z-0"
+    />
+    <img  v-if="selectedWishlist.category.name != 'Birthday'"
+      src="@/assets/images/gift.svg" 
+      alt="Gift"
+      class="absolute lg:top-[32px] top-[190px] right-[-25px] lg:w-[423px] lg:h-[403px] w-[200px]  z-0"
+    />
 
     <!-- Share Modal -->
     <div v-if="isShareMenuOpen" class="fixed p-4 inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
@@ -90,35 +116,12 @@
               <span>Share to Facebook</span>
             </button>
           </div>
-
         </div>
       </div>
     </div>
 
 
 
-
-
-    <div class=" mb-4 lg:hidden block">
-      <button @click="toggleMenu"
-        class="absolute  top-12 right-4 p-1 h-10 flex justify-center items-center w-10 bg-gray-200 rounded-full toggle-menu-button">
-        <img src="/assets/frame-1618868216.svg" alt="Menu" class="h-6 w-6" />
-      </button>
-
-      <!-- DropdownMenu -->
-      <div v-if="isDropdownOpen" @mouseleave="closeMenu" onclick="closeMenu"
-        class="w-60 bg-white rounded-lg shadow-lg p-2 border border-gray-200 absolute top-20 z-50 right-8">
-        <div @click="toggleShareMenu" class="flex items-center p-2 hover:bg-primaryMainBright cursor-pointer">
-      
-          <span class="ml-2 text-gray-800 hover:text-primaryColor w-full font-medium">Share wishlist</span>
-        </div>
-        <div v-if="canShow" @click="$emit('editWishlist', selectedWishlist)"
-          class="flex items-center p-2 hover:bg-primaryMainBright cursor-pointer border-t border-gray-200">
-  
-          <span class="ml-2 text-gray-800 hover:text-primaryColor w-full font-medium">Edit</span>
-        </div>
-      </div>
-    </div>
   </div>
 
   <div v-else class="flex justify-center w-full items-center p-12 bg-white mt-6 rounded-t-lg">
@@ -126,23 +129,27 @@
   </div>
 </template>
 
-
 <script>
 import { eventBus } from '@/eventBus.js';
 export default {
   name: 'WishlistDetails',
   props: {
     selectedWishlist: {
-      type: Object
+      type: Object,
+      default: () => ({
+        title: 'Other wishlist category',
+        description: "Hello there! Here's my birthday wishlist.",
+        date: '2024-05-24',
+        likes_count: 200,
+        views_count: 200,
+        liked_by_me: false,
+        photo: null
+      })
     },
     canShow: {
-      type: Boolean
+      type: Boolean,
+      default: true
     }
-  },
-
-  mounted() {
-    console.log(this.selectedWishlist);
-
   },
   data() {
     return {
@@ -152,17 +159,14 @@ export default {
   },
   methods: {
     toggleMenu() {
-      this.isDropdownOpen = !this.isDropdownOpen
-    }
-    ,
-    closeMenu() {
-      this.isDropdownOpen = false
+      this.isDropdownOpen = !this.isDropdownOpen;
     },
-
+    closeMenu() {
+      this.isDropdownOpen = false;
+    },
     toggleShareMenu() {
       this.isShareMenuOpen = !this.isShareMenuOpen;
     },
-
     copyLink() {
       navigator.clipboard.writeText(`${window.location.href}/`).then(() => {
         eventBus.onSuccess("Profile link copied to clipboard!");
@@ -170,7 +174,7 @@ export default {
     },
     shareToEmail() {
       const subject = encodeURIComponent(
-        `Check out this profile: ${this.selectedWishlist.name}`
+        `Check out this profile: ${this.selectedWishlist.title}`
       );
       const body = encodeURIComponent(`${window.location.href}`);
       window.location.href = `mailto:?subject=${subject}&body=${body}`;
@@ -194,9 +198,6 @@ export default {
         "_blank"
       );
     },
-
-
-
     async toggleLike() {
       try {
         const likeStatus = !this.selectedWishlist.liked_by_me;
@@ -215,12 +216,21 @@ export default {
       }
     }
   }
-
-
 }
 </script>
 
-
 <style scoped>
-/* Additional styles if needed */
+.wishlist-cover {
+  position: relative;
+  overflow: hidden;
+  min-height: 302px;
+}
+
+button {
+  transition: all 0.2s ease-in-out;
+}
+
+button:hover {
+  background-color: #e5e7eb;
+}
 </style>

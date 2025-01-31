@@ -1,14 +1,14 @@
 <template>
   <div class="bg-gray-100">
     <AppHeader @showCategoryModal="$emit('showCategoryModal')" />
-    <div class="flex lg:hidden justify-center items-center pt-20 w-full mt-10 rounded-t-lg bg-black lg:bg-white">
+    <div class="flex lg:hidden justify-center px-4 items-center lg:pt-20 w-full mt-10 rounded-t-lg bg-white">
       <SearchComponent :loading="isSearchingLoading" @startSearch="startSearch" @selectOption="selectOption" :selectedOption="selectedOption" />
     </div>
-    <div v-if="!loading" class=" md:px-16 lg:pt-20 lg:py-20">
-      <div class="lg:flex hidden justify-center items-center pt-20 mt-10 rounded-t-lg bg-black lg:bg-white">
+    <div v-if="!loading" class=" md:px-16 lg:pt-28 lg:py-20">
+      <div class="lg:flex lg:px-12 px-4  hidden justify-center items-center  rounded-t-lg lg:bg-white">
         <SearchComponent :loading="isSearchingLoading" @startSearch="startSearch" @selectOption="selectOption" :selectedOption="selectedOption" />
       </div>
-      <TabNavigationsWishlist2 v-if="!isSearching" :activeTab="activeTab" @switchTab="setActiveTab" class="pt-4 lg:pt-20" />
+      <TabNavigationsWishlist2 v-if="!isSearching" :activeTab="activeTab" @switchTab="setActiveTab" class="pt-4 lg:pt-10" />
       
       <div v-if="!isSearching">
         <FriendorWishlist 

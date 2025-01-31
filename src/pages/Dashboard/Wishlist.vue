@@ -12,6 +12,7 @@
         :activeTab="activeTab" 
         @switchTab="setActiveTab" 
         @sort="handleSort"
+        class=" py-8"
       />
 
       <div class="grid grid-cols-2 w-full lg:grid-cols-4 gap-4 lg:gap-6 px-4 lg:px-12 py-6 pb-12 bg-white rounded-b-lg " @mouseleave="handleCloseDropdown">
