@@ -2,24 +2,28 @@
 <div class="bg-primaryBackground">
     <!-- Header section -->
     <!-- Header with Login and Signup buttons -->
-    <header class="flex lg:sticky top-0 bg-primaryBackground z-[90] justify-between items-center p-4 lg:px-8">
-        <a href="/"><img src="/assets/Logo-1.svg" alt="Logo" class="w-24 h-10"></a>
-        <div v-if="loggedIn"  class="flex space-x-4">
-            <button @click.prevent="scrollToSection" class="hidden lg:block text-gray-900 py-2 px-2 sm:px-2 rounded-full text-sm sm:text-base">Features</button>
-           <button @click.prevent="scrollToGiftGiving" class="hidden lg:block text-gray-900 py-2 rounded-full text-sm sm:text-base">How it works</button>
-            <RouterLink to="/Login" class="bg-secondaryColor hover:shadow-lg text-white py-2 px-4 sm:px-4 rounded-full text-sm sm:text-base">Log in</RouterLink>
-            <RouterLink to="/create-option" class="bg-primaryColor hover:shadow-lg text-white py-2 px-4 sm:px-4 rounded-full text-sm sm:text-base">Sign up</RouterLink>
-        </div>
-        <div v-else  class="flex space-x-4">
-            <RouterLink to="/dashboard" class="text-gray-900 py-2 px-2 sm:px-2 rounded-full font-bold text-sm sm:text-base">Dashboard</RouterLink>
-          
-          
+    <header class=" lg:sticky top-0 bg-primaryBackground z-[90] ">
+        <div class="container mx-auto flex  justify-between items-center p-4 lg:px-8  ">
+
+            <a href="/"><img src="/assets/Logo-1.svg" alt="Logo" class="w-24 h-10"></a>
+            <div v-if="loggedIn"  class="flex space-x-4">
+                <button @click.prevent="scrollToSection" class="hidden lg:block text-gray-900 py-2 px-2 sm:px-2 rounded-full text-sm sm:text-base">Features</button>
+               <button @click.prevent="scrollToGiftGiving" class="hidden lg:block text-gray-900 py-2 rounded-full text-sm sm:text-base">How it works</button>
+                <RouterLink to="/Login" class="bg-secondaryColor hover:shadow-lg text-white py-2 px-4 sm:px-4 rounded-full text-sm sm:text-base">Log in</RouterLink>
+                <RouterLink to="/create-option" class="bg-primaryColor hover:shadow-lg text-white py-2 px-4 sm:px-4 rounded-full text-sm sm:text-base">Sign up</RouterLink>
+            </div>
+            <div v-else  class="flex space-x-4">
+                <RouterLink to="/dashboard" class="text-gray-900 py-2 px-2 sm:px-2 rounded-full font-bold text-sm sm:text-base">Dashboard</RouterLink>
+            </div>
         </div>
     </header>
-    <section class=" w-full">
-        <div class="  overflow-hidden relative w-full top-screen h-screen ">
-         <!--    <img src="/assets/frame-1618868348.svg" alt="Background Decor" class="absolute inset-x-0 -bottom-8 sm:-bottom-8 lg:-bottom-2 xl:-bottom-10 left-1/2 z-50 transform -translate-x-1/2 w-full" /> -->
-            <div class="flex flex-col items-center  mt-24  px-4">
+
+    <section class="relative  lg:pt-20 pt-28 w-full bg-[url('/assets/landing-bg-mobile.svg')] lg:bg-[url('/assets/landing-bg-desktop.svg')] bg-no-repeat overflow-hidden bg-left lg:bg-cover lg:bg-top  ">
+        <img src="/assets/frame-1618868348.svg" alt="Background Decor" class="absolute -left-20  -bottom-6 sm:-bottom-28 lg:-bottom-28 xl:-bottom-28 z-50 w-full" />
+        <img src="/assets/frame-1618868348.svg" alt="Background Decor" class="absolute -right-20  -bottom-6 sm:-bottom-28 lg:-bottom-28 xl:-bottom-28 z-50 w-full" />
+        <div class=" hero  relative w-full container mx-auto ">
+
+            <div class="flex flex-col items-center    px-4">
                 <div class="text-center scale-105 flex justify-center flex-col items-center  mx-auto mb-4 space-y-2 relative">
                     <h1 class="2xl:text-4xl max-w-sm sm:max-w-lg text-[64px]  font-semibold text-gray-900  leading-none relative">
                         <img class=" particle-7" src="/assets/balloon-svgrepo-com1.svg" alt="particle-7">
@@ -35,7 +39,7 @@
 
                 <div class="relative w-full max-w-4xl mx-auto mt-10 lg:mt-8 flex justify-center overflow-hidden">
                     <!-- Rotated Images Section -->
-                    <div class="relative w-full max-w-[90vw] h-[24vh] lg:h-[50vh] scale-105 lg:scale-100 flex justify-center items-center overflow-hidden">
+                    <div class="relative w-full  h-[24vh] lg:h-[50vh]  flex justify-center items-center overflow-hidden">
                         <img src="/assets/rotatery-1.png" alt="Image 1" class="absolute smooth-rotate w-full h-auto max-w-[700px] top-10 lg:top-12 transform -translate-y-1/2" />
                     </div>
                  
@@ -43,18 +47,18 @@
             </div>
 
             <!-- Particles -->
-            <div>
+         <!--    <div>
                 <img class=" particle-1 z-50" src="/assets/Star1.svg" alt="particle-1">
                 <img class=" particle-2 top-[356px] left-[1058px] 2xl:left-[1208px]  z-50" src="/assets/Star4.svg" alt="particle-2">
                 <img class=" particle-3 z-50" src="/assets/Star3.svg" alt="particle-3">
                 <img class=" particle-4 top-[305px] right-[369px] 2xl:right-[469px] z-50" src="/assets/Ellipse2.svg" alt="particle-4">
                 <img class=" particle-5 z-50" src="/assets/Ellipse1.svg" alt="particle-5">
                 <img class=" particle-6 2xl:top-[360px] top-[300px] z-50" src="/assets/Star5.svg" alt="particle-6">
-            </div>
+            </div> -->
         </div>
     </section>
 
-    <section id="explore-section" class="lg:py-24 mt-20 lg:mt-0 px-4 md:px-24">
+    <section id="explore-section" class="  container mx-auto lg:py-24 mt-20 lg:mt-0 px-4 md:px-24">
         <div class="text-center max-w-full mx-auto mb-10 space-y-4">
             <h2 class="text-4xl md:text-5xl font-semibold text-gray-900 leading-tight">
                 Explore endless <br> possibilities <span class="text-pink-500">.</span>
@@ -156,7 +160,7 @@
     </section>
 
     <!-- Main section containing multiple flexbox layouts with custom spacing -->
-    <section id="gift-giving-section"  class="flex flex-col mt-20 lg:mt-0 lg:py-24 pt-10  space-y-8 px-4 lg:px-8">
+    <section id="gift-giving-section"  class=" container mx-auto flex flex-col mt-20 lg:mt-0 lg:py-24 pt-10  space-y-8 px-4 lg:px-8">
 
         <!-- Title Section with centered heading -->
         <div class="text-center max-w-full mx-auto mb-4 space-y-4">
@@ -695,4 +699,12 @@ button span {
 .animate-carousel div:nth-child(6) {
     animation-delay: 5s;
 }
+
+
+@media (min-width: 3000px) {
+    .hero{
+        height: 40vh !important; /* Set the height to half the viewport height */
+    }
+}
+
 </style>

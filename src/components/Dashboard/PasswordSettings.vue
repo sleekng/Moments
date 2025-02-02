@@ -11,7 +11,7 @@
           <div class="relative">
             <input
               :type="showCurrentPassword ? 'text' : 'password'"
-              v-model="passwordData.currentPassword"
+              v-model="passwordData.current_password"
               class="w-full p-3 mt-2 bg-gray-50 border border-gray-300 rounded-md"
             />
             <i 
@@ -27,7 +27,7 @@
           <div class="relative">
             <input
               :type="showNewPassword ? 'text' : 'password'"
-              v-model="passwordData.newPassword"
+              v-model="passwordData.password"
               class="w-full p-3 mt-2 bg-gray-50 border border-gray-300 rounded-md"
             />
             <i 
@@ -45,7 +45,7 @@
           <div class="relative">
             <input
               :type="showReEnterPassword ? 'text' : 'password'"
-              v-model="passwordData.reEnterPassword"
+              v-model="passwordData.password_confirmation"
               class="w-full p-3 mt-2 bg-gray-50 border border-gray-300 rounded-md"
             />
             <i  
@@ -72,9 +72,9 @@ export default {
   data() {
     return {
       passwordData: {
-        currentPassword: '',
-        newPassword: '',
-        reEnterPassword: ''
+        current_password: '', // updated
+        password: '', // updated
+        password_confirmation: '' // updated
       },
       isSaving: false,
       showCurrentPassword: false,
@@ -105,6 +105,7 @@ export default {
         const user = result.data;
         localStorage.setItem('user', JSON.stringify(user));
         console.log('Profile updated:', user);
+        eventBus.onSuccess(result.message || 'Password updated successfully!'); // updated to use response message
       } catch (error) {
         const errorMsg = error.response ?.data ?.message || 'An error occurred. Please try again.';
         eventBus.onError(errorMsg); // Trigger the alert

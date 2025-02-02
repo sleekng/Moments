@@ -8,7 +8,7 @@
       <div class="space-y-8">
         <div>
           <label class="block text-gray-700 font-medium">Username</label>
-          <input type="text" v-model="userData.username" class="w-full p-3 mt-2  border border-gray-300 rounded-md" />
+          <input type="text" v-model="userData.username" class="w-full p-3 mt-2 border border-gray-300 rounded-md" />
           <div class="mt-2 flex items-center text-sm text-gray-600">
             <span>Your Moments Hub URL: https://momentshub.org/{{ userData.username }}</span>
             <img src="/assets/copy.svg" alt="Copy" class="w-4 h-4 ml-1 cursor-pointer">
@@ -23,8 +23,8 @@
           <p class="text-sm text-gray-600 mt-1">Format: MM/DD</p>
         </div>
         <div>
-          <label class="block  text-gray-700 font-medium">Email</label>
-          <input  disabled type="email" v-model="userData.email" class="w-full p-3 mt-2 bg-gray-200  border border-gray-300 rounded-md" />
+          <label class="block text-gray-700 font-medium">Email</label>
+          <input disabled type="email" v-model="userData.email" class="w-full p-3 mt-2 bg-gray-200 border border-gray-300 rounded-md" />
         </div>
       </div>
       <div class="justify-end flex">
@@ -44,25 +44,35 @@
             <h3 class="text-gray-900 font-medium mb-1">Deactivate your moments hub account</h3>
             <p class="text-gray-600">Temporarily hide your profile, wishlist and wishes. You can restore your account if it was accidentally or wrongfully deactivated for up to 30 days after deactivation.</p>
           </div>
-          <button class="bg-gray-200 text-gray-800 px-6 py-2 rounded-full w-[168px] inline-block">Deactivate</button>
+          <button      @click="showDeactivateModal = true"  class="bg-gray-200 text-gray-800 px-6 py-2 rounded-full w-[168px] inline-block">Deactivate</button>
         </div>
         <div class="flex items-start gap-8">
           <div class="flex-grow">
             <h3 class="text-gray-900 font-medium mb-1">Delete your moments hub account</h3>
             <p class="text-gray-600">Permanently delete your data and everything associated with your account. Once you delete your account, your data will be gone forever.</p>
           </div>
-          <button class="bg-gray-200 text-gray-800 px-6 py-2 rounded-full w-[168px] inline-block">Delete</button>
+          <button @click="showDeleteModal = true" class="bg-gray-200 text-gray-800 px-6 py-2 rounded-full w-[168px] inline-block">Delete</button>
         </div>
       </div>
     </div>
+
+    <!-- Delete & Deactivate Account Modal -->
+    <DeleteAccountModal v-if="showDeleteModal" @close="showDeleteModal = false" />
+    <DeactivateAccountModal v-if="showDeactivateModal" @close="showDeactivateModal = false" />
   </div>
 </template>
 
 <script>
+import DeactivateAccountModal from './DeactivateAccountModal.vue';
+import DeleteAccountModal from './DeleteAccountModal.vue';
 import { eventBus } from '@/eventBus.js';
+
 export default {
-  
   name: "AccountSettings",
+  components: {
+    DeleteAccountModal,
+    DeactivateAccountModal
+  },
   data() {
     return {
       userData: {
@@ -73,6 +83,8 @@ export default {
       birthdayMonth: '',
       birthdayDay: '',
       isSaving: false,
+      showDeactivateModal: false,
+      showDeleteModal: false
     };
   },
   mounted() {
