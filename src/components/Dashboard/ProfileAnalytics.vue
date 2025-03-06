@@ -1,11 +1,11 @@
 <template>
-  <div :style="styles.container">
-    <ProfileAnalyticsHeader :style="styles.header" @close="$emit('close')" />
-    <AnalyticsSummaryCards :style="styles.summaryCards" :analyticsData="analyticsData" />
-    <TopPerformingWishlist :style="styles.topWishlist" />
-    <div :style="styles.bottomSection">
-      <WishPerformanceGraph :style="styles.wishGraph" />
-      <AudiencePieChart :style="styles.audienceChart" />
+  <div class="flex flex-col w-auto lg:p-6 bg-white rounded-2xl gap-4 sm:gap-6">
+    <ProfileAnalyticsHeader class="flex-grow h-auto" @close="$emit('close')" />
+    <AnalyticsSummaryCards class="flex-grow h-auto" :analyticsData="analyticsData" />
+    <TopPerformingWishlist class="flex-grow h-auto" :wishlists="analyticsData.top_wishlists" />
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <WishPerformanceGraph class="h-auto" :wishData="analyticsData.wishGraph" />
+      <AudiencePieChart class="h-auto" :audienceData="analyticsData.pieChart" />
     </div>
   </div>
 </template>
@@ -30,51 +30,6 @@ export default {
       type: Object,
       required: true
     }
-  },
-  data() {
-    return {
-      styles: {
-        container: {
-          display: 'flex',
-          flexDirection: 'column',
-          width: '1136px',
-          padding: '32px',
-          backgroundColor: '#fefefe',
-          borderRadius: '32px',
-          gap: '24px'
-        },
-        header: {
-          flexGrow: 1,
-          height: 'auto'
-        },
-        summaryCards: {
-          flexGrow: 1,
-          height: 'auto'
-        },
-        topWishlist: {
-          flexGrow: 1,
-          height: 'auto'
-        },
-        bottomSection: {
-          display: 'flex',
-          flexDirection: 'row',
-          gap: '16px'
-        },
-        wishGraph: {
-          flexGrow: 1,
-          height: 'auto'
-        },
-        audienceChart: {
-          flexGrow: 1,
-          height: 'auto'
-        }
-      }
-    };
   }
 };
 </script>
-
-<style scoped>
-/* Additional styles if needed */
-</style>
-

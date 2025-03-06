@@ -39,45 +39,24 @@ export default {
 
         const expirationTime = Date.now() + 24 * 60 * 60 * 1000; // 24 hours
           localStorage.setItem("authToken", token);
-          localStorage.setItem("tokenExpiration", expirationTime);
+       /*    localStorage.setItem("tokenExpiration", expirationTime); */
           localStorage.setItem("user", JSON.stringify(user));
 
         // Redirect to /verification-sent
         this.$router.push('/verification-sent');
       } catch (error) {
 
-        let errorMsg = 'An error occurred. Please try again.';
-
-    if (error.response) {
-      switch (error.response.status) {
-        case 400:
-          errorMsg = 'Invalid input. Please check your information and try again.';
-          break;
-        case 401:
-          errorMsg = 'Unauthorized. Please check your credentials.';
-          break;
-        case 422:
-          // Validation errors
-          if (error.response.data.errors) {
-            errorMsg = Object.values(error.response.data.errors).flat().join(' ');
+        if (error.response) {
+          // Use eventBus to output error messages directly from the response
+          if (error.response.data.message) {
+            eventBus.onError(error.response.data.message);
+          } else if (error.response.data.errors) {
+            const errorMsg = Object.values(error.response.data.errors).flat().join(" ");
+            eventBus.onError(errorMsg);
           } else {
-            errorMsg = 'Validation failed. Please check your input.';
+            eventBus.onError("An unexpected error occurred. Please try again.");
           }
-          break;
-        case 409:
-          errorMsg = 'This email is already registered. Please use a different email.';
-          break;
-        case 500:
-          errorMsg = 'Server error. Please try again later.';
-          break;
-        default:
-          errorMsg = error.response.data.message || 'An unexpected error occurred. Please try again.';
-      }
-    }
-
-    eventBus.onError(errorMsg); // Trigger the alert
-
-        console.error('Registration failed:', error.response?.data);
+        }
 
         // Reset form submission state
         this.$refs.registrationForm.isSubmitting = false;

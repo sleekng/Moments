@@ -594,7 +594,7 @@
                 v-if="wish.status != 'saved'"
                 class="text-sm text-gray-500 mt-2"
               >
-                {{ timeAgo }} ago
+                {{ timeAgo }}
               </div>
             </div>
 
@@ -621,7 +621,7 @@
                 >
               </div>
               <div v-if="wish.status != 'saved'" class="text-sm text-gray-500">
-                {{ timeAgo }} ago
+                {{ timeAgo }}
               </div>
             </div>
 
@@ -661,7 +661,7 @@
                 v-if="wish.status != 'saved'"
                 class="text-sm text-gray-500 mt-2"
               >
-                {{ timeAgo }} ago
+                {{ timeAgo }}
               </div>
             </div>
 
@@ -685,7 +685,7 @@
                 >@{{ wish.gifter?.username }}</span
               >
               <div v-if="wish.status != 'saved'" class="text-sm text-gray-500">
-                {{ timeAgo }} ago
+                {{ timeAgo }}
               </div>
             </div>
 
@@ -725,7 +725,7 @@
                 v-if="wish.status != 'saved'"
                 class="text-sm text-gray-500 mt-2"
               >
-                {{ timeAgo }} ago
+                {{ timeAgo }}
               </div>
             </div>
           </div>
@@ -761,7 +761,7 @@
                 v-if="wish.status != 'saved'"
                 class="text-sm text-gray-500 mt-2"
               >
-                {{ timeAgo }} ago
+                {{ timeAgo }}
               </div>
             </div>
 
@@ -794,7 +794,7 @@
                 v-if="wish.status != 'saved'"
                 class="text-sm text-gray-500 mt-2"
               >
-                {{ timeAgo }} ago
+                {{ timeAgo }}
               </div>
             </div>
           </div>
@@ -1094,7 +1094,8 @@ export default {
         GBP: '£',
         CAD: 'C$',
         GHS: '₵'
-      }
+      },
+      user:JSON.parse(localStorage.getItem('user')),
     };
   },
   // Add a watch to update local state when prop changes
@@ -1111,21 +1112,39 @@ export default {
       return this.wish.wishlist.user?.username === this.loggedInUser;
     },
     timeAgo() {
-      const now = new Date();
-      const updatedAt = new Date(this.wish.status_update_at);
-      const diffMs = now - updatedAt; // Difference in milliseconds
-      const diffMins = Math.floor(diffMs / (1000 * 60)); // Convert to minutes
-      const diffHours = Math.floor(diffMins / 60);
-      const diffDays = Math.floor(diffHours / 24);
+    const dateObj = new Date(this.wish.status_update_at);
+    const now = new Date();
+    const diffInSeconds = Math.floor((now - dateObj) / 1000);
+    
+    const secondsInMinute = 60;
+    const secondsInHour = secondsInMinute * 60;
+    const secondsInDay = secondsInHour * 24;
+    const secondsInMonth = secondsInDay * 30; // Approximation
+    const secondsInYear = secondsInDay * 365; // Approximation
 
-      if (diffDays >= 1) {
-        return `${diffDays} day${diffDays > 1 ? "s" : ""}`;
-      } else if (diffHours >= 1) {
-        return `${diffHours} hour${diffHours > 1 ? "s" : ""}`;
-      } else {
-        return `${diffMins} minute${diffMins > 1 ? "s" : ""}`;
-      }
-    },
+    if (diffInSeconds < secondsInMinute) {
+      return `${diffInSeconds} second${diffInSeconds !== 1 ? 's' : ''} ago`;
+    } else if (diffInSeconds < secondsInHour) {
+      const minutes = Math.floor(diffInSeconds / secondsInMinute);
+      return `${minutes} minute${minutes !== 1 ? 's' : ''} ago`;
+    } else if (diffInSeconds < secondsInDay) {
+      const hours = Math.floor(diffInSeconds / secondsInHour);
+      return `${hours} hour${hours !== 1 ? 's' : ''} ago`;
+    } else if (diffInSeconds < secondsInMonth) {
+      const days = Math.floor(diffInSeconds / secondsInDay);
+      return `${days} day${days !== 1 ? 's' : ''} ago`;
+    } else if (diffInSeconds < secondsInYear) {
+      const months = Math.floor(diffInSeconds / secondsInMonth);
+      return `${months} month${months !== 1 ? 's' : ''} ago`;
+    } else {
+      const years = Math.floor(diffInSeconds / secondsInYear);
+      return `${years} year${years !== 1 ? 's' : ''} ago`;
+    }
+  },
+  },
+  mounted() {
+   console.log(this.wish);
+   
   },
   methods: {
     getCurrencySymbol(currency) {
@@ -1249,7 +1268,7 @@ export default {
     copyLink() {
       navigator.clipboard
         .writeText(
-          `${this.$website}/wishlist/${this.currentWishlistId}/${this.user.username}`
+          `${this.$website}/wishlist/${this.wish.wishlist_id}/${this.user.username}`
         )
         .then(() => {
           eventBus.onSuccess("Wishlist link copied to clipboard!");
@@ -1260,25 +1279,25 @@ export default {
         `Check out this Wishlist: ${this.user.username}`
       );
       const body = encodeURIComponent(
-        `${this.$website}/wishlist/${this.currentWishlistId}/${this.user.username}`
+        `${this.$website}/wishlist/${this.wish.wishlist_id}/${this.user.username}`
       );
       window.location.href = `mailto:?subject=${subject}&body=${body}`;
     },
     shareToWhatsApp() {
       const text = encodeURIComponent(
-        `Check out this Wishlist: ${this.$website}/wishlist/${this.currentWishlistId}/${this.user.username}`
+        `Check out this Wishlist: ${this.$website}/wishlist/${this.wish.wishlist_id}/${this.user.username}`
       );
       window.open(`https://wa.me/?text=${text}`, "_blank");
     },
     shareToTwitter() {
       const text = encodeURIComponent(
-        `Check out this Wishlist: ${this.$website}/wishlist/${this.currentWishlistId}/${this.user.username}`
+        `Check out this Wishlist: ${this.$website}/wishlist/${this.wish.wishlist_id}/${this.user.username}`
       );
       window.open(`https://twitter.com/intent/tweet?text=${text}`, "_blank");
     },
     shareToFacebook() {
       const url = encodeURIComponent(
-        `${this.$website}/wishlist/${this.currentWishlistId}/${this.user.username}`
+        `${this.$website}/wishlist/${this.wish.wishlist_id}/${this.user.username}`
       );
       window.open(
         `https://www.facebook.com/sharer/sharer.php?u=${url}`,
@@ -1378,7 +1397,17 @@ export default {
           this.closeModal();
         }
       } catch (error) {
-        console.error("Error reserving wish:", error);
+        if (error.response) {
+          // Use eventBus to output error messages directly from the response
+          if (error.response.data.message) {
+            eventBus.onError(error.response.data.message);
+          } else if (error.response.data.errors) {
+            const errorMsg = Object.values(error.response.data.errors).flat().join(" ");
+            eventBus.onError(errorMsg);
+          } else {
+            eventBus.onError("An unexpected error occurred. Please try again.");
+          }
+        }
       } finally {
         this.isReserving = false; // End loading state
       }

@@ -98,18 +98,32 @@ export default {
           body: JSON.stringify(this.passwordData)
         });
 
-        if (!response.ok) {
-          throw new Error('Failed to update profile');
-        }
+    if(response.status === 200) {
         const result = await response.json();
         const user = result.data;
         localStorage.setItem('user', JSON.stringify(user));
         console.log('Profile updated:', user);
         eventBus.onSuccess(result.message || 'Password updated successfully!'); // updated to use response message
+
+    }else{
+        const result = await response.json();
+        eventBus.onError(result.message || 'An error occurred. Please try again.'); // updated to use response message
+    }
+
       } catch (error) {
-        const errorMsg = error.response ?.data ?.message || 'An error occurred. Please try again.';
-        eventBus.onError(errorMsg); // Trigger the alert
-        console.error('Error updating profile:', error);
+        console.log('Error updating profile:', error);
+        
+          if (error.response) {
+          // Use eventBus to output error messages directly from the response
+          if (error.response.data.message) {
+            eventBus.onError(error.response.data.message);
+          } else if (error.response.data.errors) {
+            const errorMsg = Object.values(error.response.data.errors).flat().join(" ");
+            eventBus.onError(errorMsg);
+          } else {
+            eventBus.onError("An unexpected error occurred. Please try again.");
+          }
+        }
       } finally {
         this.isSaving = false;
         eventBus.setLoading(false);

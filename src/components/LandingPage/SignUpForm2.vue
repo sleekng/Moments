@@ -15,7 +15,7 @@
         up</h2>
     </div>
 
-    <div class="mb-10 relative left-hand lg:top-[480px] 2xl:top-[400px] w-full">
+    <div class="mb-10 relative left-hand lg:top-[400px] 2xl:top-[400px] w-full">
       <!-- Form Inputs -->
       <div class="w-full space-y-4">
         <!-- Category dropdown -->

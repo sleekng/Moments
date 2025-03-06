@@ -275,7 +275,7 @@ export default {
     viewCreatedWish() {
       this.$router.push({
         name: "Wishlist",
-        params: { id: this.createdWishlistId },
+        params: { id: this.currentWishlistId },
       });
       this.wishCreated = false;
       this.wishUpdated = false;

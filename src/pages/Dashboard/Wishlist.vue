@@ -3,7 +3,7 @@
     <AppHeader @showCategoryModal="$emit('showCategoryModal')" />
 
     <div v-if="!loading" class="container mx-auto pt-20">
-      <WishlistDetails  :canShow="currentUser?.username === currentWishlist?.user.username" @editWishlist="handleEditWishlist" :selectedWishlist="currentWishlist" />
+      <WishlistDetails  :canShow="currentUser?.username === currentWishlist?.user.username" @editWishlist="handleEditWishlist" :selectedWishlist="currentWishlist" :filteredWishes="filteredWishes"/>
 
       <TabNavigationsWish 
         :myWishesCount="myWishes.length" 
@@ -15,7 +15,7 @@
         class=" py-8"
       />
 
-      <div class="grid grid-cols-2 w-full lg:grid-cols-4 gap-4 lg:gap-6 px-4 lg:px-12 py-6 pb-12 bg-white rounded-b-lg " @mouseleave="handleCloseDropdown">
+      <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4   w-full gap-4 lg:gap-6 px-4 lg:px-12 py-6 pb-12 bg-white rounded-b-lg " @mouseleave="handleCloseDropdown">
         <!-- Empty State Centered -->
         <div v-if="activeTab === 'myWishes' && myWishes.length === 0" class="col-span-2 lg:col-span-4 flex justify-center">
           <EmptyState 
@@ -71,6 +71,7 @@
           @editWish="openEditWishModal"
           @reserved="reservedWish"
           @updateSavedStatus="handleUpdateSavedStatus"
+        
         />
       </div>
     </div>
@@ -121,6 +122,7 @@
       @viewWish="viewCreatedWish" 
       @makeAWish="openCreateWishModal"
       :updateType="updateType"
+      @shareWish="toggleShareMenu"
     />
 
     <GiftReservedModal
@@ -130,6 +132,68 @@
         :isRequestingAddress="isRequestingAddress"
         :wish="giftReservedWish"
     />
+
+
+    <!-- Share Modal -->
+    <div
+      v-if="isShareMenuOpen"
+      class="fixed left-0 inset-0 flex items-center p-4 justify-center bg-black bg-opacity-50 z-[100]"
+    >
+      <div class="bg-white rounded-lg shadow-lg p-6 relative max-w-lg w-full">
+        <button
+          @click="toggleShareMenu"
+          class="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+        >
+          <i class="fas fa-times"></i>
+        </button>
+        <div class="flex space-x-4 items-center pb-2">
+          <span class="font-bold text-lg">Share with friends</span>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 pt-4 gap-4">
+          <button
+            @click="copyLink"
+            class="flex items-center space-x-2 p-2 border hover:bg-gray-100 rounded-lg"
+          >
+            <i class="fas fa-link"></i>
+            <span>Copy Link</span>
+          </button>
+          <button
+            @click="shareToEmail"
+            class="flex items-center space-x-2 p-2 border hover:bg-gray-100 rounded-lg"
+          >
+            <i class="fas fa-envelope"></i>
+            <span>Share to Email</span>
+          </button>
+          <button
+            @click="shareToWhatsApp"
+            class="flex items-center space-x-2 p-2 border hover:bg-gray-100 rounded-lg"
+          >
+            <i class="fab fa-whatsapp"></i>
+            <span>Share to Whatsapp</span>
+          </button>
+          <button
+            @click="shareToTwitter"
+            class="flex items-center space-x-2 p-2 border hover:bg-gray-100 rounded-lg"
+          >
+            <i class="fab fa-twitter"></i>
+            <span>Share to Twitter</span>
+          </button>
+          <div class="lg:col-span-2 lg:inline-flex lg:justify-center w-full">
+            <button
+              @click="shareToFacebook"
+              class="flex items-center space-x-2 p-2 border hover:bg-gray-100 rounded-lg lg:w-auto w-full"
+            >
+              <i class="fab fa-facebook"></i>
+              <span>Share to Facebook</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
   </div>
   <Loader :show="loading" />
 </template>
@@ -167,6 +231,7 @@ export default {
   },
   data() {
     return {
+      isShareMenuOpen: false,
       savedWishes: new Set(), // Add this to track saved wishes
       isWishSaved:false,
       giftReservedWish:null,
@@ -216,6 +281,9 @@ export default {
       }
 
     },
+
+
+
     wishmodalTitle() {
       return this.wishCreated ? 'Wish Added! 🥳' : 'Wish Updated! 🥳';
     },
@@ -229,7 +297,52 @@ export default {
     this.loadCurrentUser(); // Load user data when component is created
     this.loadData();
   },
+  mounted() {
+   console.log();
+   
+  },
   methods: {
+
+
+    toggleShareMenu() {
+      console.log('working');
+      
+      this.isShareMenuOpen = !this.isShareMenuOpen;
+    },
+
+    copyLink() {
+      navigator.clipboard.writeText(`${window.location.href}/`).then(() => {
+        eventBus.onSuccess("Profile link copied to clipboard!");
+      });
+    },
+    shareToEmail() {
+      const subject = encodeURIComponent(
+        `Check out this profile: ${this.currentWishlist.title}`
+      );
+      const body = encodeURIComponent(`${window.location.href}`);
+      window.location.href = `mailto:?subject=${subject}&body=${body}`;
+    },
+    shareToWhatsApp() {
+      const text = encodeURIComponent(
+        `Check out this profile: ${window.location.href}`
+      );
+      window.open(`https://wa.me/?text=${text}`, "_blank");
+    },
+    shareToTwitter() {
+      const text = encodeURIComponent(
+        `Check out this profile: ${window.location.href}`
+      );
+      window.open(`https://twitter.com/intent/tweet?text=${text}`, "_blank");
+    },
+    shareToFacebook() {
+      const url = encodeURIComponent(`${window.location.href}/`);
+      window.open(
+        `https://www.facebook.com/sharer/sharer.php?u=${url}`,
+        "_blank"
+      );
+    },
+
+
     handleUpdateSavedStatus(wishId, isSaved) {
       this.loadData();
     },

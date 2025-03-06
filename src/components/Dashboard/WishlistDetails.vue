@@ -1,12 +1,19 @@
 <template>
 
 
-    <div v-if="selectedWishlist" class="wishlist-cover mt-10 rounded-t-lg px-4 lg:p-12 pt-8 pb-4" 
+    <div v-if="selectedWishlist" class="wishlist-cover mt-10 rounded-t-lg px-4 lg:p-12 pt-8 pb-4 relative" 
     :style="{ 
       background: selectedWishlist.category.name === 'Birthday' 
         ? 'linear-gradient(180deg, rgba(247,204,253,1) 10.74%, rgba(252,236,255,1) 103.53%)'
         : 'linear-gradient(180deg, rgba(155,201,255,1) 85.76%, rgba(210,241,255,1) 103.38%)'
     }">
+
+    
+    <!-- Overlay to disable interactions if wish is archived -->
+    <div
+      v-if="filteredWishes.length > 0 && filteredWishes[0].archived"
+      class="absolute inset-0 bg-gray-500 bg-opacity-0 z-50 cursor-not-allowed lg:min-w-[286px]"
+    ></div>
 
 
 
@@ -134,6 +141,9 @@ import { eventBus } from '@/eventBus.js';
 export default {
   name: 'WishlistDetails',
   props: {
+    filteredWishes:{
+      type: Array,
+    },
     selectedWishlist: {
       type: Object,
       default: () => ({
@@ -156,6 +166,10 @@ export default {
       isDropdownOpen: false,
       isShareMenuOpen: false,
     }
+  },
+  mounted() {
+   console.log(this.selectedWishlist);
+   
   },
   methods: {
     toggleMenu() {

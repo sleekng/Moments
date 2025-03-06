@@ -2,7 +2,7 @@
   <header class="flex justify-between items-center bg-white px-4 lg:px-16 border-b border-gray-300 fixed w-full top-0 z-50 lg:h-20 h-14">
     <!-- Logo and Navigation Toggle for Mobile -->
     <div class="flex items-center lg:hidden">
-      <img @click="toggleMobileMenu" src="/assets/mobile-nav.svg" alt="Menu" class="h-5 w-5 mr-4 cursor-pointer " />
+      <img @click="toggleMobileMenu" src="/assets/mobile-nav.svg" alt="Menu" class="h-5 w-5 mr-4 cursor-pointer" />
       <router-link to="/">
         <img src="/assets/logo.svg" alt="Moments Hub Logo" class="h-8" />
       </router-link>
@@ -14,23 +14,24 @@
         <img src="/assets/logo.svg" alt="Logo" class="h-10" />
       </router-link>
       <nav class="flex ml-16 h-full space-x-8">
-        <RouterLink to="/dashboard" :class="[isActiveRoute('dashboard') ? 'bg-primaryMainBright border-b-2 border-primaryColor' : '']" class="flex pb-4 mt-4 items-center space-x-1 px-4 py-2">
-          <span :class="isActiveRoute('dashboard') ? 'text-gray-900' : 'text-gray-600'" class="text-lg font-medium">
+        <RouterLink to="/dashboard" :class="[isActiveRoute('dashboard') ? 'bg-primaryMainBright border-b-2 border-primaryColor' : '']" class="flex pb-4 mt-4 items-center space-x-1 px-2 whitespace-nowrap xl:px-4 py-2">
+          <span :class="isActiveRoute('dashboard') ? 'text-gray-900' : 'text-gray-600'" class="text-xs xl:text-lg font-medium">
             My Wishlist
           </span>
         </RouterLink>
         <RouterLink to="/explore" :class="[isActiveRoute('explore') ? 'bg-primaryMainBright border-b-2 border-primaryColor' : '']" class="flex pb-4 mt-4 items-center space-x-1 px-4 py-2">
-          <span :class="isActiveRoute('explore') ? 'text-gray-900' : 'text-gray-600'" class="text-lg font-medium">
+          <span :class="isActiveRoute('explore') ? 'text-gray-900' : 'text-gray-600'" class="text-xs xl:text-lg  font-medium">
             Explore
           </span>
         </RouterLink>
       </nav>
     </div>
 
-    <div class=" flex lg:hidden items-center h-full space-x-3">
-
-       <img @click="toggleNotifications" src="/assets/bell.svg" alt="Notifications" class="h-6 w-6" />
-        <router-link to="/explore" class="flex items-center h-full"><i class="fa-regular fa-magnifying-glass text-gray-700 text-xl"></i></router-link>
+    <div class="flex lg:hidden items-center h-full space-x-3">
+      <img @click="toggleNotifications" src="/assets/bell.svg" alt="Notifications" class="h-6 w-6" />
+      <router-link to="/explore" class="flex items-center h-full">
+        <i class="fa-regular fa-magnifying-glass text-gray-700 text-xl"></i>
+      </router-link>
     </div>
 
     <!-- Search and Action Buttons for Desktop -->
@@ -54,9 +55,10 @@
       </div>
 
       <!-- Create Wishlist Button -->
-      <button @click="Createa" class="flex items-center bg-primaryColor transition-all hover:shadow text-white py-2 px-6 rounded-full">
-        <img src="/assets/add-2.svg" alt="Add" class="h-4 w-4 mr-2" />
-        Create wishlist
+      <button @click="Createa" class="flex items-center justify-center  bg-primaryColor transition-all whitespace-nowrap hover:shadow text-white py-2 px-6 rounded-full">
+        <img src="/assets/add-2.svg" alt="Add" class="h-4 w-4 " />
+        <span class="text-xs xl:text-base"> Create wishlist</span>
+       
       </button>
 
       <!-- Notification and Profile Section -->
@@ -66,7 +68,7 @@
 
         <!-- Notifications Dropdown -->
         <div v-if="showNotifications" class="absolute -right-20 top-10 w-[450px] bg-white border overflow-hidden rounded-lg shadow-lg z-50">
-          <NotificationDropdown :notifications="notifications" @shareAddress="showShareAddressModalMethod" @cancelReservation="cancelReservation" />
+          <NotificationDropdown :notifications="notifications" @shareAddress="showShareAddressModalMethod" @cancelReservation="cancelReservation"   @refreshNotifications="fetchNotifications" />
         </div>
       </div>
 
@@ -90,7 +92,7 @@
           <div class="py-2">
             <RouterLink to="/archived" class="px-4 py-2 cursor-pointer block hover:bg-gray-100">Archived wishlist</RouterLink>
             <RouterLink to="/account" class="px-4 block py-2 cursor-pointer hover:bg-gray-100">Account settings</RouterLink>
-          </div> 
+          </div>
           <hr />
           <div class="py-2">
             <a href="/" target="_blank" class="px-4 py-2 cursor-pointer flex items-center justify-between hover:bg-gray-100">
@@ -106,7 +108,7 @@
 
   <!--Mobile Notification and Profile Section -->
   <div v-if="showNotifications" class="fixed left-0 lg:hidden top-12 w-full h-screen bg-white border overflow-hidden rounded-lg shadow-lg z-40">
-    <NotificationDropdown :notifications="notifications" @shareAddress="showShareAddressModalMethod" @cancelReservation="cancelReservation" />
+    <NotificationDropdown :notifications="notifications" @shareAddress="showShareAddressModalMethod" @cancelReservation="cancelReservation"   @refreshNotifications="fetchNotifications" />
   </div>
 
   <!-- Mobile Menu -->
@@ -131,7 +133,7 @@
       </div>
       <hr class="my-4" />
       <div class="px-6">
-        <a  href="/" target="_blank" class="flex justify-between items-center py-2">
+        <a href="/" target="_blank" class="flex justify-between items-center py-2">
           <span class="text-lg font-medium">How it works</span>
           <img src="/assets/Gotoweb.svg" alt="External Link" class="w-4 h-4" />
         </a>
@@ -139,7 +141,7 @@
       </div>
     </div>
   </div>
-  <ShareAddressModal @close="closeShareAddressModal" :wishID="selectedWishID" :showShareAddressModal="showShareAddressModal"/>
+  <ShareAddressModal @close="closeShareAddressModal" :wishID="selectedWishID" :showShareAddressModal="showShareAddressModal" />
 </template>
 
 <script>
@@ -281,7 +283,6 @@ export default {
       }
     },
     async cancelReservation(wishId) {
-      alert('working')
       eventBus.setLoading(true);
       try {
         await this.$axios.put(
@@ -395,10 +396,29 @@ export default {
 </script>
 
 <style scoped>
-@media (min-width: 1024px) {
+@media (max-width: 640px) {
   header {
-    height: 80px;
-    padding: 0 64px;
+    padding: 0 16px;
+  }
+  .text-lg {
+    font-size: 1rem; /* Adjust font size for smaller screens */
+  }
+  .text-xl {
+    font-size: 1.125rem; /* Adjust font size for smaller screens */
+  }
+  .h-10 {
+    height: 2.5rem; /* Adjust height for smaller screens */
+  }
+  .w-10 {
+    width: 2.5rem; /* Adjust width for smaller screens */
+  }
+  .px-6 {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+  .py-2 {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
   }
 }
 </style>

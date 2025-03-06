@@ -44,16 +44,16 @@
     </div>
 
     <div class="flex justify-center space-x-4 p-4 rounded">
-      <img src="/assets/facebook.svg" class="w-8 h-8 rounded-full p-1 border" alt="Facebook Icon" />
+<!--       <img src="/assets/facebook.svg" class="w-8 h-8 rounded-full p-1 border" alt="Facebook Icon" /> -->
       <button   @click="handleOAuthSignIn('google')" >
         <img src="/assets/google.svg" class="w-8 h-8 rounded-full p-1 border" alt="Google Icon" />
       </button>
-      <img src="/assets/apple.svg" class="w-8 h-8 rounded-full p-1 border" alt="Apple Icon" />
+<!--       <img src="/assets/apple.svg" class="w-8 h-8 rounded-full p-1 border" alt="Apple Icon" /> -->
     </div>
     <div class="text-center text-sm create-bt  text-gray-600 mt-4">
       New to Moments Hub? 
       
-      <router-link class="text-primaryColor font-medium" to="/register">
+      <router-link class="text-primaryColor font-medium" to="/create-option">
         Create Account
       </router-link>
     </div>
@@ -92,7 +92,17 @@ export default {
                     window.location.replace(response.data.data.redirect_url);
                 }
             } catch (error) {
-                console.error(`${provider} authentication error:`, error);
+              if (error.response) {
+          // Use eventBus to output error messages directly from the response
+          if (error.response.data.message) {
+            eventBus.onError(error.response.data.message);
+          } else if (error.response.data.errors) {
+            const errorMsg = Object.values(error.response.data.errors).flat().join(" ");
+            eventBus.onError(errorMsg);
+          } else {
+            eventBus.onError("An unexpected error occurred. Please try again.");
+          }
+        }
             }
         },
     togglePassword() {
@@ -107,8 +117,17 @@ export default {
           await this.$emit('submit', { email: this.email, password: this.password });
           // Handle success, reset form, navigate, etc.
         } catch (error) {
-          // Handle error, show error message, etc.
-          console.error('An error occurred', error);
+          if (error.response) {
+          // Use eventBus to output error messages directly from the response
+          if (error.response.data.message) {
+            eventBus.onError(error.response.data.message);
+          } else if (error.response.data.errors) {
+            const errorMsg = Object.values(error.response.data.errors).flat().join(" ");
+            eventBus.onError(errorMsg);
+          } else {
+            eventBus.onError("An unexpected error occurred. Please try again.");
+          }
+        }
         } finally {
           this.isSubmitting = false;
           this.opacity = 'opacity-100'

@@ -101,6 +101,10 @@
       makeAWish() {
         this.$emit('makeAWish', this.currentWishlistId);
         this.closeModal();
+      },
+      shareWish() {
+        
+        this.$emit('shareWish', this.currentWishlistId);
       }
     }
   };

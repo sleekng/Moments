@@ -15,10 +15,11 @@ const app = createApp(App);
 app.directive('user-access', UserAccess);
 
 // Set the global base URL
-/* app.config.globalProperties.$baseURL = 'https://be.momentshub.org/api';
-app.config.globalProperties.$website = 'http://localhost:5173'; */
-app.config.globalProperties.$website = 'http://momentshub.org';
-app.config.globalProperties.$baseURL = 'https://account.momentshub.org/api';
+app.config.globalProperties.$baseURL = 'https://be.momentshub.org/api';
+app.config.globalProperties.$website = 'http://localhost:5173';
+
+/* app.config.globalProperties.$website = 'http://momentshub.org';
+app.config.globalProperties.$baseURL = 'https://account.momentshub.org/api'; */
 
 // Create a new Axios instance for the app
 const axiosInstance = axios.create({
@@ -32,20 +33,21 @@ function clearAuthData() {
   localStorage.removeItem('user');
 }
 
-// Setup the interceptor globally
 axiosInstance.interceptors.response.use(
-  response => response, // Forward successful responses
+  response => response,
   error => {
-    if (error.response && error.response.status === 401) {
-      // Check for a 401 unauthenticated response
-      clearAuthData(); // Clear stored authentication data
-      // Use router instance to navigate to login page
-      router.push({ name: 'Login', query: { redirect: router.currentRoute.value.fullPath } });
-      console.error('Session has expired. Please log in again.');
+    if (error.response) {
+      console.error('Error response:', error.response);
+      if (error.response.status === 401) {
+        clearAuthData();
+        router.push({ name: 'Login', query: { redirect: router.currentRoute.value.fullPath } });
+        console.error('Session has expired. Please log in again.');
+      }
     }
     return Promise.reject(error);
   }
 );
+
 
 // Inject the Axios instance globally
 app.config.globalProperties.$axios = axiosInstance;

@@ -118,7 +118,7 @@
         id="country" 
         v-model="addressForm.country" 
         @change="updateStates"
-        class="w-full p-3 border border-gray-300 rounded-md appearance-none pr-10"
+        class="w-full p-3 border border-gray-300 bg-transparent rounded-md appearance-none pr-10"
       >
         <option v-for="country in countries" :key="country.name" :value="country.name">
         {{ country.name }}
@@ -134,7 +134,7 @@
       <select 
         id="state" 
         v-model="addressForm.state"
-        class="w-full p-3 border border-gray-300 rounded-md appearance-none pr-10"
+        class="w-full p-3 border bg-transparent border-gray-300 rounded-md appearance-none pr-10"
       >
         <option v-for="state in states" :key="state.id" :value="state.name">
           {{ state.name }}

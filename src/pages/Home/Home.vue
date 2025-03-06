@@ -2,7 +2,7 @@
 <div class="bg-primaryBackground">
     <!-- Header section -->
     <!-- Header with Login and Signup buttons -->
-    <header class=" lg:sticky top-0 bg-primaryBackground z-[90] ">
+    <header class=" sticky top-0 bg-primaryBackground z-[90] ">
         <div class="container mx-auto flex  justify-between items-center p-4 lg:px-8  ">
 
             <a href="/"><img src="/assets/Logo-1.svg" alt="Logo" class="w-24 h-10"></a>
@@ -27,10 +27,10 @@
                 <div class="text-center scale-105 flex justify-center flex-col items-center  mx-auto mb-4 space-y-2 relative">
                     <h1 class="2xl:text-4xl max-w-sm sm:max-w-lg text-[64px]  font-semibold text-gray-900  leading-none relative">
                         <img class=" particle-7" src="/assets/balloon-svgrepo-com1.svg" alt="particle-7">
-                        Make Every Moment Memorable
-                        <span class="text-primaryColor absolute">.</span>
+                        Wish It. Share It.<br>Receive It
+                        <span class="text-primaryColor absolute">!</span>
                     </h1>
-                    <p class="text-base  max-w-xl lg:text-[14px] text-gray-600">Connect with loved ones through heartfelt wishes and gifts. Create, share, and discover wishlists to make your dreams come true.</p>
+                    <p class="text-base  max-w-xl lg:text-[14px] text-gray-600">Moments Hub Wishlist makes gifting easy and meaningful! Create and share your Wishlist with loved ones. Whether it’s a birthday, holiday, or just because—you get what you truly want!</p>
                 </div>
                 <RouterLink to="/Login" class="bg-primaryColor text-white font-medium  py-2 lg:py-3 px-12 rounded-full flex items-center space-x-2  transition-all transform hover:scale-105">
                     <span class="">Start wishing now</span>

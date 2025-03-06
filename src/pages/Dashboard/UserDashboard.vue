@@ -10,7 +10,7 @@
 
       <div v-if="activeTab === 'myWishes'">
         <div v-if="wishlists.length > 0"
-          class="grid grid-cols-1 lg:grid-cols-4 gap-6 lg:px-12 py-8 rounded-b-lg bg-white">
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:px-12 py-8 rounded-b-lg bg-white">
           <div class="flex flex-col items-center justify-center bg-gray-100 h-full rounded-lg p-4 py-8 cursor-pointer"
             @click="$emit('showCategoryModal')">
             <div class="flex items-center justify-center w-12 h-12 bg-black rounded-full mb-4">
@@ -81,7 +81,7 @@
         @newUpdate="newUpdate" />
 
 
-      <AnalyticsModal v-if="showAnalyticsModal" :analyticsData="analyticsData" @close="closeAnalyticsModal" />
+        <AnalyticsModal v-if="showAnalyticsModal" :analyticsData="analyticsData" @close="closeAnalyticsModal" />
       <CreateWishModal v-if="showCreateWishModal" :wish="editingWish" @addWish="AddWish"
         @close="closeCreateWishModal" />
       <DeleteConfirmationModal v-if="showDeleteModal" :title="'WishList'"
@@ -437,10 +437,23 @@ export default {
 
     async fetchAnalyticsData() {
       try {
-        const response = await this.$axios.get(`${this.$baseURL}/analytics`, {
-          headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
-        });
-        this.analyticsData = response.data.data;
+        const [analyticsResponse, pieChartResponse, wishGraphResponse] = await Promise.all([
+          this.$axios.get(`${this.$baseURL}/analytics`, {
+            headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+          }),
+          this.$axios.get(`${this.$baseURL}/analytics/pie-chart`, {
+            headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+          }),
+          this.$axios.get(`${this.$baseURL}/analytics/wish-graph`, {
+            headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+          })
+        ]);
+
+        this.analyticsData = {
+          ...analyticsResponse.data.data,
+          pieChart: pieChartResponse.data.data,
+          wishGraph: wishGraphResponse.data.data
+        };
       } catch (error) {
         console.error('Error fetching analytics data:', error);
       }

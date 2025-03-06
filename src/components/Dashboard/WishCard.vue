@@ -1,10 +1,18 @@
 <template>
-  <div>
+  <div class="relative">
+    <!-- Overlay to disable interactions if wish is archived -->
+    <div
+      v-if="wish.archived"
+      class="absolute inset-0 bg-gray-500 bg-opacity-0 z-50 cursor-not-allowed lg:min-w-[286px]"
+    ></div>
+
     <div
       @click="preview"
+         
       class="bg-white cursor-pointer rounded-lg shadow-lg overflow-hidden relative card group flex-shrink-0 md:w-auto h-[208px] lg:min-h-[360px] lg:min-w-[286px]"
     >
       <div class="lg:relative">
+
         <img
           :src="wish.photo || '/assets/wishlist-category-placeholder.svg'"
           alt="Wish Item"
@@ -715,6 +723,10 @@ export default {
   mounted() {
     this.fetchSavedWishes();
     window.addEventListener("resize", this.handleResize);
+    console.log(this.wish);
+    
+    
+    
   },
   beforeUnmount() {
     window.removeEventListener("resize", this.handleResize);
@@ -858,9 +870,11 @@ export default {
               wish_id: this.wish.id,
             },
             {
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-              },
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+              'Authorization': `Bearer ${this.getAuthToken()}`
+            },
             }
           );
         }
@@ -872,11 +886,27 @@ export default {
           this.$emit("newUpdate");
         }
       } catch (error) {
-        console.error("Error reserving wish:", error);
+  
+        if (error.response) {
+          // Use eventBus to output error messages directly from the response
+          if (error.response.data.message) {
+            eventBus.onError(error.response.data.message);
+          } else if (error.response.data.errors) {
+            const errorMsg = Object.values(error.response.data.errors).flat().join(" ");
+            eventBus.onError(errorMsg);
+          } else {
+            eventBus.onError("An unexpected error occurred. Please try again.");
+          }
+        }
+        
+
       } finally {
         this.isReserving = false; // End loading state
       }
     },
+    getAuthToken() {
+        return localStorage.getItem('authToken') || '';
+      },
     preview() {
       this.$emit("preview", this.wish.id, this.isWishSaved);
     },

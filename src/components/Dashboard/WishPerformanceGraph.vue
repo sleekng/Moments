@@ -1,7 +1,7 @@
 <template>
-    <div class="graph-container">
+  <div class="bg-white p-4 sm:p-6 rounded-lg border border-[#f0f0f0] flex flex-col gap-4">
       <!-- Header section -->
-      <div class="header">
+      <div class="flex flex-col lg:flex-row justify-between ">
         <h2 class="title">Wish performance</h2>
         <div class="legends">
           <div class="legend-item">
@@ -22,7 +22,7 @@
       <!-- Stats section -->
       <div class="stats">
         <div class="stat-header">
-          <h3 class="stat-value">27</h3>
+          <h3 class="stat-value">{{wishData.received.length}}</h3>
           <div class="stat-details">
             <p class="stat-label">Wishes received</p>
             <div class="stat-trend">
@@ -37,46 +37,30 @@
       <!-- Graph section -->
       <div class="graph">
         <!-- Y-axis -->
-        <div class="y-axis">
-          <div v-for="value in [40, 30, 20, 10, 0]" :key="value" class="y-label">
-            <span>{{ value }}</span>
-            <div class="grid-line"></div>
-          </div>
-        </div>
-  
-        <!-- Graph content -->
-        <div class="graph-content">
-          <!-- Line chart will be rendered here -->
-          <div class="tooltip" v-if="showTooltip" :style="tooltipStyle">
-            <div class="tooltip-date">Tuesday, Dec 2, 2024</div>
-            <div class="tooltip-stats">
-              <div class="tooltip-stat">
-                <span>Reserved:</span>
-                <strong>27</strong>
-              </div>
-              <div class="tooltip-stat">
-                <span>Fulfilled:</span>
-                <strong>12</strong>
-              </div>
-              <div class="tooltip-stat">
-                <span>Received:</span>
-                <strong>5</strong>
-              </div>
-            </div>
-          </div>
-        </div>
-  
-        <!-- X-axis -->
-        <div class="x-axis">
-          <span v-for="n in 12" :key="n" class="x-label">{{ n }}</span>
-        </div>
+        <canvas ref="wishPerformanceChart" width="400" height="200"></canvas>
       </div>
     </div>
   </template>
   
   <script>
+  import { Chart, registerables } from 'chart.js';
+import 'chartjs-adapter-date-fns';
+import { format } from 'date-fns';
+Chart.register(...registerables);
+
   export default {
     name: 'WishPerformanceGraph',
+    props: {
+    wishData: {
+      type: Object,
+      required: true,
+      default: () => ({
+        reserved: [],
+        fulfilled: [],
+        received: []
+      })
+    }
+  },
     data() {
       return {
         showTooltip: false,
@@ -85,7 +69,118 @@
           top: '0px'
         }
       }
+    },
+    mounted() {
+    if (this.wishData) {
+      this.renderChart();
     }
+  },
+
+  methods: {
+    renderChart() {
+      const ctx = this.$refs.wishPerformanceChart.getContext('2d');
+      const labels = this.getUniqueDates();
+
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'Reserved',
+              data: this.getDataForType('reserved'),
+              borderColor: '#e567f8',
+              backgroundColor: '#e567f8',
+              tension: 0.4,
+              fill: false
+              
+            },
+            {
+              label: 'Fulfilled',
+              data: this.getDataForType('fulfilled'),
+              borderColor: '#47e3e8',
+              tension: 0.4,
+              fill: false
+            },
+            {
+              label: 'Received',
+              data: this.getDataForType('received'),
+              borderColor: '#7cc1e8',
+              tension: 0.4,
+              fill: false
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false
+            },
+            tooltip: {
+              callbacks: {
+                title: (tooltipItems) => {
+                  // Format the date using date-fns
+                  return format(new Date(tooltipItems[0].parsed.x), 'EEEE, MMM d, yyyy');
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              type: 'time',
+              time: {
+                unit: 'day',
+                displayFormats: {
+                  day: 'MMM d'
+                }
+              },
+              grid: {
+                display: false
+              }
+            },
+            y: {
+              beginAtZero: true,
+              grid: {
+                color: '#f0f0f0'
+              },
+              ticks: {
+                stepSize: 1
+              }
+            }
+          }
+        }
+      });
+    },
+    getUniqueDates() {
+      try {
+        const allDates = [
+          ...(this.wishData.reserved || []).map(item => new Date(item.date)),
+          ...(this.wishData.fulfilled || []).map(item => new Date(item.date)),
+          ...(this.wishData.received || []).map(item => new Date(item.date))
+        ];
+        return [...new Set(allDates)].sort((a, b) => a - b);
+      } catch (error) {
+        console.error('Error in getUniqueDates:', error);
+        return [];
+      }
+    },
+    getDataForType(type) {
+      try {
+        const dataArray = this.wishData[type] || [];
+        return dataArray.map(item => ({
+          x: new Date(item.date),
+          y: item.count
+        }));
+      } catch (error) {
+        console.error(`Error in getDataForType for ${type}:`, error);
+        return [];
+      }
+    }
+  }
+
+
   }
   </script>
   
@@ -96,8 +191,8 @@
     border-radius: 10px;
     padding: 16px;
     width: 100%;
-    max-width: 528px;
-    height: auto;
+  
+    height: 400px !important;
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -198,14 +293,7 @@
     color: #616874;
   }
   
-  .graph {
-    position: relative;
-    flex-grow: 1;
-    margin-top: 20px;
-    display: grid;
-    grid-template-columns: 40px 1fr;
-    grid-template-rows: 1fr 30px;
-  }
+
   
   .y-axis {
     display: flex;

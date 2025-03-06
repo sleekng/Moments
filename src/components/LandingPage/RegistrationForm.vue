@@ -144,17 +144,13 @@ export default {
     },
 
     handleSubmit() {
-      if (this.password === this.confirmPassword) {
-        this.isSubmitting = true;
-        this.$emit('submit', { 
-          email: this.email, 
-          password: this.password, 
-          password_confirmation: this.confirmPassword 
-        });
-      } else {
-        console.error('Passwords do not match.');
-        // Handle password mismatch appropriately
-      }
+      this.isSubmitting = true;
+      this.$emit('submit', { 
+        email: this.email, 
+        password: this.password, 
+        password_confirmation: this.confirmPassword 
+      });
+   
     },
   },
 };

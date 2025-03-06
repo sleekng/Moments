@@ -1,6 +1,6 @@
 <!-- LoginForm.vue -->
 <template>
-   <div class="w-full lg:w-1/2 p-4 py-8 lg:p-8 flex overflow-y-auto flex-col justify-start items-center">
+   <div class="w-full lg:w-1/2 p-4 py-8 lg:p-8 flex overflow-y-auto flex-col  justify-center items-center">
     <!-- Logo -->
     <OptinLogo />
 
@@ -11,24 +11,24 @@
  
     <!-- Sign Up Buttons -->
     <div class="w-full space-y-4">
-        <button class="w-full flex items-center justify-center p-3 bg-gray-200 rounded-full shadow-sm">
+      
+        <router-link to="/register"  class="w-full flex items-center justify-center p-3 bg-gray-200 rounded-full shadow-sm text-gray-800 font-medium" >
             <img src="/assets/mail.svg" class="w-4 h-4 mr-2" alt="Email Icon" />
-            <router-link to="/register" class="text-gray-800 font-medium">
                 Sign up with email
-            </router-link>
-        </button>
+         </router-link>
+        
 
-        <button class="w-full flex items-center justify-center p-3 bg-gray-200 rounded-full shadow-sm">
+     <!--    <button class="w-full flex items-center justify-center p-3 bg-gray-200 rounded-full shadow-sm">
             <img src="/assets/apple.svg" class="w-4 h-4 mr-2" alt="Apple Icon" />
             <span class="text-gray-800 font-medium">Sign up with Apple</span>
-        </button>
+        </button> -->
 
-        <button 
+     <!--    <button 
         @click="handleOAuthSignIn('facebook')" 
         class="w-full flex items-center justify-center p-3 bg-gray-200 rounded-full shadow-sm">
         <img src="/assets/facebook.svg" class="w-4 h-4 mr-2" alt="Facebook Icon" />
         <span class="text-gray-800 font-medium">Sign up with Facebook</span>
-    </button>
+    </button> -->
 
     <button 
         @click="handleOAuthSignIn('google')" 
