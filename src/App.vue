@@ -8,6 +8,8 @@
       @showCreateWishlistModal="openCreateWishlistModal"
       @showCategoryModal="showCategoryModal = true"
       @showShareAddressModal="openShareAddressModal"
+      :showNotifications=" showNotifications" 
+      @hideNotification = "showNotifications = true"
     />
 
     <CategoryPopup
@@ -156,6 +158,7 @@ export default {
       currentWishlist: null,
       showCreateWishModal: false,
       user: null,
+      showNotifications: false, // Add this line
     };
   },
   computed: {
@@ -207,8 +210,24 @@ export default {
     }
 
     eventBus.onError = this.handleError;
+
+    document.addEventListener('click', this.handleGlobalClick);
+  },
+  beforeDestroy() {
+    // Remove event listener
+    document.removeEventListener('click', this.handleClickOutside);
   },
   methods: {
+
+    handleGlobalClick(event) {
+      if(this.showNotifications ===true){
+        console.log('workingin');
+        
+        this.showNotifications = false;
+      }
+    },
+
+
 
     closeCreateWishModal(){
       this.showCreateWishModal = false

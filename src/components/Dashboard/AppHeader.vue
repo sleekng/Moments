@@ -61,16 +61,18 @@
        
       </button>
 
-      <!-- Notification and Profile Section -->
-      <div class="relative cursor-pointer">
-        <img @click="toggleNotifications" src="/assets/bell.svg" alt="Notifications" class="h-6 w-6" />
-        <img v-if="showNotifications" src="/assets/notification-arrow.svg" alt="Notifications" class="h-6 w-6 absolute" />
+    <!-- Notification and Profile Section -->
+    <div class="relative cursor-pointer">
+      <img @click="toggleNotifications" src="/assets/bell.svg" alt="Notifications" class="h-6 w-6" />
+      <!-- Pink dot for new notifications -->
+      <div v-if="hasUnreadNotifications" class="w-2 h-2 bg-pink-500 rounded-full absolute top-0 right-0"></div>
+      <img v-if="showNotifications" src="/assets/notification-arrow.svg" alt="Notifications" class="h-6 w-6 absolute" />
 
-        <!-- Notifications Dropdown -->
-        <div v-if="showNotifications" class="absolute -right-20 top-10 w-[450px] bg-white border overflow-hidden rounded-lg shadow-lg z-50">
-          <NotificationDropdown :notifications="notifications" @shareAddress="showShareAddressModalMethod" @cancelReservation="cancelReservation"   @refreshNotifications="fetchNotifications" />
-        </div>
-      </div>
+<!-- Notifications Dropdown -->
+    <div v-if="showNotifications" ref="notificationDropdown" class="absolute -right-20 top-10 w-[450px] bg-white border overflow-hidden rounded-lg shadow-lg z-50">
+      <NotificationDropdown :notifications="notifications" @shareAddress="showShareAddressModalMethod" @cancelReservation="cancelReservation" @refreshNotifications="fetchNotifications" @handleAction="handleAction"  />
+    </div>
+    </div>
 
       <!-- Profile Section -->
       <div class="relative">
@@ -152,10 +154,13 @@ import { eventBus } from '@/eventBus.js';
 
 export default {
   emits: ['showCategoryModal'],
+  props:[' showNotifications'],
+
   components: {
     NotificationDropdown,
     RecentSearchList,
     ShareAddressModal,
+    
   },
   data() {
     return {
@@ -186,10 +191,75 @@ export default {
     document.addEventListener('click', this.handleClickOutside);
     await this.fetchNotifications();
   },
+  computed: {
+    hasUnreadNotifications() {
+      return this.notifications.some(notification => notification.read_at === null);
+    }
+  },
   beforeDestroy() {
     document.removeEventListener('click', this.handleClickOutside);
   },
   methods: {
+
+async handleAction({ action, notification }) {
+      try {
+        // Send a PUT request to mark the notification as read
+        await this.$axios.get(`${this.$baseURL}/notifications/${notification.id}`, {
+          headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+        });
+        console.log('Notification marked as read');
+
+        if (action.text === 'Accept') {
+          const friendId = notification.notifier.id;
+          try {
+            const response = await this.$axios.put(`${this.$baseURL}/friends/${friendId}`, { status: 'accepted' }, {
+              headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+            });
+            eventBus.onSuccess(response.data.message);
+          } catch (error) {
+            if (error.response) {
+              if (error.response.data.message) {
+                eventBus.onError(error.response.data.message);
+              } else if (error.response.data.errors) {
+                const errorMsg = Object.values(error.response.data.errors).flat().join(" ");
+                eventBus.onError(errorMsg);
+              } else {
+                eventBus.onError("An unexpected error occurred. Please try again.");
+              }
+            }
+          }
+        } else if (action.text === 'Decline') {
+          const friendId = notification.notifier.id;
+          try {
+            const response = await this.$axios.put(`${this.$baseURL}/friends/${friendId}`, { status: 'rejected' }, {
+              headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+            });
+            eventBus.onSuccess(response.data.message);
+          } catch (error) {
+            if (error.response) {
+              if (error.response.data.message) {
+                eventBus.onError(error.response.data.message);
+              } else if (error.response.data.errors) {
+                const errorMsg = Object.values(error.response.data.errors).flat().join(" ");
+                eventBus.onError(errorMsg);
+              } else {
+                eventBus.onError("An unexpected error occurred. Please try again.");
+              }
+            }
+          }
+        } else if (action.text === 'Share address') {
+          this.showShareAddressModalMethod(notification.action_id);
+        } else if (action.text === 'Cancel reservation') {
+          this.cancelReservation(notification.action_id);
+        }
+
+        // Refresh notifications
+        await this.fetchNotifications();
+
+      } catch (error) {
+        console.error('Error handling action:', error);
+      }
+    },
     
     async fetchNotifications() {
       try {
@@ -285,7 +355,7 @@ export default {
     async cancelReservation(wishId) {
       eventBus.setLoading(true);
       try {
-        await this.$axios.put(
+      const response =  await this.$axios.put(
           `${this.$baseURL}/wishes/${wishId}`,
           { 
             status: null,
@@ -298,7 +368,7 @@ export default {
           }
         );
        
-        eventBus.onSuccess("Wish reservation Cancelled.");
+        eventBus.onSuccess(response.data.message);
       } catch (error) {
         console.error("Error canceling reservation:", error);
         const errorMsg =
@@ -345,6 +415,7 @@ export default {
     },
     toggleNotifications() {
       this.showNotifications = !this.showNotifications;
+      this.$emit('hideNotification', this.showNotifications);
     },
     toggleProfileDropdown() {
       this.showProfileDropdown = !this.showProfileDropdown;

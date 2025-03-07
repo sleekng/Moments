@@ -200,7 +200,7 @@
                     wish.status == 'reserved' &&
                     wish.gifter?.username == loggedInUser
                   "
-                  @click="cancelReservation"
+              @click="$emit('cancelReservation', wish.id)"
                   class="flex items-center p-2 group moment-text-effect-parent cursor-pointer border-t border-gray-200"
                 >
                   <i
@@ -481,7 +481,7 @@
                         wish.status == 'fulfiled' &&
                         wish.gifter?.username == loggedInUser
                       "
-                      @click="removeFromFulfiled"
+                      @click="$emit('removeFromFulfiled', wish.id)"
                       class="flex items-center p-2 group moment-text-effect-parent cursor-pointer border-t border-gray-200"
                     >
                       <i
@@ -873,7 +873,7 @@
               </button>
 
               <button
-                @click="markAsReceived"
+                @click="$emit('markAsReceived', wish.id)"
                 :disabled="isReceiving"
                 :class="[
                   'px-8 py-3 rounded-full relative',
@@ -927,7 +927,7 @@
               class="inline-flex justify-end w-full space-x-4"
             >
               <button
-                @click="markAsFulfilled"
+                @click="$emit('markAsFulfilled', wish.id)"
                 :disabled="isFulfilling"
                 :class="[
                   'px-8 py-3 rounded-full relative',
@@ -979,7 +979,7 @@
               v-if="isWishOwner && wish.status === 'fulfiled' && wish.received"
             >
               <button
-                @click="markAsUnreceived"
+                @click="$emit('markAsUnreceived', wish.id)"
                 :disabled="isUnReceiving"
                 class="px-8 w-full py-3 bg-gray-200 text-gray-800 rounded-full hover:shadow-lg"
               >
@@ -999,7 +999,7 @@
               class="w-full inline-flex justify-end"
             >
               <button
-                @click="reserveWish"
+               @click="$emit('reserveWish', wish)"
                 :disabled="isReserving"
                 :class="[
                   'px-8 py-3 rounded-full relative',
@@ -1026,7 +1026,7 @@
               class="w-full inline-flex justify-end"
             >
               <button
-                @click="reserveWish"
+                  @click="$emit('reserveWish', wish)"
                 :disabled="isReserving"
                 :class="[
                   'px-8 py-3 rounded-full relative',
@@ -1308,7 +1308,7 @@ export default {
     async markAsReceived() {
       this.isReceiving = true;
       try {
-        await this.$axios.put(
+      const response =  await this.$axios.put(
           `${this.$baseURL}/wishes/${this.wish.id}`,
           {
             status: "fulfiled",
@@ -1321,7 +1321,7 @@ export default {
           }
         );
         this.wish.received = true;
-        eventBus.onSuccess("Wish marked as received.");
+        eventBus.onSuccess(response.data.message);
       } catch (error) {
         console.error("Error marking as received:", error);
         const errorMsg =
@@ -1335,7 +1335,7 @@ export default {
     async markAsUnreceived() {
       this.isUnReceiving = true;
       try {
-        await this.$axios.put(
+      const response =  await this.$axios.put(
           `${this.$baseURL}/wishes/${this.wish.id}`,
           {
             received: false,
@@ -1347,7 +1347,7 @@ export default {
           }
         );
         this.wish.received = false;
-        eventBus.onSuccess("Wish marked as unreceived.");
+        eventBus.onSuccess(response.data.message);
       } catch (error) {
         console.error("Error marking as unreceived:", error);
         const errorMsg =
@@ -1362,7 +1362,7 @@ export default {
     async reserveWish() {
       this.isReserving = true; // Start loading state
       try {
-        await this.$axios.put(
+      const response =  await this.$axios.put(
           `${this.$baseURL}/wishes/${this.wish.id}`,
           { status: "reserved" },
           {
@@ -1388,6 +1388,7 @@ export default {
 
         this.wish.status = "reserved";
         this.$emit("reserved", this.wish);
+        eventBus.onSuccess(response.data.message);
 
         if (this.isDashboard) {
           // Update local state
@@ -1395,6 +1396,7 @@ export default {
 
           this.$emit("newUpdate");
           this.closeModal();
+          eventBus.onSuccess(response.data.message);
         }
       } catch (error) {
         if (error.response) {
@@ -1416,7 +1418,7 @@ export default {
     async markAsFulfilled() {
       this.isFulfilling = true;
       try {
-        await this.$axios.put(
+       const response = await this.$axios.put(
           `${this.$baseURL}/wishes/${this.wish.id}`,
           {
             status: "fulfiled",
@@ -1428,7 +1430,7 @@ export default {
           }
         );
         this.wish.status = "fulfiled";
-        eventBus.onSuccess("Wish marked as fulfilled.");
+        eventBus.onSuccess(response.data.message);
       } catch (error) {
         console.error("Error marking as fulfiled:", error);
         const errorMsg =
@@ -1442,7 +1444,7 @@ export default {
     async cancelReservation() {
       eventBus.setLoading(true);
       try {
-        await this.$axios.put(
+      const response =  await this.$axios.put(
           `${this.$baseURL}/wishes/${this.wish.id}`,
           { status: null },
           {
@@ -1453,7 +1455,7 @@ export default {
         );
 
         this.wish.status = null;
-        eventBus.onSuccess("Wish reservation Cancelled.");
+        eventBus.onSuccess(response.data.message);
 
         setTimeout(() => {
           window.location.reload();
@@ -1472,7 +1474,7 @@ export default {
     async removeFromFulfiled() {
       eventBus.setLoading(true);
       try {
-        await this.$axios.put(
+       const response = await this.$axios.put(
           `${this.$baseURL}/wishes/${this.wish.id}`,
           {
             status: null,
@@ -1485,7 +1487,7 @@ export default {
         );
 
         this.wish.status = null;
-        eventBus.onSuccess("Wish has been remove from Fulfilled.");
+        eventBus.onSuccess(response.data.message);
       } catch (error) {
         console.error("Error removing Fulfilled:", error);
         const errorMsg =

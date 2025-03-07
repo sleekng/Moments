@@ -89,7 +89,16 @@
        @reserved="reservedWish"
        @requestAddress="requestAddress"
        :isRequestingAddress="isRequestingAddress"
+       :isHasAddress="isHasAddress"
        @updateSavedStatus="handleUpdateSavedStatus"
+
+
+       @markAsReceived="markAsReceived"
+        @markAsUnreceived="markAsUnreceived"
+        @reserveWish="reserveWish"
+        @markAsFulfilled="markAsFulfilled"
+        @cancelReservation="cancelReservation"
+        @removeFromFulfiled="removeFromFulfiled"
 
     />
 
@@ -129,7 +138,9 @@
       v-if="showGiftReservedModal"
       @close="showGiftReservedModal = false"
        @requestAddress="requestAddress"
+       @hasAddress="hasAddress"
         :isRequestingAddress="isRequestingAddress"
+        :isHasAddress="isHasAddress"
         :wish="giftReservedWish"
     />
 
@@ -236,6 +247,7 @@ export default {
       isWishSaved:false,
       giftReservedWish:null,
       isRequestingAddress:false,
+      isHasAddress:false,
       showGiftReservedModal: false,
       updateType: null,
       showPrevWish: null,
@@ -302,6 +314,201 @@ export default {
    
   },
   methods: {
+
+
+    async markAsReceived(wishId) {
+      this.isReceiving = true;
+      try {
+      const response =  await this.$axios.put(
+          `${this.$baseURL}/wishes/${wishId}`,
+          {
+            status: "fulfiled",
+            received: true,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            },
+          }
+        );
+        this.wish.received = true;
+        eventBus.onSuccess(response.data.message);
+      } catch (error) {
+        console.error("Error marking as received:", error);
+        const errorMsg =
+          error.response?.data?.message ||
+          "Error marking as received. Please try again.";
+        eventBus.onError(errorMsg);
+      } finally {
+        this.isReceiving = false; // End loading state
+      }
+    },
+    async markAsUnreceived(wishId) {
+      this.isUnReceiving = true;
+      try {
+      const response =  await this.$axios.put(
+          `${this.$baseURL}/wishes/${wishId}`,
+          {
+            received: false,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            },
+          }
+        );
+        this.wish.received = false;
+        eventBus.onSuccess(response.data.message);
+      } catch (error) {
+        console.error("Error marking as unreceived:", error);
+        const errorMsg =
+          error.response?.data?.message ||
+          "Error marking as unreceived. Please try again.";
+        eventBus.onError(errorMsg);
+      } finally {
+        this.isUnReceiving = false;
+      }
+    },
+
+    async reserveWish(wishId) {
+      this.isReserving = true; // Start loading state
+      try {
+      const response =  await this.$axios.put(
+          `${this.$baseURL}/wishes/${wishId}`,
+          { status: "reserved" },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            },
+          }
+        );
+
+        if (this.isDashboard) {
+          await this.$axios.post(
+            `${this.$baseURL}/saved-wishes`,
+            {
+              wish_id: wishId,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+              },
+            }
+          );
+        }
+
+        this.wish.status = "reserved";
+        this.$emit("reserved", this.wish);
+        eventBus.onSuccess(response.data.message);
+
+        if (this.isDashboard) {
+          // Update local state
+          this.localIsWishSaved = !this.localIsWishSaved;
+
+          this.$emit("newUpdate");
+          this.closeModal();
+          eventBus.onSuccess(response.data.message);
+        }
+      } catch (error) {
+        if (error.response) {
+          // Use eventBus to output error messages directly from the response
+          if (error.response.data.message) {
+            eventBus.onError(error.response.data.message);
+          } else if (error.response.data.errors) {
+            const errorMsg = Object.values(error.response.data.errors).flat().join(" ");
+            eventBus.onError(errorMsg);
+          } else {
+            eventBus.onError("An unexpected error occurred. Please try again.");
+          }
+        }
+      } finally {
+        this.isReserving = false; // End loading state
+      }
+    },
+
+    async markAsFulfilled(wishId) {
+      this.isFulfilling = true;
+      try {
+       const response = await this.$axios.put(
+          `${this.$baseURL}/wishes/${wishId}`,
+          {
+            status: "fulfiled",
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            },
+          }
+        );
+        this.wish.status = "fulfiled";
+        eventBus.onSuccess(response.data.message);
+      } catch (error) {
+        console.error("Error marking as fulfiled:", error);
+        const errorMsg =
+          error.response?.data?.message ||
+          "Error marking as fulfiled. Please try again.";
+        eventBus.onError(errorMsg);
+      } finally {
+        this.isFulfilling = false;
+      }
+    },
+    async cancelReservation(wishId) {
+      eventBus.setLoading(true);
+      try {
+      const response =  await this.$axios.put(
+          `${this.$baseURL}/wishes/${wishId}`,
+          { status: null },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            },
+          }
+        );
+
+        this.wish.status = null;
+        eventBus.onSuccess(response.data.message);
+
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
+      } catch (error) {
+        console.error("Error canceling reservation:", error);
+        const errorMsg =
+          error.response?.data?.message ||
+          "Error canceling reservation. Please try again.";
+        eventBus.onError(errorMsg);
+      } finally {
+        eventBus.setLoading(false);
+      }
+    },
+
+    async removeFromFulfiled(wishId) {
+      eventBus.setLoading(true);
+      try {
+       const response = await this.$axios.put(
+          `${this.$baseURL}/wishes/${wishId}`,
+          {
+            status: null,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            },
+          }
+        );
+
+        this.wish.status = null;
+        eventBus.onSuccess(response.data.message);
+      } catch (error) {
+        console.error("Error removing Fulfilled:", error);
+        const errorMsg =
+          error.response?.data?.message ||
+          "Error removing from Fulfilled. Please try again.";
+        eventBus.onError(errorMsg);
+      } finally {
+        eventBus.setLoading(false);
+      }
+    },
 
 
     toggleShareMenu() {
@@ -514,6 +721,31 @@ export default {
                 const errorMsg = error.response?.data?.message || 'Error requesting address. Please try again.';
             } finally {
                 this.isRequestingAddress =false
+                this.showGiftReservedModal =false
+            }
+        },
+    async hasAddress(wishID) {
+      console.log('woking');
+          this.isHasAddress = true
+          
+            try {
+                
+            await this.$axios.put(
+          `${this.$baseURL}/wishes/${wishID}`,
+          { has_address: true },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            },
+          }
+        );
+
+   /*          eventBus.onSuccess('Address request sent successfully.'); */
+            } catch (error) {
+              console.error("Error requesting address:", error);
+                const errorMsg = error.response?.data?.message || 'Error requesting address. Please try again.';
+            } finally {
+                this.isHasAddress =false
                 this.showGiftReservedModal =false
             }
         },

@@ -11,8 +11,8 @@ import Account from '@/pages/Dashboard/Account.vue';
 import Archived from '@/pages/Dashboard/Archived.vue';
 import ArchivedWishlist from '@/pages/Dashboard/ArchivedWishlist.vue';
 import Wishlist from '@/pages/Dashboard/Wishlist.vue';
-import Friends from '@/pages/Friends.vue';
-import Profile from '@/pages/Profile.vue';
+/* import Friends from '@/pages/Friends.vue'; */
+/* import Profile from '@/pages/Profile.vue'; */
 import Login from '@/pages/Auth/Login.vue';
 import Register from '@/pages/Auth/Register.vue';
 import CreateOption from '@/pages/Auth/CreateOption.vue';
@@ -49,8 +49,8 @@ const routes = [
 
   { path: '/:username', name: 'UsersProfile', component: UsersProfile, props: true },
 /*   { path: '/wishlist', name: 'Wishlist', component: Wishlist }, */
-  { path: '/friends', name: 'Friends', component: Friends },
-  { path: '/profile', name: 'Profile', component: Profile },
+/*   { path: '/friends', name: 'Friends', component: Friends }, */
+/*   { path: '/profile', name: 'Profile', component: Profile }, */
   { path: '/login', name: 'Login', component: Login },
   { path: '/register', name: 'Register', component: Register },
   { path: '/create-option', name: 'Create Option', component: CreateOption },

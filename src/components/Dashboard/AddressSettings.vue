@@ -285,41 +285,41 @@ components:{
       this.showModal = true;
     },
     editAddress(address) {
-
-      this.modalType = address.private ? 'Private' : 'Public';
-      this.addressForm = { ...address };
-      this.isEditing = true;
-      this.editingId = address.id;
-      this.showModal = true;
-    },
+  this.modalType = address.private ? 'Private' : 'Public';
+  this.addressForm = { ...address };
+  this.isEditing = true;
+  this.editingId = address.id;
+  this.showModal = true;
+},
     closeModal() {
       this.showModal = false;
     },
     async saveAddress() {
-      eventBus.setLoading(true);
+  eventBus.setLoading(true);
 
-      const method = this.isEditing ? 'PUT' : 'POST';
-      const url = this.isEditing ? `${this.$baseURL}/addresses/${this.editingId}` : `${this.$baseURL}/addresses`;
+  const method = this.isEditing ? 'PUT' : 'POST';
+  const url = this.isEditing ? `${this.$baseURL}/addresses/${this.editingId}` : `${this.$baseURL}/addresses`;
 
-      try {
-        await fetch(url, {
-          method,
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Authorization': `Bearer ${this.getAuthToken()}`
-          },
-          body: JSON.stringify(this.addressForm)
-        });
-        await this.fetchAddresses();
-      } catch (error) {
-        console.error(`Error ${this.isEditing ? 'updating' : 'adding'} address:`, error);
-      }
-      finally {
+  try {
+    const response = await fetch(url, {
+      method,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${this.getAuthToken()}`
+      },
+      body: JSON.stringify(this.addressForm)
+    });
+
+    await this.fetchAddresses();
+  } catch (error) {
+    console.error(`Error ${this.isEditing ? 'updating' : 'adding'} address:`, error);
+  } finally {
     eventBus.setLoading(false);
   }
-      this.closeModal();
-    },
+  this.closeModal();
+}
+,
     resetForm() {
       this.addressForm = {
         street: '',
@@ -338,13 +338,14 @@ components:{
     async removeAddress(id) {
       eventBus.setLoading(true);
       try {
-        await fetch(`${this.$baseURL}/addresses/${id}`, {
+       const response =  await fetch(`${this.$baseURL}/addresses/${id}`, {
           method: 'DELETE',
           headers: {
             'Accept': 'application/json',
             'Authorization': `Bearer ${this.getAuthToken()}`
           }
         });
+           eventBus.onSuccess(response.data.message);
         await this.fetchAddresses();
       } catch (error) {
         console.error('Error removing address:', error);

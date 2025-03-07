@@ -37,11 +37,18 @@
           </div>
 
           <div  class="flex justify-between space-x-2">
-            <button
-               @click="$emit('close')"
-              class="flex-1  text-gray-800 bg-[#F0F1F2] hover:shadow-lg transition-all font-medium py-3 px-4 rounded-full text-center focus:outline-none"
-            >
-            Maybe Later
+            <button @click="hasAddress" :disabled="isHasAddress" :class="[
+                  'px-8 py-3 rounded-full relative',
+                  isHasAddress
+                    ? 'bg-[#F0F1F2] text-gray-800 font-medium hover:shadow-lg cursor-not-allowed flex-1   transition-all  py-3 px-4 rounded-full text-center focus:outline-none'
+                    : 'bg-[#F0F1F2] text-gray-800 font-medium hover:shadow-lg flex-1   transition-all  py-3 px-4 rounded-full text-center focus:outline-none',
+                ]">
+                            <span class="w-full flex justify-center">
+                                <span v-if="isHasAddress" class="  absolute ">
+                                    <i class="fas fa-spinner fa-spin "></i>
+                                </span>
+                                I have address
+                            </span>
             </button>
             <button @click="requestAddress" :disabled="isRequestingAddress" :class="[
                   'px-8 py-3 rounded-full relative',
@@ -92,6 +99,9 @@
 
       isRequestingAddress:{
           type:Boolean,
+        },
+      isHasAddress:{
+          type:Boolean,
         }
 
     },
@@ -100,6 +110,9 @@
     methods:{
       requestAddress() {
           this.$emit('requestAddress',this.wish.id)
+        },
+      hasAddress() {
+          this.$emit('hasAddress',this.wish.id)
         },
     }
   };

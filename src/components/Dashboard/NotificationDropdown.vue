@@ -1,6 +1,6 @@
 <template>
-  <div class="px-4 py-6 relative">
-    <div class="absolute bg-gray-100 w-full left-0 top-0">
+  <div class="px-4 py-6 relative bg-gray-100 z-[999]">
+    <div class="absolute z-[999]  bg-gray-100 w-full left-0 top-0">
       <div class="flex items-center justify-between px-4 pt-6">
         <h2 class="text-xl font-semibold mb-4" style="font-family: Mukta">Your notifications</h2>
         <img src="/assets/settings.svg" alt="Settings" class="w-4 h-4 cursor-pointer" @click="navigateToSettings">
@@ -13,7 +13,7 @@
       </div>
     </div>
     <div class="pt-20 h-[650px] pb-10 overflow-y-auto">
-      <NotificationItem v-for="notification in filteredNotifications" :key="notification.id" :notification="notification" @shareAddress="shareAddress" @cancelReservation="cancelReservation"   @refreshNotifications="refreshNotifications" />
+      <NotificationItem v-for="notification in filteredNotifications" :key="notification.id" :notification="notification" @shareAddress="shareAddress" @cancelReservation="cancelReservation"   @refreshNotifications="refreshNotifications"     @handleAction="(payload) => $emit('handleAction', payload)"  />
       <div v-if="filteredNotifications.length === 0" class="flex flex-col items-center justify-center h-full">
         <img src="/assets/notification-bell.svg" alt="No Notifications" class="w-12 h-12 mb-4" />
         <p class="text-center text-gray-500">You don't have any notifications at the moment.</p>

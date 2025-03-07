@@ -1,26 +1,23 @@
 <template>
   <div class="p-4 border-b border-gray-200 flex items-start space-x-3">
-    <div class="relative flex items-center space-x-3 -z-50">
-      <!-- New circle for alert -->
-      <div v-if="notification.read_at === null" class="w-2 h-2 absolute bg-primaryColor rounded-full"></div>
+    <div class="-z-10 relative space-x-2 flex items-center">
+      <div class="w-2 h-2 bg-primaryColor rounded-full"></div>
       <div class="w-10 h-10 border border-gray-200 rounded-full flex items-center justify-center">
-
-        <img :src="notification.notifier?.avatar || '/assets/avatar.svg'" alt="Profile"
-          class="w-10 h-10 rounded-full object-cover">
+        <img :src="notification.notifier?.avatar || '/assets/avatar.svg'" alt="Profile" class="w-full rounded-full object-cover">
       </div>
     </div>
+
     <div class="w-full">
       <p class="text-sm text-gray-700">
         <span @click="navigateToUserProfile(notification.notifier?.username)" class="cursor-pointer">
-          <strong class=" hover:underline">{{ notification.notifier?.username || 'Unknown User' }}</strong>
+          <strong class="hover:underline">{{ notification.notifier?.username || 'Unknown User' }}</strong>
         </span> {{ notification.data.message }}
       </p>
       <div v-if="notification.type === 'wishlist' || notification.type === 'birthdays'"
         @click="navigateTo(notificationLink)"
         class="mt-2 flex w-full items-center space-x-3 p-2 border border-gray-300 rounded-lg cursor-pointer">
-        <div class="flex items-center space-x-3 ">
-          <img :src="notification.action.photo || '/assets/default-image.svg'" alt="Product"
-            class="w-16 h-16 object-cover rounded-md">
+        <div class="flex items-center space-x-3">
+          <img :src="notification.action.photo || '/assets/default-image.svg'" alt="Product" class="w-16 h-16 object-cover rounded-md">
           <div>
             <p class="text-sm font-medium text-gray-800">{{ notification.action.name }}</p>
             <div v-if="notification.action.priority" :class="priorityClass(notification.action.priority)"
@@ -32,10 +29,15 @@
         </div>
       </div>
       <p class="text-xs text-gray-500 mt-1">{{ formatDate(notification.created_at) }}</p>
-      <div v-if="notificationActions.length && !isNotificationRead" class="flex mt-2 space-x-2">
-        <button v-for="action in notificationActions" :key="action.text" :class="actionClass(action.primary)"
-          @click="handleAction(action)">
-          {{ action.text }}
+      <div v-if="notificationActions.length" class="flex mt-2 space-x-2">
+        <button v-for="action in notificationActions" :key="action.text" :class="actionClass(action.primary)" class=" relative flex justify-center items-center"
+          @click="handleActionClick(action, notification)" :disabled="loadingActions[action.text]">
+          <span v-if="loadingActions[action.text]" class=" absolute">
+            <i class="fas fa-spinner fa-spin"></i>
+          </span>
+          <span>
+            {{ action.text }}
+          </span>
         </button>
       </div>
     </div>
@@ -52,9 +54,16 @@ export default {
       required: true
     }
   },
+  data() {
+    return {
+      loadingActions: {}
+    };
+  },
   emits: ['shareAddress'],
   computed: {
-
+    hasUnreadNotifications() {
+      return this.notifications.some(notification => notification.read_at === null);
+    },
     notificationLink() {
       if (this.notification.data.type === 'wishlist' && this.notification.notifier) {
         return { name: 'Wishlist', params: { id: this.notification.action.id, username: this.notification.notifier.username } };
@@ -65,8 +74,6 @@ export default {
         const loggedInUsername = user?.username; // Get the username from the parsed object
         return { name: 'Wishlist', params: { id: this.notification.action.wishlist_id, username: loggedInUsername } };
       } else if (this.notification.data.type === 'wish' && this.notification.notifier) {
-
-
         return { name: 'Wishlist', params: { id: this.notification.action.wishlist_id, username: this.notification.notifier.username } };
       }
       return null;
@@ -74,7 +81,6 @@ export default {
     isNotificationRead() {
       return this.notification.read_at !== null;
     },
-
     notificationActions() {
       const actions = [];
       const message = this.notification.data.message;
@@ -89,8 +95,6 @@ export default {
         actions.push({ text: 'Create wishlist', primary: true });
       } else if (message.includes('sent you a friend request')) {
         actions.push({ text: 'Accept', primary: true }, { text: 'Decline', primary: false });
-      } else if (message.includes('requested your delivery address')) {
-        actions.push({ text: 'Share address', primary: true }, { text: 'Cancel reservation', primary: false });
       } else if (message.includes('requested your delivery address')) {
         actions.push({ text: 'Share address', primary: true }, { text: 'Cancel reservation', primary: false });
       } else if (message.includes('reserved your wish')) {
@@ -182,77 +186,22 @@ export default {
     actionClass(isPrimary) {
       return isPrimary ? 'bg-primaryColor text-white py-1 px-3 rounded-full' : 'bg-gray-200 text-gray-700 py-1 px-3 rounded-full';
     },
-    async handleAction(action) {
+    handleActionClick(action, notification) {
+    this.$emit('handleAction', { action, notification });
+  
 
-      console.log(this.notification);
+    // Instead of using $set, directly modify the object
+    this.loadingActions = { ...this.loadingActions, [action.text]: true };
 
-      try {
-        // Send a PUT request to mark the notification as read
-        await this.$axios.get(`${this.$baseURL}/notifications/${this.notification.id}`, {
-          headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
-        });
-        console.log('Notification marked as read');
-
-        if (action.text === 'Accept') {
-          const friendId = this.notification.notifier.id;
-          try {
-            const response = await this.$axios.put(`${this.$baseURL}/friends/${friendId}`, { status: 'accepted' }, {
-              headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
-            });
-            eventBus.onSuccess(response.data.message);
-          } catch (error) {
-            if (error.response) {
-              // Use eventBus to output error messages directly from the response
-              if (error.response.data.message) {
-                eventBus.onError(error.response.data.message);
-              } else if (error.response.data.errors) {
-                const errorMsg = Object.values(error.response.data.errors).flat().join(" ");
-                eventBus.onError(errorMsg);
-              } else {
-                eventBus.onError("An unexpected error occurred. Please try again.");
-              }
-            }
-          }
-
-        } else if (action.text === 'Decline') {
-
-          const friendId = this.notification.notifier.id;
-          try {
-            const response = await this.$axios.put(`${this.$baseURL}/friends/${friendId}`, { status: 'rejected' }, {
-              headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
-            });
-            eventBus.onSuccess(response.data.message);
-          } catch (error) {
-            if (error.response) {
-              // Use eventBus to output error messages directly from the response
-              if (error.response.data.message) {
-                eventBus.onError(error.response.data.message);
-              } else if (error.response.data.errors) {
-                const errorMsg = Object.values(error.response.data.errors).flat().join(" ");
-                eventBus.onError(errorMsg);
-              } else {
-                eventBus.onError("An unexpected error occurred. Please try again.");
-              }
-            }
-          }
-
-          console.log('Friend request declined');
-        } else if (action.text === 'Share address') {
-          this.$emit('shareAddress', this.notification.action_id);
-        }
-        else if (action.text === 'Cancel reservation') {
-
-          this.$emit('cancelReservation', this.notification.action_id);
-        }
-
-
-      // Emit an event to refresh notifications
-      this.$emit('refreshNotifications');
-
-      } catch (error) {
-        console.error('Error handling action:', error);
-      }
-    }
+    // Simulate an async operation
+    setTimeout(() => {
+      this.loadingActions = { ...this.loadingActions, [action.text]: false };
+    }, 2000); // Replace with actual async operation
+  }
   }
 };
 </script>
+
+<style scoped>
+/* Add any additional styles here */
+</style>

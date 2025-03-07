@@ -765,7 +765,7 @@ export default {
     },
     shareToEmail() {
       const subject = encodeURIComponent(
-        `Check out this profile: ${this.selectedWishlist.name}`
+        `Check out this profile: ${this.wish.wishlist.title}`
       );
       const body = encodeURIComponent(`${window.location.href}`);
       window.location.href = `mailto:?subject=${subject}&body=${body}`;
