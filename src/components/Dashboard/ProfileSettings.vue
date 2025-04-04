@@ -25,8 +25,8 @@
       </div>
 
       <div>
-        <label class="block text-gray-700 font-medium mb-1">Gender</label>
-        <select v-model="formData.gender" class="w-full p-3  border border-gray-300 rounded-md">
+        <label class="block text-gray-700   font-medium mb-1">Gender</label>
+        <select v-model="formData.gender" class="w-full p-3 bg-transparent  border border-gray-300 rounded-md">
           <option v-for="option in genders" :key="option" :value="option">{{ option }}</option>
         </select>
       </div>
@@ -37,7 +37,7 @@
           <select 
             v-model="formData.country" 
             @change="updateStates"
-            class="w-full p-3  border border-gray-300 rounded-md appearance-none pr-10"
+            class="w-full p-3 bg-transparent  border border-gray-300 rounded-md appearance-none pr-10"
           >
             <option v-for="country in countries" :key="country.name" :value="country.name">
               {{ country.name }}
@@ -52,7 +52,7 @@
         <div class="relative">
           <select 
             v-model="formData.state"
-            class="w-full p-3  border border-gray-300 rounded-md appearance-none pr-10"
+            class="w-full p-3 bg-transparent  border border-gray-300 rounded-md appearance-none pr-10"
           >
             <option v-for="state in states" :key="state.id" :value="state.name">
               {{ state.name }}

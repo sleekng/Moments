@@ -1,7 +1,7 @@
 <template>
   <div class="p-4 border-b border-gray-200 flex items-start space-x-3">
     <div class="-z-10 relative space-x-2 flex items-center">
-      <div class="w-2 h-2 bg-primaryColor rounded-full"></div>
+      <div v-if="notification.read_at === null" class="w-2 h-2 bg-primaryColor rounded-full"></div>
       <div class="w-10 h-10 border border-gray-200 rounded-full flex items-center justify-center">
         <img :src="notification.notifier?.avatar || '/assets/avatar.svg'" alt="Profile" class="w-full rounded-full object-cover">
       </div>
@@ -13,14 +13,15 @@
           <strong class="hover:underline">{{ notification.notifier?.username || 'Unknown User' }}</strong>
         </span> {{ notification.data.message }}
       </p>
+      
       <div v-if="notification.type === 'wishlist' || notification.type === 'birthdays'"
         @click="navigateTo(notificationLink)"
         class="mt-2 flex w-full items-center space-x-3 p-2 border border-gray-300 rounded-lg cursor-pointer">
         <div class="flex items-center space-x-3">
-          <img :src="notification.action.photo || '/assets/default-image.svg'" alt="Product" class="w-16 h-16 object-cover rounded-md">
+          <img :src="notification.action?.photo || '/assets/default-image.svg'" alt="Product" class="w-16 h-16 object-cover rounded-md">
           <div>
-            <p class="text-sm font-medium text-gray-800">{{ notification.action.name }}</p>
-            <div v-if="notification.action.priority" :class="priorityClass(notification.action.priority)"
+            <p class="text-sm font-medium text-gray-800">{{ notification.action?.name || 'Unnamed Item' }}</p>
+            <div v-if="notification.action?.priority" :class="priorityClass(notification.action.priority)"
               class="inline-flex items-center text-sm font-medium py-1 px-2 rounded-full">
               {{ notification.action.priority }} priority
               <img :src="priorityIcon(notification.action.priority)" alt="Priority" class="ml-2 w-4 h-4" />
@@ -29,13 +30,13 @@
         </div>
       </div>
       <p class="text-xs text-gray-500 mt-1">{{ formatDate(notification.created_at) }}</p>
-      <div v-if="notificationActions.length" class="flex mt-2 space-x-2">
+      <div v-if="notificationActions.length && !notification.action_taken" class="flex mt-2 space-x-2">
         <button v-for="action in notificationActions" :key="action.text" :class="actionClass(action.primary)" class=" relative flex justify-center items-center"
-          @click="handleActionClick(action, notification)" :disabled="loadingActions[action.text]">
+          @click.stop="handleActionClick(action, notification)" :disabled="loadingActions[action.text]">
           <span v-if="loadingActions[action.text]" class=" absolute">
             <i class="fas fa-spinner fa-spin"></i>
           </span>
-          <span>
+          <span class="text-xs lg:text-base">
             {{ action.text }}
           </span>
         </button>
@@ -66,15 +67,15 @@ export default {
     },
     notificationLink() {
       if (this.notification.data.type === 'wishlist' && this.notification.notifier) {
-        return { name: 'Wishlist', params: { id: this.notification.action.id, username: this.notification.notifier.username } };
+        return { name: 'Wishlist', params: { id: this.notification.action?.id, username: this.notification.notifier.username } };
       } else if (this.notification.type === 'birthdays' || this.notification.type === 'friend') {
-        return { name: 'UsersProfile', params: { username: this.notification.notifier.username } };
+        return { name: 'UsersProfile', params: { username: this.notification.notifier?.username } };
       } else if (this.notification.data.type === 'wish' && !this.notification.notifier) {
         const user = JSON.parse(localStorage.getItem('user')); // Parse the user object from LocalStorage
         const loggedInUsername = user?.username; // Get the username from the parsed object
-        return { name: 'Wishlist', params: { id: this.notification.action.wishlist_id, username: loggedInUsername } };
+        return { name: 'Wishlist', params: { id: this.notification.action?.wishlist_id, username: loggedInUsername } };
       } else if (this.notification.data.type === 'wish' && this.notification.notifier) {
-        return { name: 'Wishlist', params: { id: this.notification.action.wishlist_id, username: this.notification.notifier.username } };
+        return { name: 'Wishlist', params: { id: this.notification.action?.wishlist_id, username: this.notification.notifier.username } };
       }
       return null;
     },
@@ -187,6 +188,7 @@ export default {
       return isPrimary ? 'bg-primaryColor text-white py-1 px-3 rounded-full' : 'bg-gray-200 text-gray-700 py-1 px-3 rounded-full';
     },
     handleActionClick(action, notification) {
+      console.log('Action:', action, 'Notification:', notification);
     this.$emit('handleAction', { action, notification });
   
 

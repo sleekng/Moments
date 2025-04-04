@@ -11,7 +11,7 @@
           <input type="text" v-model="userData.username" class="w-full p-3 mt-2 border border-gray-300 rounded-md" />
           <div class="mt-2 flex items-center text-sm text-gray-600">
             <span>Your Moments Hub URL: https://momentshub.org/{{ userData.username }}</span>
-            <img src="/assets/copy.svg" alt="Copy" class="w-4 h-4 ml-1 cursor-pointer">
+            <img src="/assets/copy.svg" alt="Copy" class="w-4 h-4 ml-1 cursor-pointer" @click="copyToClipboard">
           </div>
         </div>
         <div>
@@ -120,19 +120,26 @@ export default {
           },
           body: JSON.stringify(this.userData)
         });
-
-        if (!response.ok) {
-          throw new Error('Failed to update profile');
-        }
+   
         const result = await response.json();
-        const user = result.data;
-        localStorage.setItem('user', JSON.stringify(user));
-        console.log('Profile updated:', user);
+    const user = result.data;
+
+    // Update the user object in localStorage
+    localStorage.setItem('user', JSON.stringify(user));
+
+    eventBus.onSuccess(result.message || 'Profile updated successfully');
+
       } catch (error) {
-        const errorMsg = error.response ?.data ?.message || 'An error occurred. Please try again.';
-        eventBus.onError(errorMsg); // Trigger the alert
-        
-        console.error('Error updating profile:', error);
+        if (error.response) {
+              if (error.response.data.message) {
+                eventBus.onError(error.response.data.message);
+              } else if (error.response.data.errors) {
+                const errorMsg = Object.values(error.response.data.errors).flat().join(" ");
+                eventBus.onError(errorMsg);
+              } else {
+                eventBus.onError("An unexpected error occurred. Please try again.");
+              }
+            }
       } finally {
         this.isSaving = false;
         eventBus.setLoading(false);
@@ -141,6 +148,15 @@ export default {
     },
     getAuthToken() {
       return localStorage.getItem('authToken') || '';
+    },
+    copyToClipboard() {
+      const url = `https://momentshub.org/${this.userData.username}`;
+      navigator.clipboard.writeText(url).then(() => {
+       
+        eventBus.onSuccess('URL copied to clipboard');
+      }).catch(err => {
+        console.error('Failed to copy URL:', err);
+      });
     }
   }
 };

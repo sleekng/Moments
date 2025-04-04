@@ -1,6 +1,6 @@
 <template>
   <div class="bg-gray-100">
-    <AppHeader @showCategoryModal="$emit('showCategoryModal')" />
+  <!--   <AppHeader @showCategoryModal="$emit('showCategoryModal')" /> -->
     <div class="flex lg:hidden justify-center px-4 items-center lg:pt-20 w-full mt-10 rounded-t-lg bg-white">
       <SearchComponent :loading="isSearchingLoading" @startSearch="startSearch" @selectOption="selectOption" :selectedOption="selectedOption" />
     </div>

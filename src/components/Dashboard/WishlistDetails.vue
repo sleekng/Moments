@@ -15,14 +15,13 @@
       class="absolute inset-0 bg-gray-500 bg-opacity-0 z-50 cursor-not-allowed lg:min-w-[286px]"
     ></div>
 
-
-
     <div class="flex flex-col md:flex-row gap-8 relative">
       <!-- Left Content -->
       <div class="flex flex-col gap-3 flex-1 z-40">
         <!-- Profile Image -->
         <div class="w-[120px] h-[120px] rounded-full bg-[#f8f9fa] overflow-hidden">
-          <img :src="selectedWishlist.photo || '/assets/wishlist-category-placeholder.svg'" alt="Profile" class="w-full h-full object-cover"/>
+          <img :src=" selectedWishlist.photo || `/assets/`+ selectedWishlist.category.slug + `.svg`" alt="Profile" class="w-full h-full object-cover"/>
+       
         </div>
         <!-- Content Section -->
         <div class="mt-4">

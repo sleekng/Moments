@@ -20,9 +20,10 @@
                class="fas absolute inset-y-0 right-3 top-6 cursor-pointer text-gray-500">
             </i>
           </div>
-          <button class="text-pink-500 mt-2">Forgot Password?</button>
+          <button @click="handleForgotPassword" class="text-pink-500 mt-2">Forgot Password?</button>
         </div>
         <div>
+          
           <label class="block text-gray-700 font-medium">New Password</label>
           <div class="relative">
             <input
@@ -84,6 +85,44 @@ export default {
   },
   methods: {
 
+    async handleForgotPassword() {
+      const user = JSON.parse(localStorage.getItem('user'));
+      const email = user?.email;
+
+
+      if (!email) {
+        eventBus.onError('No email found for the logged-in user.');
+        return;
+      }
+
+      try {
+        eventBus.setLoading(true);
+        const response = await this.$axios.post(`${this.$baseURL}/forgot-password`, { email }, {
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          }
+        });
+
+        eventBus.onSuccess(response.data.message);
+
+      } catch (error) {
+        if (error.response) {
+          // Use eventBus to output error messages directly from the response
+          if (error.response.data.message) {
+            eventBus.onError(error.response.data.message);
+          } else if (error.response.data.errors) {
+            const errorMsg = Object.values(error.response.data.errors).flat().join(" ");
+            eventBus.onError(errorMsg);
+          } else {
+            eventBus.onError("An unexpected error occurred. Please try again.");
+          }
+        }
+      } finally {
+        eventBus.setLoading(false);
+      }
+    },
+
     async updatePassword() {
       this.isSaving = true;
       try {
@@ -98,21 +137,13 @@ export default {
           body: JSON.stringify(this.passwordData)
         });
 
-    if(response.status === 200) {
+        eventBus.onSuccess(response.data.message);
         const result = await response.json();
         const user = result.data;
         localStorage.setItem('user', JSON.stringify(user));
-        console.log('Profile updated:', user);
-        eventBus.onSuccess(result.message || 'Password updated successfully!'); // updated to use response message
-
-    }else{
-        const result = await response.json();
-        eventBus.onError(result.message || 'An error occurred. Please try again.'); // updated to use response message
-    }
 
       } catch (error) {
-        console.log('Error updating profile:', error);
-        
+
           if (error.response) {
           // Use eventBus to output error messages directly from the response
           if (error.response.data.message) {

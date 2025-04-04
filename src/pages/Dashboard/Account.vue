@@ -1,6 +1,6 @@
 <template>
   <div class="lg:bg-gray-100 h-screen overflow-y-auto">
-    <AppHeader @showCategoryModal="$emit('showCategoryModal')" @navigateToAddressSettings="setCurrentPage('delivery')" />
+<!--     <AppHeader @showCategoryModal="$emit('showCategoryModal')" @navigateToAddressSettings="setCurrentPage('delivery')" /> -->
     <div class="container mx-auto py-20 hidden lg:block">
       <div class="max-w-screen-lg mx-auto rounded-lg bg-white shadow-lg p-10 mt-12">
         <div class="flex gap-8 items-start mb-10">

@@ -1,10 +1,10 @@
 <template>
   <div
-    class="fixed overflow-y-auto inset-0 flex items-start justify-center bg-gray-800 p-4 bg-opacity-50 z-50"
+    class="fixed overflow-y-auto inset-0 bg-gray-800 p-4 bg-opacity-50 z-50"
     @click.self="closeModal"
   >
     <div
-      class="bg-white rounded-2xl w-full lg:max-w-[850px] lg:h-auto shadow-lg lg:p-6 p-3 mx-auto relative"
+      class="bg-white rounded-2xl w-full lg:max-w-[850px] lg:h-auto overflow-y-auto shadow-lg lg:p-6 p-3 mx-auto relative my-8"
     >
       <div class="flex justify-between items-center w-full">
         <button
@@ -138,14 +138,14 @@
                 @mouseleave="closeMenu"
                 class="w-60 bg-white rounded-lg shadow-lg p-2 border border-gray-200 absolute top-8 z-40 right-4"
               >
-                <div
+              <div
+                  @click="showAddToWishlistModal"
                   class="flex items-center p-2 group moment-text-effect-parent cursor-pointer border-gray-200"
                 >
                   <i class="fa-solid fa-gift moment-text-effect-child"></i>
-                  <span
-                    class="ml-2 text-gray-800 w-full moment-text-effect-child font-medium"
-                    >Add to my wishlist</span
-                  >
+                  <span class="ml-2 text-gray-800 w-full moment-text-effect-child font-medium">
+                    Add to my wishlist
+                  </span>
                 </div>
                 <div
                   @click="toggleSaveWish"
@@ -183,7 +183,7 @@
                     wish.status == 'fulfiled' &&
                     wish.gifter?.username == loggedInUser
                   "
-                  @click="removeFromFulfiled"
+                    @click="$emit('removeFromFulfiled', wish.id)"
                   class="flex items-center p-2 group moment-text-effect-parent cursor-pointer border-t border-gray-200"
                 >
                   <i
@@ -200,7 +200,7 @@
                     wish.status == 'reserved' &&
                     wish.gifter?.username == loggedInUser
                   "
-              @click="$emit('cancelReservation', wish.id)"
+              @click="$emit('cancelReservation', wish)"
                   class="flex items-center p-2 group moment-text-effect-parent cursor-pointer border-t border-gray-200"
                 >
                   <i
@@ -223,23 +223,24 @@
         <!-- Image with Priority Tag -->
         <div class="p-4 lg:w-[364px]">
           <div
-            class="lg:sticky relative lg:top-0 h-[300px] lg:h-[503px] rounded-lg lg:overflow-hidden"
+            class="lg:sticky relative lg:top-0 h-[300px] lg:min-h-[468px] rounded-lg lg:overflow-hidden"
           >
-            <img
-              :src="wish.photo || '/assets/wishlist-category-placeholder.svg'"
-              alt="Wish Item"
-              class="w-full rounded-lg h-[300px] lg:h-[503px] object-cover"
-            />
-            <img
+          <img
               src="/assets/gradient.svg"
               alt="Gradient Overlay"
-              class="absolute bottom-0 w-full object-cover rounded-lg"
+              class="absolute h-full w-full object-cover rounded-lg"
             />
+            <img
+              :src="wish.photo || `/assets/` + wish.wishlist.category.slug + `.svg`"
+              alt="Wish Item"
+              class="w-full rounded-lg h-[300px] lg:min-h-[468px] object-cover"
+            />
+        
 
             <div class="absolute bottom-4 left-4 text-white">
               <div class="w-auto">
                 <!-- priority check Low -->
-
+ 
                 <div
                   v-if="wish.priority == 'low'"
                   class="inline-flex items-center bg-[#FAFFFF] border border-[#37B1B5] text-[#37B1B5] text-sm font-medium py-1 px-2 rounded-full"
@@ -434,15 +435,15 @@
                     @mouseleave="closeMenu"
                     class="w-60 bg-white rounded-lg shadow-lg p-2 border border-gray-200 absolute top-8 z-40 right-4"
                   >
-                    <div
-                      class="flex items-center p-2 group moment-text-effect-parent cursor-pointer border-gray-200"
-                    >
-                      <i class="fa-solid fa-gift moment-text-effect-child"></i>
-                      <span
-                        class="ml-2 text-gray-800 w-full moment-text-effect-child font-medium"
-                        >Add to my wishlist</span
-                      >
-                    </div>
+                  <div
+                    @click="showAddToWishlistModal"
+                    class="flex items-center p-2 group moment-text-effect-parent cursor-pointer border-gray-200"
+                  >
+                    <i class="fa-solid fa-gift moment-text-effect-child"></i>
+                    <span class="ml-2 text-gray-800 w-full moment-text-effect-child font-medium">
+                      Add to my wishlist
+                    </span>
+                  </div>
                     <div
                       @click="toggleSaveWish"
                       class="flex items-center p-2 group moment-text-effect-parent cursor-pointer border-gray-200"
@@ -498,7 +499,7 @@
                         wish.status == 'reserved' &&
                         wish.gifter?.username == loggedInUser
                       "
-                      @click="cancelReservation"
+                       @click="$emit('cancelReservation', wish)"
                       class="flex items-center p-2 group moment-text-effect-parent cursor-pointer border-t border-gray-200"
                     >
                       <i
@@ -550,6 +551,10 @@
 
           <!-- Show this on a users Wishlist -->
           <div v-if="!isDashboard">
+
+
+
+            
             <!-- Reserved Indicator Wish does not belong to user-->
             <div
               v-if="
@@ -598,6 +603,7 @@
               </div>
             </div>
 
+                <!-- Reserved Indicator Wish does not belong to user-->
             <div
               v-if="
                 isWishOwner &&
@@ -605,7 +611,7 @@
                 wish.gifter?.username != loggedInUser
               "
             >
-              <!-- Reserved Indicator Wish does not belong to user-->
+          
               <div
                 class="inline-flex items-center space-x-2 rounded-full px-4 py-2 bg-[#FEF8EF] text-sm lg:text-base"
               >
@@ -665,49 +671,34 @@
               </div>
             </div>
 
-            <!-- FulFilled Indicator Wish does not belong to user-->
-            <div
-              v-if="
-                isWishOwner &&
-                wish.status == 'fulfiled' &&
-                wish.gifter?.username != loggedInUser
-              "
-              class="inline-flex items-center space-x-2 rounded-full px-4 py-2 bg-[#F4F9F6] text-sm lg:text-base"
-            >
-              <i class="fa-light fa-solid fa-circle-check text-green-600"></i>
-              <span class="text-green-600 font-medium">Fulfilled by </span>
-              <img
-                :src="wish.gifter?.avatar || '/assets/avatar.svg'"
-                alt="Avatar"
-                class="w-5 h-5 rounded-full"
-              />
-              <span class="text-primaryColor"
-                >@{{ wish.gifter?.username }}</span
-              >
-              <div v-if="wish.status != 'saved'" class="text-sm text-gray-500">
-                {{ timeAgo }}
-              </div>
-            </div>
 
-            <!-- FulFilled Indicator Wish belongs to user -->
+
+
+            <!-- Fulfilled Indicator Wish does not belong to login user and gifter-->
             <div
               v-if="
                 !isWishOwner &&
                 wish.status == 'fulfiled' &&
-                wish.gifter?.username == loggedInUser
+                wish.gifter?.username != loggedInUser
               "
               class=""
             >
-              <div class="flex items-center text-sm lg:text-base">
+              <div class="flex items-center overflow-auto text-sm lg:text-base">
                 <div
-                  class="inline-flex items-center space-x-2 rounded-full px-4 py-2 bg-[#F4F9F6] mr-2"
+                  class="inline-flex  items-center space-x-2 rounded-full px-4 py-2 bg-[#F4F9F6] mr-2"
                 >
-                  <i
-                    class="fa-light fa-solid fa-circle-check text-green-600"
-                  ></i>
-                  <span class="text-green-600 font-medium"
-                    >Fulfilled by you</span
-                  >
+                <i class="fa-light fa-solid fa-circle-check text-green-600"></i>
+                <span class="text-green-600 font-medium">Fulfilled by </span>
+                  <div class="flex items-center space-x-2">
+                    <img
+                      :src="wish.gifter?.avatar || '/assets/avatar.svg'"
+                      alt="Avatar"
+                      class="w-5 h-5 rounded-full"
+                    />
+                    <span class="text-primaryColor"
+                      >@{{ wish.gifter?.username }}</span
+                    >
+                  </div>
                 </div>
                 <div class="flex space-x-2 items-center">
                   <span>for</span>
@@ -728,6 +719,84 @@
                 {{ timeAgo }}
               </div>
             </div>
+
+                <!-- Fulfilled Indicator Wish does not belong to user-->
+            <div
+              v-if="
+                isWishOwner &&
+                wish.status == 'fulfiled' &&
+                wish.gifter?.username != loggedInUser
+              "
+            >
+          
+              <div
+                class="inline-flex items-center space-x-2 rounded-full px-4 py-2 bg-[#F4F9F6] text-sm lg:text-base"
+              >
+              <i class="fa-light fa-solid fa-circle-check text-green-600"></i>
+              <span class="text-green-600 font-medium">Fulfilled by </span>
+                <img
+                  :src="wish.gifter?.avatar || '/assets/avatar.svg'"
+                  alt="Avatar"
+                  class="w-5 h-5 rounded-full"
+                />
+                <span class="text-primaryColor"
+                  >@{{ wish.gifter?.username }}</span
+                >
+              </div>
+              <div v-if="wish.status != 'saved'" class="text-sm text-gray-500">
+                {{ timeAgo }}
+              </div>
+            </div>
+
+            <!-- Fulfilled Indicator Wish belongs to user -->
+            <div
+              v-if="
+                !isWishOwner &&
+                wish.status == 'fulfiled' &&
+                wish.gifter?.username == loggedInUser
+        
+              "
+              class=""
+            >
+              <div class="flex items-center text-sm lg:text-base">
+                <div
+                  class="inline-flex items-center space-x-2 rounded-full px-4 py-2 bg-[#F4F9F6] mr-2 "
+                >
+                <i class="fa-light fa-solid fa-circle-check text-green-600"></i>
+                <span class="text-green-600 font-medium">Fulfilled by you </span>
+                </div>
+                <div class="flex space-x-2 items-center">
+                  <span>for</span>
+                  <img
+                    :src="wish.wishlist.user?.avatar || '/assets/avatar.svg'"
+                    alt="Avatar"
+                    class="w-5 h-5 rounded-full"
+                  />
+                  <span class="text-primaryColor"
+                    >@{{ wish.wishlist.user?.username }}</span
+                  >
+                </div>
+              </div>
+              <div
+                v-if="wish.status != 'saved'"
+                class="text-sm text-gray-500 mt-2"
+              >
+                {{ timeAgo }}
+              </div>
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
           </div>
 
           <!-- Show this on a users Dashboard -->
@@ -855,14 +924,15 @@
             >
               <button
                 @click.stop="$emit('editWish', wish)"
-                class="px-8 py-3 bg-gray-200 text-gray-800 rounded-full hover:bg-gray-300"
+                class="px-8 py-3 bg-gray-200 text-gray-800 rounded-full mb-10 lg:mb-0 hover:bg-gray-300"
               >
                 Edit
               </button>
             </div>
 
             <div
-              v-if="isWishOwner && wish.status === 'reserved' && !wish.received"
+              v-if="(isWishOwner && wish.status === 'reserved') &&
+                (wish.delivery_address || wish.has_address) && !wish.received"
               class="flex flex-col lg:flex-row w-full space-y-2 lg:space-y-0 lg:space-x-4"
             >
               <button
@@ -873,7 +943,7 @@
               </button>
 
               <button
-                @click="$emit('markAsReceived', wish.id)"
+                @click="$emit('markAsReceived', wish)"
                 :disabled="isReceiving"
                 :class="[
                   'px-8 py-3 rounded-full relative',
@@ -893,9 +963,9 @@
 
             <div
               v-if="
-                !isWishOwner &&
-                wish.status === 'reserved' &&
-                !wish.delivery_address
+                (!isWishOwner &&
+                wish.status === 'reserved') &&
+                (!wish.delivery_address && !wish.has_address) && !wish.received
               "
               class="inline-flex justify-end w-full space-x-4"
             >
@@ -920,14 +990,14 @@
 
             <div
               v-if="
-                !isWishOwner &&
-                wish.status === 'reserved' &&
-                wish.delivery_address
+                (!isWishOwner &&
+                wish.status === 'reserved') &&
+                (wish.delivery_address || wish.has_address) && !wish.received
               "
               class="inline-flex justify-end w-full space-x-4"
             >
               <button
-                @click="$emit('markAsFulfilled', wish.id)"
+                @click="$emit('markAsFulfilled', wish)"
                 :disabled="isFulfilling"
                 :class="[
                   'px-8 py-3 rounded-full relative',
@@ -957,7 +1027,7 @@
               </button>
 
               <button
-                @click="markAsReceived"
+                @click="$emit('markAsReceived', wish)"
                 :disabled="isReceiving"
                 :class="[
                   'px-8 py-3 rounded-full relative w-full',
@@ -979,7 +1049,7 @@
               v-if="isWishOwner && wish.status === 'fulfiled' && wish.received"
             >
               <button
-                @click="$emit('markAsUnreceived', wish.id)"
+                @click="$emit('markAsUnreceived', wish)"
                 :disabled="isUnReceiving"
                 class="px-8 w-full py-3 bg-gray-200 text-gray-800 rounded-full hover:shadow-lg"
               >
@@ -994,7 +1064,7 @@
 
             <div
               v-if="
-                !isWishOwner && wish.status === null && !wish.delivery_address
+                !isWishOwner && wish.status === null && !wish.delivery_address && !wish.has_address
               "
               class="w-full inline-flex justify-end"
             >
@@ -1021,7 +1091,7 @@
           <div v-else class="absolute bottom-0 left-0 right-0">
             <div
               v-if="
-                !isWishOwner && wish.status === null && !wish.delivery_address
+                (!isWishOwner && wish.status === null) && !wish.delivery_address && !wish.has_address
               "
               class="w-full inline-flex justify-end"
             >
@@ -1072,6 +1142,19 @@ export default {
     isRequestingAddress: {
       type: Boolean,
     },
+    isReserving: {
+      type: Boolean,
+    },
+    isReceiving: {
+      type: Boolean,
+    },
+
+    isFulfilling: {
+      type: Boolean,
+    },
+    isUnReceiving: {
+      type: Boolean,
+    },
     isWishSaved: {
       type: Boolean,
       default: false,
@@ -1082,10 +1165,6 @@ export default {
     return {
       isShareMenuOpen: false,
       isDropdownOpen: false,
-      isReserving: false, // New data property to track reservation state
-      isFulfilling: false, // New data property to track Fulfilling state
-      isReceiving: false, // New data property to track Fulfilling state
-      isUnReceiving: false, // New data property to track Fulfilling state
       localIsWishSaved: this.isWishSaved,
       currencySymbols: {
         NGN: '₦',
@@ -1147,6 +1226,11 @@ export default {
    
   },
   methods: {
+    showAddToWishlistModal() {
+      this.$emit('showAddToWishlistModal', this.wish);
+      this.closeModal();
+    },
+
     getCurrencySymbol(currency) {
       return this.currencySymbols[currency] || currency;
     },
@@ -1166,7 +1250,7 @@ export default {
             }
           );
 
-          if (this.isDashboard) {
+/*           if (this.isDashboard) {
             await this.$axios.put(
               `${this.$baseURL}/wishes/${this.wish.id}`,
               { status: null },
@@ -1176,7 +1260,7 @@ export default {
                 },
               }
             );
-          }
+          } */
 
           eventBus.onSuccess(response.data.message);
         } else {
@@ -1190,7 +1274,7 @@ export default {
             }
           );
 
-          if (this.isDashboard) {
+/*           if (this.isDashboard) {
             await this.$axios.put(
               `${this.$baseURL}/wishes/${this.wish.id}`,
               { status: null },
@@ -1200,7 +1284,7 @@ export default {
                 },
               }
             );
-          }
+          } */
 
           eventBus.onSuccess(response.data.message);
         }
@@ -1305,7 +1389,7 @@ export default {
       );
     },
 
-    async markAsReceived() {
+/*     async markAsReceived() {
       this.isReceiving = true;
       try {
       const response =  await this.$axios.put(
@@ -1331,8 +1415,8 @@ export default {
       } finally {
         this.isReceiving = false; // End loading state
       }
-    },
-    async markAsUnreceived() {
+    }, */
+/*     async markAsUnreceived() {
       this.isUnReceiving = true;
       try {
       const response =  await this.$axios.put(
@@ -1357,9 +1441,9 @@ export default {
       } finally {
         this.isUnReceiving = false;
       }
-    },
+    }, */
 
-    async reserveWish() {
+/*     async reserveWish() {
       this.isReserving = true; // Start loading state
       try {
       const response =  await this.$axios.put(
@@ -1413,9 +1497,9 @@ export default {
       } finally {
         this.isReserving = false; // End loading state
       }
-    },
+    }, */
 
-    async markAsFulfilled() {
+/*     async markAsFulfilled() {
       this.isFulfilling = true;
       try {
        const response = await this.$axios.put(
@@ -1440,8 +1524,10 @@ export default {
       } finally {
         this.isFulfilling = false;
       }
-    },
-    async cancelReservation() {
+    }, */
+ 
+ 
+/*     async cancelReservation() {
       eventBus.setLoading(true);
       try {
       const response =  await this.$axios.put(
@@ -1469,9 +1555,9 @@ export default {
       } finally {
         eventBus.setLoading(false);
       }
-    },
+    }, */
 
-    async removeFromFulfiled() {
+/*     async removeFromFulfiled() {
       eventBus.setLoading(true);
       try {
        const response = await this.$axios.put(
@@ -1497,7 +1583,7 @@ export default {
       } finally {
         eventBus.setLoading(false);
       }
-    },
+    }, */
     /* 
         async saveWish() {
             eventBus.setLoading(true);

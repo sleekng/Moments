@@ -291,11 +291,7 @@ export default {
       if (this.imageFile) {
         formData.append('photo', this.imageFile);
       } else {
-        // Fetch the category image and convert it to a Blob
-        const response = await fetch(this.categoryImage);
-        const blob = await response.blob();
-        const file = new File([blob], 'category-image.jpg', { type: blob.type });
-        formData.append('photo', file);
+       
       }
       formData.append('title', this.form.title);
       formData.append('date', this.form.date);

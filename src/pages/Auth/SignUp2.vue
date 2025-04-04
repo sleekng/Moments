@@ -1,16 +1,16 @@
 
 
 <template>
+    <Header />
     <div class="flex flex-col lg:justify-center lg:flex-row lg:items-center items-center h-screen  bg-white lg:p-8">
+    
+        <div class="w-full  h-full flex space-x-10 bg-white rounded-2xl  ">
+          <SignUpForm2 />
+    
+          <!-- Right Side: Image -->
+          <RightSideImage3 />
+        </div>
       <!-- Header -->
-      <Header />
-  
-      <div class="w-full  h-[95vh] flex space-x-10 bg-white rounded-2xl  overflow-hidden">
-        <SignUpForm2 />
-  
-        <!-- Right Side: Image -->
-        <RightSideImage3 />
-      </div>
     </div>
   </template>
     

@@ -6,6 +6,7 @@
       class="absolute inset-0 bg-gray-500 bg-opacity-0 z-50 cursor-not-allowed lg:min-w-[286px]"
     ></div>
 
+
     <div
       @click="preview"
          
@@ -14,27 +15,36 @@
       <div class="lg:relative">
 
         <img
-          :src="wish.photo || '/assets/wishlist-category-placeholder.svg'"
+          :src="wish.photo || `/assets/` + wish.wishlist.category.slug + `.svg`"
           alt="Wish Item"
           class="w-full h-[360px] object-cover"
         />
+
+
+
+        <!-- Reserve wish -->
+
+        <div v-if="status != 'saved'">
+
+          <button
+            @click.stop="toggleMenu"
+            v-if="
+              (isWishOwner && (wish.status === null || wish.status === 'reserved') && !wish.delivery_address) ||  (wish.status === 'reserved' && isDashboard) || (wish.status === 'fulfiled')
+            "
+            class="absolute z-30 top-3 right-2 p-1 bg-gray-200 rounded-full toggle-menu-button transition-opacity opacity-0 group-hover:opacity-100  lg:inline-flex"
+          >
+            <img src="/assets/frame-1618868216.svg" alt="Menu" class="h-6 w-6" />
+          </button>
+        </div>
         
-        <button
-          @click.stop="toggleMenu"
-          v-if="
-            (isWishOwner && (wish.status === null || wish.status === 'reserved') && !wish.delivery_address) ||  (wish.status === 'reserved' && isDashboard) || (wish.status === 'fulfiled') 
-          "
-          class="absolute z-30 top-3 right-2 p-1 bg-gray-200 rounded-full toggle-menu-button transition-opacity opacity-0 group-hover:opacity-100"
-        >
-          <img src="/assets/frame-1618868216.svg" alt="Menu" class="h-6 w-6" />
-        </button>
 
         <div
-          v-if="!isWishOwner && wish.status === null && !wish.delivery_address"
-          class="absolute z-40 top-3 right-2 w-full inline-flex justify-end toggle-menu-button transition-opacity opacity-0 group-hover:opacity-100"
+          v-if="!isWishOwner && wish.status === null && !wish.delivery_address && !isDashboard"
+          class="absolute z-30 top-3 right-2 w-full inline-flex justify-end toggle-menu-button transition-opacity opacity-0 group-hover:opacity-100"
         >
           <button
-            @click.stop="reserveWish"
+       
+              @click.stop="$emit('reserveWish', wish)"
             :disabled="isReserving"
             :class="[
               'px-4 py-1 lg:px-8 lg:py-3 rounded-full text-sm lg:text-base',
@@ -126,7 +136,7 @@
  
 
         <!-- DropdownMenu Reserved for Desktop -->
-        <template v-if="wish.status == 'reserved' && isDashboard && !isMobile">
+        <template v-if="wish.status == 'reserved' && isDashboard && !isMobile && status != 'saved'">
           <div
             v-if="isDropdownOpen"
             @mouseleave="closeMenu"
@@ -144,7 +154,7 @@
                 >Mark as fulfilled</span
               >
             </div>
-            <div
+            <div     @click.stop="showAddToWishlistModal"
               class="flex items-center p-2 group moment-text-effect-parent cursor-pointer border-gray-200"
             >
               <i class="fa-regular fa-gift moment-text-effect-child"></i>
@@ -169,7 +179,7 @@
         </template>
 
         <!-- DropdownMenu FulFilled for Desktop not isGifter -->
-        <template v-if=" !isWishOwner && (wish.status == 'fulfiled' &&   loggedInUser != wish.gifter.username ) && !isMobile">
+        <template v-if=" !isWishOwner && (wish.status == 'fulfiled' &&   loggedInUser != wish.gifter?.username ) && !isMobile && status != 'saved'">
           <div
             v-if="isDropdownOpen"
             @mouseleave="closeMenu"
@@ -188,13 +198,13 @@
               >
             </div>
             <div
+              @click.stop="showAddToWishlistModal"
               class="flex items-center p-2 group moment-text-effect-parent cursor-pointer border-gray-200"
             >
-              <i class="fa-regular fa-gift moment-text-effect-child"></i>
-              <span
-                class="ml-2 text-gray-800 w-full moment-text-effect-child hover:text-primaryColor font-medium"
-                >Add to my wishlist</span
-              >
+              <i class="fa-solid fa-gift moment-text-effect-child"></i>
+              <span class="ml-2 text-gray-800 w-full moment-text-effect-child font-medium">
+                Add to my wishlist
+              </span>
             </div>
          
           </div>
@@ -203,23 +213,23 @@
         
         
         <!-- DropdownMenu FulFilled for Desktop isGifter -->
-        <template v-if="(wish.status == 'fulfiled' &&   loggedInUser == wish.gifter.username ) && !isMobile">
+        <template v-if="(wish.status == 'fulfiled' &&   loggedInUser == wish.gifter?.username ) && !isMobile && status != 'saved'">
           <div
             v-if="isDropdownOpen"
             @mouseleave="closeMenu"
             class="w-60 bg-white rounded-lg shadow-lg p-2 border border-gray-200 absolute top-8 z-40 right-4"
           >
-            <div
+          <div
+              @click.stop="showAddToWishlistModal"
               class="flex items-center p-2 group moment-text-effect-parent cursor-pointer border-gray-200"
             >
-              <i class="fa-regular fa-gift moment-text-effect-child"></i>
-              <span
-                class="ml-2 text-gray-800 w-full moment-text-effect-child hover:text-primaryColor font-medium"
-                >Add to my wishlist</span
-              >
+              <i class="fa-solid fa-gift moment-text-effect-child"></i>
+              <span class="ml-2 text-gray-800 w-full moment-text-effect-child font-medium">
+                Add to my wishlist
+              </span>
             </div>
             <div
-              @click.stop="$emit('removeFromFulfiled', wish)"
+              @click.stop="$emit('removeFromFulfiled', wish.id)"
               class="flex items-center p-2 group moment-text-effect-parent cursor-pointer border-t border-gray-200"
             >
               <i
@@ -263,7 +273,7 @@
 
       <!-- Reserved Indicator -->
       <div
-        v-if="wish.status == 'reserved'"
+        v-if="wish.status == 'reserved' && status != 'saved'"
         class="absolute top-4 left-2 lg:left-4 bg-[#FEF8EF] text-[#DE900B] py-1 px-2 lg:px-4 rounded-full flex items-center"
       >
         <i class="fa-light mr-2 fa-solid fa-circle-check"></i>
@@ -289,21 +299,21 @@
         class="absolute top-4 left-2 lg:left-4 bg-[#EFF9F3] text-[#1FB356] py-1 px-2 lg:px-4 rounded-full flex items-center"
       >
         <i class="fa-light mr-2 fa-solid fa-circle-check"></i>
-        <span class="font-medium text-xs lg:text-sm">Unreceived</span>
+        <span class="font-medium text-xs lg:text-sm">Fulfilled</span>
       </div>
 
       <!-- FulFilled wish indicator with none owner viewing -->
       <div v-if="!isDashboard">
         <div
           v-if="
-            !isWishOwner &&
-            wish.status == 'fulfiled' &&
-            loggedInUser == wish.gifter.username
+       
+            wish.status == 'fulfiled'
+            && wish.received == true
           "
           class="absolute top-4 left-2 lg:left-4 bg-[#EFF9F3] text-[#1FB356] py-1 px-2 lg:px-4 rounded-full flex items-center"
         >
           <i class="fa-light mr-2 fa-solid fa-circle-check"></i>
-          <span class="font-medium text-xs lg:text-sm">Fulfilled by you</span>
+          <span class="font-medium text-xs lg:text-sm">Received</span>
         </div>
       </div>
 
@@ -311,34 +321,36 @@
       <div v-if="!isDashboard">
         <div
           v-if="
-            !isWishOwner &&
-            wish.status == 'fulfiled' &&
-            loggedInUser != wish.gifter.username
+       
+            wish.status == 'fulfiled'
+            && wish.received == false
           "
           class="absolute top-4 left-2 lg:left-4 bg-[#EFF9F3] text-[#1FB356] py-1 px-2 lg:px-4 rounded-full flex items-center"
         >
           <i class="fa-light mr-2 fa-solid fa-circle-check"></i>
-          <span class="font-medium text-xs lg:text-sm">Recieved</span>
+          <span class="font-medium text-xs lg:text-sm">FulFilled</span>
         </div>
       </div>
 
       <!-- FulFilled wish indicator with none owner viewing on Dashboard -->
       <div v-if="isDashboard">
         <div
-          v-if="!isWishOwner && wish.status == 'fulfiled'"
+          v-if="!isWishOwner && wish.status == 'fulfiled' && status != 'saved'"
           class="absolute top-4 left-2 lg:left-4 bg-[#EFF9F3] text-[#1FB356] py-1 px-2 lg:px-4 rounded-full flex items-center"
         >
           <i class="fa-light mr-2 fa-solid fa-circle-check"></i>
           <span class="font-medium text-xs lg:text-sm">Fulfilled by you</span>
         </div>
       </div>
+  
 
       <!-- Saved Indicator -->
       <div
         v-if="status == 'saved'"
         class="absolute top-4 left-2 lg:left-4 bg-primaryMainBright text-primaryColor py-1 px-2 lg:px-4 rounded-full flex items-center"
       >
-        <span class="font-medium text-xs lg:text-sm">Birthday wishlist</span>
+      
+        <span class="font-medium text-xs lg:text-sm">{{ wish.wishlist.category.name }} wishlist</span>
       </div>
 
       <div
@@ -399,7 +411,7 @@
             <span>{{ wish.likes_count }}</span>
           </div>
           <div class="flex space-x-2 md:space-x-4">
-            <button v-if="wish.status != 'fulfiled'"
+            <button 
               @click.stop="toggleSaveWish"
               class="border-white border w-8 h-8 lg:w-10 lg:h-10 rounded-full focus:outline-none shadow-sm"
             >
@@ -522,7 +534,7 @@
                 <i class="fa-light fa-solid fa-circle-check"></i>
                 <span class="ml-2 text-gray-800 font-medium">Mark as fulfilled</span>
               </div>
-              <div class="flex items-center p-2 cursor-pointer">
+              <div     @click.stop="showAddToWishlistModal" class="flex items-center p-2 cursor-pointer">
                 <i class="fa-regular fa-gift"></i>
                 <span class="ml-2 text-gray-800 font-medium">Add to my wishlist</span>
               </div>
@@ -535,17 +547,17 @@
         </div>
 
                 <!-- DropdownMenu Fulfilled as Modal on Mobile -->
-         <div v-if="isDropdownOpen && isMobile && (wish.status == 'fulfiled' &&   loggedInUser == wish.gifter.username ) " class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+         <div v-if="isDropdownOpen && isMobile && (wish.status == 'fulfiled' &&   loggedInUser == wish.gifter?.username ) && status != 'saved' " class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div class="bg-white rounded-lg shadow-lg p-6 relative max-w-sm w-full">
             <button @click="closeMenu" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
               <i class="fas fa-times"></i>
             </button>
             <div class="flex flex-col space-y-4">
-              <div class="flex items-center p-2 cursor-pointer">
+              <div     @click.stop="showAddToWishlistModal" class="flex items-center p-2 cursor-pointer">
                 <i class="fa-regular fa-gift"></i>
                 <span class="ml-2 text-gray-800 font-medium">Add to my wishlist</span>
               </div>
-              <div @click.stop="$emit('removeFromFulfiled', wish)" class="flex items-center p-2 cursor-pointer">
+              <div @click.stop="$emit('removeFromFulfiled', wish.id)" class="flex items-center p-2 cursor-pointer">
                 <i class="fa-light fa-light fa-circle-xmark"></i>
                 <span class="ml-2 text-gray-800 font-medium">Remove from fulfilled</span>
               </div>
@@ -553,17 +565,17 @@
           </div>
         </div>
                 <!-- DropdownMenu Fulfilled as Modal on Mobile -->
-         <div v-if="isDropdownOpen && isMobile && (wish.status == 'fulfiled' &&   loggedInUser == wish.gifter.username ) " class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+         <div v-if="isDropdownOpen && isMobile && (wish.status == 'fulfiled' &&   loggedInUser == wish.gifter?.username ) && status != 'saved' " class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div class="bg-white rounded-lg shadow-lg p-6 relative max-w-sm w-full">
             <button @click="closeMenu" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
               <i class="fas fa-times"></i>
             </button>
             <div class="flex flex-col space-y-4">
-              <div class="flex items-center p-2 cursor-pointer">
+              <div     @click.stop="showAddToWishlistModal" class="flex items-center p-2 cursor-pointer">
                 <i class="fa-regular fa-gift"></i>
                 <span class="ml-2 text-gray-800 font-medium">Add to my wishlist</span>
               </div>
-              <div @click.stop="$emit('removeFromFulfiled', wish)" class="flex items-center p-2 cursor-pointer">
+              <div @click.stop="$emit('removeFromFulfiled', wish.id)" class="flex items-center p-2 cursor-pointer">
                 <i class="fa-light fa-light fa-circle-xmark"></i>
                 <span class="ml-2 text-gray-800 font-medium">Remove from fulfilled</span>
               </div>
@@ -630,11 +642,16 @@
         </template>
 
     <!-- Show this if url is dashboard -->
-    <!--      <div v-if="isDashboard" class="flex  lg:flex-row flex-col lg:items-center lg:space-x-2 mt-2 pb-2">
+    <div v-if="isDashboard" class="flex  lg:flex-row flex-col lg:items-center lg:space-x-2 mt-2 pb-2">
         <div class="flex  items-center space-x-1">
             <span class="text-gray-600 font-normal  text-[14px]">For</span>
             <img :src="wish.wishlist.user.avatar" alt="Avatar" class="w-4 h-4 rounded-full">
-            <span class="text-primaryColor font-medium text-[14px]">@{{ wish.wishlist.user.username }}</span>
+            <span 
+  class="text-primaryColor font-medium text-[14px] cursor-pointer"
+  @click="goToUserProfile"
+>
+  @{{ wish.wishlist.user.username }}
+</span>
         </div>
         <div class="flex items-center lg:space-x-1">
             <img src="/assets/ellipse-20.svg" alt="Ellipse" class="w-1 h-1 hidden lg:inline-block">
@@ -644,13 +661,14 @@
               <DateFormat :date="wish.created_at" :classList="'text-[14px]'" />
             </span>
         </div>
-    </div> -->
+    </div> 
   </div>
 </template>
 
 <script>
 import DateFormat from "./DateFormat.vue";
 import { eventBus } from "@/eventBus.js";
+import { isTokenExpired } from "@/router/index.js"; // Import the function
 
 export default {
   name: "WishCard",
@@ -659,6 +677,10 @@ export default {
   },
 
   props: {
+    isReserving:{
+            type: Boolean,
+            default: false,
+        },
     loggedInUser: {
       type: [String, Number], // Accept both string and number since ID might be either
       required: true,
@@ -694,12 +716,16 @@ export default {
         GHS: '₵'
       },
       savedwishes: [],
-      isReserving: false, // New data property to track reservation state
+
       isShareMenuOpen: false,
       isMobile: window.innerWidth <= 768, // Detect mobile screen
     };
   },
   computed: {
+    isLoggedIn() {
+      // Check if the user is logged in by verifying the token
+      return localStorage.getItem('authToken') && !isTokenExpired();
+    },
     formattedAmount() {
       return parseFloat(this.wish.amount).toLocaleString("en-US");
     },
@@ -721,7 +747,10 @@ export default {
     },
   },
   mounted() {
-    this.fetchSavedWishes();
+ 
+    if (this.isLoggedIn) {
+      this.fetchSavedWishes();
+    }
     window.addEventListener("resize", this.handleResize);
     console.log(this.wish);
     
@@ -732,6 +761,20 @@ export default {
     window.removeEventListener("resize", this.handleResize);
   },
   methods: {
+    showAddToWishlistModal() {
+      this.$emit('showAddToWishlistModal', this.wish);
+    },
+
+    goToUserProfile() {
+    this.$router.push({ 
+      path: `/${this.wish.wishlist.user.username}`, 
+      name: 'UsersProfile', 
+      params: { username: this.wish.wishlist.user.username } 
+    });
+  },
+    redirectToLogin() {
+      this.$router.push('/login');
+    },
     getCurrencySymbol(currency) {
       return this.currencySymbols[currency] || currency;
     },
@@ -789,13 +832,15 @@ export default {
         "_blank"
       );
     },
-
-
     toggleMenu() {
       this.$emit("toggleDropdown", this.wish.id);
     },
 
     async toggleSaveWish() {
+      if (!this.isLoggedIn) {
+        this.redirectToLogin();
+        return;
+      }
       eventBus.setLoading(true);
       try {
         const response = await this.$axios.post(
@@ -819,7 +864,7 @@ export default {
           );
         }
 
-        if (this.isDashboard) {
+/*         if (this.isDashboard) {
           await this.$axios.put(
             `${this.$baseURL}/wishes/${this.wish.id}`,
             { status: null },
@@ -829,7 +874,7 @@ export default {
               },
             }
           );
-        }
+        } */
 
         this.fetchSavedWishes();
         eventBus.onSuccess(response.data.message);
@@ -850,7 +895,15 @@ export default {
       }
     },
 
-    async reserveWish() {
+    
+
+
+/*     async reserveWish() {
+      return console.log("Reserve wish");
+      if (!this.isLoggedIn) {
+        this.redirectToLogin();
+        return;
+      }
       this.isReserving = true; // Start loading state
       try {
         await this.$axios.put(
@@ -903,11 +956,15 @@ export default {
       } finally {
         this.isReserving = false; // End loading state
       }
-    },
+    }, */
     getAuthToken() {
         return localStorage.getItem('authToken') || '';
       },
     preview() {
+      if (!this.isLoggedIn) {
+        this.redirectToLogin();
+        return;
+      }
       this.$emit("preview", this.wish.id, this.isWishSaved);
     },
     closeMenu() {
@@ -915,6 +972,10 @@ export default {
     },
 
     async toggleLike() {
+      if (!this.isLoggedIn) {
+        this.redirectToLogin();
+        return;
+      }
       try {
         const likeStatus = !this.wish.liked_by_me;
         const response = await this.$axios.put(

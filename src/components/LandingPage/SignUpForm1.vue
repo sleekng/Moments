@@ -187,15 +187,22 @@ export default {
           const user = response.data.data;
           localStorage.setItem("user", JSON.stringify(user));
           this.showSuccess = true;
-          console.log('Registration successful:', response.data.message);
+
           // Redirect to /additional-info after success
           this.$router.push('/additional-info');
         }
       } catch (error) {
-        const errorMsg = error.response?.data?.message || 'An error occurred. Please try again.';
-        eventBus.onError(errorMsg); // Trigger the alert
-        console.error('Error in registration:', error.response ? error.response.data : error);
-        // Handle error response
+        if (error.response) {
+          // Use eventBus to output error messages directly from the response
+          if (error.response.data.message) {
+            eventBus.onError(error.response.data.message);
+          } else if (error.response.data.errors) {
+            const errorMsg = Object.values(error.response.data.errors).flat().join(" ");
+            eventBus.onError(errorMsg);
+          } else {
+            eventBus.onError("An unexpected error occurred. Please try again.");
+          }
+        }
       } finally {
         eventBus.setLoading(false);
       }

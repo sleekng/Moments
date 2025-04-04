@@ -38,10 +38,13 @@ export default {
 
       if (response.data.data.token) {
         // Store the authentication data
+        const expirationTime = Date.now() + 24 * 60 * 60 * 1000; // 24 hours
         localStorage.setItem('authToken', response.data.data.token);
+        localStorage.setItem("tokenExpiration", expirationTime);
         localStorage.setItem('user', JSON.stringify(response.data.data));
-        localStorage.setItem('tokenExpiration', response.data.data.expiration);
 
+
+        eventBus.onSuccess(response.data.message);
         // Redirect to dashboard
         this.$router.push({ name: 'dashboard' });
       }

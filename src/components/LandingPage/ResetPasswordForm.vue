@@ -125,6 +125,7 @@
         }
       },
       async resetPassword() {
+
         if (this.password !== this.confirmPassword) {
           this.message = "Passwords do not match";
           this.success = false;
@@ -144,25 +145,62 @@
             }
           });
   
-          if (response.data.success) {
-            localStorage.setItem("authToken", token);
-            this.message = response.data.message || 'Your password has been reset.';
-            this.success = true;
-          } else {
-            this.message = response.data.message || 'Failed to reset password. Try again later.';
-          }
+          eventBus.onSuccess(response.data.message);
+          localStorage.setItem("authToken", token);
+       
         } catch (error) {
             
-          this.message = error.response.data.message || 'An error occurred. Please try again.';
-          this.success = false;
+          if (error.response) {
+          // Use eventBus to output error messages directly from the response
+          if (error.response.data.message) {
+            eventBus.onError(error.response.data.message);
+          } else if (error.response.data.errors) {
+            const errorMsg = Object.values(error.response.data.errors).flat().join(" ");
+            eventBus.onError(errorMsg);
+          } else {
+            eventBus.onError("An unexpected error occurred. Please try again.");
+          }
+        }
+    
         } finally {
           eventBus.setLoading(false);
           this.$router.push({
             path: "/dashboard",
           });
         }
+      },
+      async signOut() {
+      try {
+        eventBus.setLoading(true);
+        const response = await fetch(`${this.$baseURL}/logout`, {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.getToken()}`
+          },
+        });
+
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('user');
+      } catch (error) {
+        const errorMsg = error.response?.data?.message || 'An error occurred. Please try again.';
+        eventBus.onError(errorMsg);
+        console.error('Error logging out', error);
+      } finally {
+        eventBus.setLoading(false);
       }
+    },
+    getToken() {
+      return localStorage.getItem('authToken');
     }
+    },
+    beforeMount() {
+    if (this.getToken()) {
+      this.signOut();
+    }
+  }
+
   };
   </script>
   

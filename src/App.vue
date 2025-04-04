@@ -1,13 +1,13 @@
 <template>
   <div v-if="isLoading" class="progress-bar"></div>
+  <Alert ref="alertComponent" class=" fixed top-4 right-2 lg:top-10 lg:right-10 z-[9999999999]" />
   <div :class="{ 'blurred-content': isLoading }">
-    <Alert ref="alertComponent" class=" fixed top-4 right-2 lg:top-10 lg:right-10 z-[999]" />
 
+    <AppHeader @showCategoryModal="showCategoryModal = true" @navigateToAddressSettings="setCurrentPage('delivery')" />
     <RouterView
       @shareWishlist="toggleShareMenu"
       @showCreateWishlistModal="openCreateWishlistModal"
       @showCategoryModal="showCategoryModal = true"
-      @showShareAddressModal="openShareAddressModal"
       :showNotifications=" showNotifications" 
       @hideNotification = "showNotifications = true"
     />
@@ -83,6 +83,7 @@
       @updateWishList="UpdatedWishList"
       @close="closeCreateWishlistModal"
     />
+    
 
     <CreatedWishlistModal
       v-if="wishlistCreated || wishlistUpdated"
@@ -123,13 +124,15 @@
 import CreatedWishModal from "@/components/Dashboard/CreatedWishModal.vue";
 import CreateWishModal from "@/components/Dashboard/CreateWishModal.vue";
 import { onMounted, watch } from "vue";
-import { RouterView } from "vue-router";
+import { RouterView, useRoute } from "vue-router";
 import CreateWishlistModal from "@/components/Dashboard/CreateWishlistModal.vue";
 
+import { isTokenExpired } from "@/router/index.js"; // Import the function
 import Alert from "@/components/Alert.vue";
 import { eventBus } from "@/eventBus.js";
 import CategoryPopup from "@/components/Dashboard/CategoryPopup.vue";
 import CreatedWishlistModal from "./components/Dashboard/CreatedWishlistModal.vue";
+import AppHeader from '@/components/Dashboard/AppHeader.vue';
 
 export default {
   components: {
@@ -139,14 +142,19 @@ export default {
     CreatedWishlistModal,
     CreateWishModal,
     CreatedWishModal,
+    AppHeader
   },
   data() {
     return {
+      wishCreated: false,
+      wishUpdated: false,
       wishlistUser:null,
       isShareMenuOpen: false,
       updateType: null,
       showCategoryModal: false,
       showCreateWishlistModal: false,
+
+
       isLoading: false,
       selectedCategory: null,
       editingWishlist: null,
@@ -162,6 +170,7 @@ export default {
     };
   },
   computed: {
+
     modalTitle() {
       return this.wishlistCreated
         ? "New Wishlist Created! ✨"
@@ -219,15 +228,15 @@ export default {
   },
   methods: {
 
+
     handleGlobalClick(event) {
+
       if(this.showNotifications ===true){
         console.log('workingin');
         
         this.showNotifications = false;
       }
     },
-
-
 
     closeCreateWishModal(){
       this.showCreateWishModal = false
@@ -242,6 +251,8 @@ export default {
         console.error('Error fetching wishlist details:', error);
       }
     },
+
+    
     toggleShareMenu(wishlistId, wishlistUser) {
       this.currentWishlistId = wishlistId;
       this.wishlistUser = wishlistUser

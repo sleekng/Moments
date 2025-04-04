@@ -12,10 +12,10 @@
             <img src="/assets/close.svg" alt="Close" class="h-6 w-6 cursor-pointer" @click="close" />
           </div>
           <div class="grid md:grid-cols-3 gap-4 px-4 lg:p-6">
-            
+
             <div class="md:col-span-1">
               <div class="bg-gray-100 rounded-lg overflow-hidden w-[200px] h-[200px] flex items-center justify-center">
-                <img :src="imagePreview || selectedWishlist.photo" alt="Placeholder" class="object-cover w-full h-full" />
+                <img :src="imagePreview || selectedWishlist.photo || `/assets/` + selectedWishlist.category.slug + `.svg`" alt="Placeholder" class="object-cover w-full h-full" />
               </div>
               <label class="my-4 py-2 bg-gray-200 rounded-full block text-center cursor-pointer w-[200px]">
                 Upload photo
@@ -292,20 +292,28 @@ export default {
 
       if (this.imageFile) {
         formData.append('photo', this.imageFile);
-      } else {
-        // Fetch the category image and convert it to a Blob
-        const response = await fetch(this.selectedWishlist.photo);
-        const blob = await response.blob();
-        const file = new File([blob], 'category-image.jpg', { type: blob.type });
-        formData.append('photo', file);
+      } 
+      if (this.form.name) {
+     formData.append('name', this.form.name);
       }
-      formData.append('name', this.form.name);
-      formData.append('quantity', this.form.quantity);
-      formData.append('amount', this.form.amount);
-      formData.append('currency', this.form.currency);
-      formData.append('priority', this.form.priority);
-      formData.append('link', this.form.link);
-      formData.append('comment', this.form.comment);
+      if (this.form.quantity) {
+        formData.append('quantity', this.form.quantity);
+      }
+      if (this.form.amount) {
+        formData.append('amount', this.form.amount);
+      }
+      if (this.form.currency) {
+        formData.append('currency', this.form.currency);
+      }
+      if (this.form.priority) {
+        formData.append('priority', this.form.priority);
+      }
+      if (this.form.link) {
+        formData.append('link', this.form.link);
+      }
+      if (this.form.comment) {
+        formData.append('comment', this.form.comment);
+      }
       formData.append('tagged_friends', JSON.stringify(this.selectedFriends.map(f => f.username)));
 
       try {

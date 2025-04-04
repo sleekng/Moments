@@ -9,8 +9,9 @@
     </div>
     
     <!-- Conditional Image and Menu-option for Dashboard -->
+
     <div class="relative mb-4">
-      <img class="w-full h-56 object-cover rounded-md" :src="wishlist.photo || categoryImage" alt="Wishlist Image" />
+      <img class="w-full h-56 object-cover rounded-md" :src="wishlist.photo || `/assets/`+ wishlist.category.slug + `.svg` " alt="Wishlist Image" />
       <button v-if="!isExplore" @click.stop="toggleMenu" class="absolute z-30 top-2 right-2 p-1 bg-gray-200 rounded-full toggle-menu-button transition-opacity opacity-0 group-hover:opacity-100">
         <img src="/assets/frame-1618868216.svg" alt="Menu" class="h-6 w-6" />
       </button>
@@ -106,6 +107,7 @@
 
 <script>
 import { eventBus } from '@/eventBus.js';
+import { isTokenExpired } from "@/router/index.js"; // Add this import
 
 export default {
   name: 'WishlistCard',
@@ -131,6 +133,10 @@ export default {
   },
   
   computed: {
+    isLoggedIn() {
+      // Check if the user is logged in by verifying the token
+      return localStorage.getItem('authToken') && !isTokenExpired();
+    },
     isWishOwner() {
             return this.wishlist.user?.username === this.currentUser.username;
         },
@@ -174,29 +180,60 @@ export default {
     this.loadCurrentUser(); // Load user data when component is created
   },
   methods: {
-        
+    redirectToLogin() {
+      this.$router.push('/login');
+    },
+
     loadCurrentUser() {
       const userData = JSON.parse(localStorage.getItem('user'));
       if (userData) {
         this.currentUser = userData;
       }
     },
-    toggleMenu() {
+
+    toggleMenu(event) {
+      if (!this.isLoggedIn) {
+        event.stopPropagation();
+        this.redirectToLogin();
+        return;
+      }
       this.$emit('toggleDropdown', this.wishlist.id);
     },
+
     closeMenu() {
+      if (!this.isLoggedIn) {
+        this.redirectToLogin();
+        return;
+      }
       this.$emit('closeDropdown', this.wishlist.id);
     },
-    shareWishlist(){
-      this.$emit('shareWishlist', this.wishlist.id, this.user.username ? this.user.username:this.currentUser.username);
+
+    shareWishlist(event) {
+      if (!this.isLoggedIn) {
+        event.stopPropagation();
+        this.redirectToLogin();
+        return;
+      }
+      this.$emit('shareWishlist', this.wishlist.id, this.user.username ? this.user.username : this.currentUser.username);
     },
+
     viewWishlist() {
+      if (!this.isLoggedIn) {
+        this.redirectToLogin();
+        return;
+      }
       const routeParams = this.isWishOwner
         ? { id: this.wishlist.id, username: this.currentUser.username }
         : { id: this.wishlist.id, username: this.user.username };
       this.$router.push({ name: 'Wishlist', params: routeParams });
     },
-    async archiveWishlist() {
+
+    async archiveWishlist(event) {
+      if (!this.isLoggedIn) {
+        event.stopPropagation();
+        this.redirectToLogin();
+        return;
+      }
       if (this.isArchiving) return;
       
       this.isArchiving = true;
@@ -218,7 +255,13 @@ export default {
         this.isArchiving = false;
       }
     },
-    async toggleLike() {
+
+    async toggleLike(event) {
+      if (!this.isLoggedIn) {
+        event.stopPropagation();
+        this.redirectToLogin();
+        return;
+      }
       try {
         const likeStatus = !this.wishlist.liked_by_me;
         const response = await this.$axios.put(`${this.$baseURL}/wishlists/${this.wishlist.id}`, {

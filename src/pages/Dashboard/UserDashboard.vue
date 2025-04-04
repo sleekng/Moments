@@ -1,11 +1,12 @@
 <template>
   <div class="bg-white lg:bg-gray-100 py-10">
-    <AppHeader @showCategoryModal="$emit('showCategoryModal')" />
+   <AppHeader @showCategoryModal="$emit('showCategoryModal')" /> 
     <div v-if="!loading" class="px-4 lg:px-16 pt-10 lg:pt-20">
 
       <ProfileDetails :user="user" @showAnalyticsModal="ToggleAnalyticsModal" :myWishlistCount="wishlists.length" />
       <TabNavigationsWishlist :myWishlistCount="wishlists.length" :savedwishesCount="savedwishes.length"
-        :reservedWishesCount="reservedWishes.length" :activeTab="activeTab" @switchTab="setActiveTab" @sort="handleSort" />
+        :reservedWishesCount="reservedWishes.length" :activeTab="activeTab" @switchTab="setActiveTab"
+        @sort="handleSort" />
 
 
       <div v-if="activeTab === 'myWishes'">
@@ -21,27 +22,28 @@
           <WishlistCard :user="user" @shareWishlist="shareWishlist" v-for="wishlist in wishlists" :key="wishlist.id"
             :wishlist="wishlist" :openDropdownId="openDropdownId" @toggleDropdown="handleToggleDropdown"
             @closeDropdown="handleCloseDropdown" @deleteWishlist="handleDeleteWishlist"
-            @editWishlist="handleEditWishlist" @viewWishlist="navigateToAllWishes" @wishlistArchived="wishlistArchived" />
+            @editWishlist="handleEditWishlist" @viewWishlist="navigateToAllWishes"
+            @wishlistArchived="wishlistArchived" />
         </div>
-      <div v-else>
+        <div v-else>
 
           <EmptyState title="Your wishlist is empty" message="Go ahead and create your first wishlist"
             @button-click="$emit('showCategoryModal')" :showButton="true" :userOwnsWishlist="true"
             buttonText="Create Wishlist" />
-      </div>
+        </div>
       </div>
 
       <div v-if="activeTab === 'reserved'">
 
-        <ReservedWishes v-if="reservedWishes.length > 0" @editWish="openEditWishModal" @deleteWish="handleDeleteWish"
-          :wishes="reservedWishes" @preview="prevWish" @newUpdate="newUpdate" />
+        <ReservedWishes v-if="reservedWishes.length > 0" @editWish="openEditWishModal" @deleteWish="handleDeleteWish" @showAddToWishlistModal="showAddToWishlistModal"
+          :wishes="reservedWishes" @preview="prevWish" @newUpdate="newUpdate" @removeFromFulfiled="removeFromFulfiled" />
         <EmptyState v-else title="No wishes reserved by you" message="Reserve a wish for your friends to surprise them."
           :showButton="false" />
       </div>
 
       <div v-if="activeTab === 'saved'">
-        <SavedWishes v-if="savedwishes.length > 0" :wishes="savedwishes" @editWish="openEditWishModal"
-          @deleteWish="handleDeleteWish" @preview="savedPrevWish" @newUpdate="newUpdate" />
+        <SavedWishes  v-if="savedwishes.length > 0" :wishes="savedwishes" @editWish="openEditWishModal"  @removeFromFulfiled="removeFromFulfiled" @showAddToWishlistModal="showAddToWishlistModal"
+          @deleteWish="handleDeleteWish" @preview="savedPrevWish" @newUpdate="newUpdate" @reserveWish="reserveWish"   :isReserving="isReserving" />
         <EmptyState v-else title="No saved wishes" message="Save your favorite wishes here to easily find them later."
           :showButton="false" />
       </div>
@@ -72,18 +74,37 @@
 
       <!-- Modals -->
 
+      <AddToWishlist :isAddingtoWishlist="isAddingtoWishlist" @saveToWishlist="saveToWishlist"  v-if="AddToWishlistModal" :wish="wishToAdd" @close="AddToWishlistModal = false" />
+
       <WelcomeModal v-if="showWelcomeModal" @close="closeWelcomeModal" />
 
       <Congratulations v-if="showInitialModal" @close="closeInitialModal" />
-      <WishDetailView :isWishSaved="isWishSaved" :isRequestingAddress="isRequestingAddress"
-        @requestAddress="requestAddress" @editWish="openEditWishModal" v-if="showWishDetailsModal"
-        @close="closeWishDetailsModal" :wish="showPrevWish ? showPrevWish : showSavedPrevWish" @unSaveWish="unSaveWish"
-        @newUpdate="newUpdate" />
 
 
-        <AnalyticsModal v-if="showAnalyticsModal" :analyticsData="analyticsData" @close="closeAnalyticsModal" />
+
+
+      <WishDetailView v-if="showWishDetailsModal" :isWishSaved="isWishSaved" :isRequestingAddress="isRequestingAddress"
+          @showAddToWishlistModal="showAddToWishlistModal"
+        @requestAddress="requestAddress" @editWish="openEditWishModal" @close="closeWishDetailsModal"
+        :wish="showPrevWish ? showPrevWish : showSavedPrevWish" @unSaveWish="unSaveWish" @newUpdate="newUpdate"
+        :isReserving="isReserving" :isFulfilling="isFulfilling" :isUnReceiving="isUnReceiving"
+        :isReceiving="isReceiving" :isHasAddress="isHasAddress" @deleteWish="handleDeleteWish"
+        @wishUpdated="handleWishUpdate" @reserved="reservedWish" @updateSavedStatus="handleUpdateSavedStatus"
+        @markAsReceived="markAsReceived" @markAsUnreceived="markAsUnreceived" @reserveWish="reserveWish"
+        @markAsFulfilled="markAsFulfilled" @cancelReservation="cancelReservation"
+        @removeFromFulfiled="removeFromFulfiled" />
+
+
+      <GiftReservedModal v-if="showGiftReservedModal" @close="showGiftReservedModal = false"
+        @requestAddress="requestAddress" @hasAddress="hasAddress" :isRequestingAddress="isRequestingAddress"
+        :isHasAddress="isHasAddress" :wish="giftReservedWish" />
+
+
+      <AnalyticsModal v-if="showAnalyticsModal" :analyticsData="analyticsData" @close="closeAnalyticsModal" />
       <CreateWishModal v-if="showCreateWishModal" :wish="editingWish" @addWish="AddWish"
         @close="closeCreateWishModal" />
+
+
       <DeleteConfirmationModal v-if="showDeleteModal" :title="'WishList'"
         :description="'Are you sure you want to delete this wishlist? This action cannot be undone.'"
         @confirm="confirmDelete" @cancel="cancelDelete" />
@@ -111,6 +132,9 @@ import SavedWishes from '@/components/Dashboard/SavedWishes.vue';
 import WishDetailView from '@/components/Dashboard/WishDetailView.vue';
 import AnalyticsModal from '@/components/Dashboard/AnalyticsModal.vue';
 import DeleteConfirmationModal from '@/components/Dashboard/DeleteConfirmationModal.vue';
+import GiftReservedModal from '@/components/GiftReservedModal.vue';
+import AddToWishlist from '@/components/AddToWishlist.vue';
+
 
 export default {
   components: {
@@ -128,13 +152,25 @@ export default {
     SavedWishes,
     WishDetailView,
     AnalyticsModal,
+    GiftReservedModal,
+    AddToWishlist
   },
 
   data() {
     return {
+      AddToWishlistModal: false,
+      wishToAdd: null,
       showWelcomeModal: false,
+      isAddingtoWishlist: false,
       isWishSaved: false,
       isRequestingAddress: false,
+      isFulfilling: false,
+      isReceiving: false,
+      isReserving: false,
+      isUnReceiving: false,
+      isHasAddress: false,
+      giftReservedWish: null,
+      showGiftReservedModal: false,
       user: {
         username: '',
         first_name: '',
@@ -172,10 +208,14 @@ export default {
       savedwishes: [],
       reservedWishes: [],
       loading: false,  // Add loading state
+      currentUser: null,
 
     };
   },
   computed: {
+    isDashboard() {
+      return this.$route.path === "/dashboard";
+    },
     filteredWishlist() {
       return this.wishlists.filter(wishlist => wishlist.status === this.activeTab);
     },
@@ -197,6 +237,9 @@ export default {
       }
     }
   },
+  created() {
+    this.loadCurrentUser(); // Load current user
+  },
   mounted() {
     this.loadUserData();
 
@@ -217,12 +260,400 @@ export default {
 
     this.loadData();
 
+
   },
 
 
 
   methods: {
-    wishlistArchived(){
+
+    showAddToWishlistModal(wish) {
+      this.wishToAdd = wish;
+      this.AddToWishlistModal = true;
+    },
+
+    async saveToWishlist(wish,  selectedWishlistId) {
+
+      this.isAddingtoWishlist = true; // Start loading state
+
+      this.wishToAdd = wish;
+
+      if (!selectedWishlistId) {
+        alert('Please select a wishlist');
+        return;
+      }
+      try {
+        const response = await this.$axios.post(`${this.$baseURL}/wishes/${wish.id}/copy`, {
+          wishlist_id: selectedWishlistId
+        }, {
+          headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+        });
+        eventBus.onSuccess(response.data.message);
+
+      } catch (error) {
+        if (error.response) {
+          // Use eventBus to output error messages directly from the response
+          if (error.response.data.message) {
+            eventBus.onError(error.response.data.message);
+          } else if (error.response.data.errors) {
+            const errorMsg = Object.values(error.response.data.errors).flat().join(" ");
+            eventBus.onError(errorMsg);
+          } else {
+            eventBus.onError("An unexpected error occurred. Please try again.");
+          }
+        }
+      } finally {
+        this.AddToWishlistModal = false;
+        this.isAddingtoWishlist = false; // End loading state
+        this.newUpdate()
+      }
+
+
+
+
+    },
+
+    async markAsReceived(wish) {
+      this.isReceiving = true;
+      try {
+        const response = await this.$axios.put(
+          `${this.$baseURL}/wishes/${wish.id}`,
+          {
+            status: "fulfiled",
+            received: true,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            },
+          }
+        );
+        this.showPrevWish.received = true;
+        eventBus.onSuccess(response.data.message);
+      } catch (error) {
+        if (error.response) {
+          // Use eventBus to output error messages directly from the response
+          if (error.response.data.message) {
+            eventBus.onError(error.response.data.message);
+          } else if (error.response.data.errors) {
+            const errorMsg = Object.values(error.response.data.errors).flat().join(" ");
+            eventBus.onError(errorMsg);
+          } else {
+            eventBus.onError("An unexpected error occurred. Please try again.");
+          }
+        }
+      } finally {
+        this.isReceiving = false; // End loading state
+      }
+    },
+    async markAsUnreceived(wish) {
+      this.isUnReceiving = true;
+      try {
+        const response = await this.$axios.put(
+          `${this.$baseURL}/wishes/${wish.id}`,
+          {
+            received: false,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            },
+          }
+        );
+        this.showPrevWish.received = false;
+        eventBus.onSuccess(response.data.message);
+      } catch (error) {
+        if (error.response) {
+          // Use eventBus to output error messages directly from the response
+          if (error.response.data.message) {
+            eventBus.onError(error.response.data.message);
+          } else if (error.response.data.errors) {
+            const errorMsg = Object.values(error.response.data.errors).flat().join(" ");
+            eventBus.onError(errorMsg);
+          } else {
+            eventBus.onError("An unexpected error occurred. Please try again.");
+          }
+        }
+      } finally {
+        this.isUnReceiving = false;
+      }
+    },
+
+    async reserveWish(wish) {
+
+
+      this.isReserving = true; // Start loading state
+      try {
+        const response = await this.$axios.put(
+          `${this.$baseURL}/wishes/${wish.id}`,
+          { status: "reserved" },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            },
+          }
+        );
+
+        /*         if (this.isDashboard) {
+                  await this.$axios.post(
+                    `${this.$baseURL}/saved-wishes`,
+                    {
+                      wish_id: wish.id,
+                    },
+                    {
+                      headers: {
+                        Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+                      },
+                    }
+                  );
+                } */
+
+        /*    this.wish.status = "reserved"; */
+
+        eventBus.onSuccess(response.data.message);
+
+        if (this.isDashboard) {
+          this.newUpdate();
+        }
+        this.reservedWish(wish)
+      } catch (error) {
+        if (error.response) {
+          // Use eventBus to output error messages directly from the response
+          if (error.response.data.message) {
+            eventBus.onError(error.response.data.message);
+          } else if (error.response.data.errors) {
+            const errorMsg = Object.values(error.response.data.errors).flat().join(" ");
+            eventBus.onError(errorMsg);
+          } else {
+            eventBus.onError("An unexpected error occurred. Please try again.");
+          }
+        }
+      } finally {
+        this.isReserving = false; // End loading state
+      }
+    },
+
+    async markAsFulfilled(wish) {
+      this.isFulfilling = true;
+      try {
+        const response = await this.$axios.put(
+          `${this.$baseURL}/wishes/${wish.id}`,
+          {
+            status: "fulfiled",
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            },
+          }
+        );
+        eventBus.onSuccess(response.data.message);
+        this.showPrevWish.status = "fulfiled";
+
+/*         if (this.isDashboard) {
+          this.newUpdate();
+        }
+ */
+
+      } catch (error) {
+        if (error.response) {
+          // Use eventBus to output error messages directly from the response
+          if (error.response.data.message) {
+            eventBus.onError(error.response.data.message);
+          } else if (error.response.data.errors) {
+            const errorMsg = Object.values(error.response.data.errors).flat().join(" ");
+            eventBus.onError(errorMsg);
+          } else {
+            eventBus.onError("An unexpected error occurred. Please try again.");
+          }
+        }
+      } finally {
+        this.isFulfilling = false;
+        this.showWishDetailsModal  = false;
+        this.refreshClicked(wish.id)
+      }
+    },
+
+    
+    async cancelReservation(wish) {
+
+
+      eventBus.setLoading(true);
+
+      try {
+        const response = await this.$axios.put(
+          `${this.$baseURL}/wishes/${wish.id}`,
+          { status: null },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            },
+          }
+        );
+
+        
+        eventBus.onSuccess(response.data.message);
+        this.showPrevWish.status = null;
+
+        /*    setTimeout(() => {
+             window.location.reload();
+           }, 2000); */
+      } catch (error) {
+        if (error.response) {
+          // Use eventBus to output error messages directly from the response
+          if (error.response.data.message) {
+            eventBus.onError(error.response.data.message);
+          } else if (error.response.data.errors) {
+            const errorMsg = Object.values(error.response.data.errors).flat().join(" ");
+            eventBus.onError(errorMsg);
+          } else {
+            eventBus.onError("An unexpected error occurred. Please try again.");
+          }
+        }
+      } finally {
+       
+        this.refreshClicked(wish.id) 
+        this.showWishDetailsModal = false;
+        eventBus.setLoading(false);
+      }
+    },
+
+    async removeFromFulfiled(wishId) {
+
+      eventBus.setLoading(true);
+      try {
+        const response = await this.$axios.put(
+          `${this.$baseURL}/wishes/${wishId}`,
+          {
+            status: null,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            },
+          }
+        );
+
+        eventBus.onSuccess(response.data.message);
+        this.showPrevWish.status = null;
+
+
+      } catch (error) {
+        if (error.response) {
+          // Use eventBus to output error messages directly from the response
+          if (error.response.data.message) {
+            eventBus.onError(error.response.data.message);
+          } else if (error.response.data.errors) {
+            const errorMsg = Object.values(error.response.data.errors).flat().join(" ");
+            eventBus.onError(errorMsg);
+          } else {
+            eventBus.onError("An unexpected error occurred. Please try again.");
+          }
+        }
+      } finally {
+        this.refreshClicked(wishId)
+        this.showWishDetailsModal  = false;
+        eventBus.setLoading(false);
+      }
+    },
+
+    reservedWish(wish) {
+      this.giftReservedWish = wish
+      this.showWishDetailsModal = false
+      this.showGiftReservedModal = true
+    },
+
+    async hasAddress(wishID) {
+      eventBus.setLoading(true);
+      this.isHasAddress = true
+
+      try {
+
+        const response = await this.$axios.put(
+          `${this.$baseURL}/wishes/${wishID}`,
+          { has_address: true },
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            },
+          }
+        );
+
+        /* eventBus.onSuccess('Address request sent successfully.'); */
+      } catch (error) {
+        if (error.response) {
+          // Use eventBus to output error messages directly from the response
+          if (error.response.data.message) {
+            eventBus.onError(error.response.data.message);
+          } else if (error.response.data.errors) {
+            const errorMsg = Object.values(error.response.data.errors).flat().join(" ");
+            eventBus.onError(errorMsg);
+          } else {
+            eventBus.onError("An unexpected error occurred. Please try again.");
+          }
+        }
+      } finally {
+        this.isHasAddress = false
+        this.showGiftReservedModal = false
+        this.hasAddressClicked(wishID)
+      }
+    },
+
+
+
+    async refreshClicked(wishId) {
+
+      try {
+        await Promise.all([
+          this.newUpdate(),
+        ]);
+      } catch (error) {
+        console.error('Failed to load data:', error);
+      } finally {
+        this.showPrevWish = this.reservedWishes.find(w => w.id === wishId);
+        this.showPrevWish.status = null;
+        this.showSavedPrevWish = this.savedwishes.find(w => w.id === wishId);
+        this.showSavedPrevWish.status = null;
+        this.fetchSavedWishes();
+        eventBus.setLoading(false);
+      }
+
+
+
+    },
+    async hasAddressClicked(wishId) {
+
+      try {
+        await Promise.all([
+          this.newUpdate(),
+        ]);
+      } catch (error) {
+        console.error('Failed to load data:', error);
+      } finally {
+        this.showWishDetailsModal = true;
+        this.showPrevWish = this.reservedWishes.find(w => w.id === wishId);
+        this.showPrevWish.has_address = true;
+        this.showSavedPrevWish = this.savedwishes.find(w => w.id === wishId);
+        this.showSavedPrevWish.has_address = true;
+        eventBus.setLoading(false);
+      }
+
+
+
+    },
+
+
+
+
+    loadCurrentUser() {
+      const userData = JSON.parse(localStorage.getItem('user'));
+      if (userData) {
+        this.currentUser = userData;
+      } else {
+        this.currentUser = []; // Explicitly set to null if no user data
+      }
+    },
+    wishlistArchived() {
       this.loadData();
 
     },
@@ -271,23 +702,32 @@ export default {
 
 
     async requestAddress(wishID) {
+          this.isRequestingAddress = true
+          
+            try {
+                
+             const response =  await this.$axios.post(`${this.$baseURL}/wishes/${wishID}/address`,{} ,{
+              headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+            });
 
-      this.isRequestingAddress = true
-      try {
-
-        await this.$axios.post(`${this.$baseURL}/wishes/${wishID}/address`, {}, {
-          headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
-        });
-
-        eventBus.onSuccess('Address request sent successfully.');
-
-      } catch (error) {
-        console.error("Error requesting address:", error);
-        const errorMsg = error.response?.data?.message || 'Error requesting address. Please try again.';
-      } finally {
-        this.isRequestingAddress = false
-      }
-    },
+            eventBus.onSuccess(response.data.message);
+           } catch (error) {
+            if (error.response) {
+              // Use eventBus to output error messages directly from the response
+              if (error.response.data.message) {
+                eventBus.onError(error.response.data.message);
+              } else if (error.response.data.errors) {
+                const errorMsg = Object.values(error.response.data.errors).flat().join(" ");
+                eventBus.onError(errorMsg);
+              } else {
+                eventBus.onError("An unexpected error occurred. Please try again.");
+              }
+            }
+            } finally {
+                this.isRequestingAddress =false
+                this.showGiftReservedModal =false
+            }
+        },
 
 
     async loadData() {
@@ -490,7 +930,7 @@ export default {
     },
     handleSort({ sortBy, sortOrder }) {
       let arrayToSort = [];
-      
+
       switch (this.activeTab) {
         case 'myWishes':
           arrayToSort = this.wishlists;
@@ -505,7 +945,7 @@ export default {
 
       arrayToSort.sort((a, b) => {
         let comparison = 0;
-        
+
         switch (sortBy) {
           case 'title':
             comparison = a.title.localeCompare(b.title);
@@ -534,7 +974,7 @@ export default {
           default:
             comparison = 0;
         }
-        
+
         return sortOrder === 'asc' ? comparison : -comparison;
       });
     },

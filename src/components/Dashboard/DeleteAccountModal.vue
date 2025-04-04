@@ -90,7 +90,13 @@
           });
   
           if (!response.ok) {
-            throw new Error('Failed to delete account');
+            const errorData = await response.json();
+            if (response.status === 422) {
+              eventBus.onError(errorData.message || 'The password is incorrect');
+            } else {
+              eventBus.onError(errorData.message || 'Failed to delete account');
+            }
+            return;
           }
   
           // Clear local storage and redirect to login
@@ -98,12 +104,10 @@
           this.$router.push('/login');
           eventBus.onSuccess('Account deleted successfully!'); // Notify success
         } catch (error) {
-      const errorMessage = error.response ? await error.response.text() : 'Error deleting account: ' + error.message; // Get error message from server
-      eventBus.onError(errorMessage); // Notify error
-      console.error('Error deleting account:', error);
-    } finally {
-      this.isDeleting = false;
-    }
+          eventBus.onError('An unexpected error occurred. Please try again.');
+        } finally {
+          this.isDeleting = false;
+        }
       },
       getAuthToken() {
         return localStorage.getItem('authToken') || '';

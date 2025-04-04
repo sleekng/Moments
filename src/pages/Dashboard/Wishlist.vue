@@ -1,10 +1,12 @@
 <template>
   <div class="bg-gray-100 pb-10">
-    <AppHeader @showCategoryModal="$emit('showCategoryModal')" />
+<!--     <AppHeader  @showCategoryModal="$emit('showCategoryModal')" /> -->
 
     <div v-if="!loading" class="container mx-auto pt-20">
-      <WishlistDetails  :canShow="currentUser?.username === currentWishlist?.user.username" @editWishlist="handleEditWishlist" :selectedWishlist="currentWishlist" :filteredWishes="filteredWishes"/>
+      <WishlistDetails v-if=" !isLoggedIn"  :canShow="isLoggedIn" @editWishlist="handleEditWishlist" :selectedWishlist="currentWishlist" :filteredWishes="filteredWishes"/>
 
+      <WishlistDetails v-else  :canShow="currentUser?.username === currentWishlist?.user.username" @editWishlist="handleEditWishlist" :selectedWishlist="currentWishlist" :filteredWishes="filteredWishes"/>
+      
       <TabNavigationsWish 
         :myWishesCount="myWishes.length" 
         :reservedCount="reservedWishes.length"
@@ -15,14 +17,14 @@
         class=" py-8"
       />
 
-      <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4   w-full gap-4 lg:gap-6 px-4 lg:px-12 py-6 pb-12 bg-white rounded-b-lg " @mouseleave="handleCloseDropdown">
+      <div v-if=" isLoggedIn" class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4   w-full gap-4 lg:gap-6 px-4 lg:px-12 py-6 pb-12 bg-white rounded-b-lg " @mouseleave="handleCloseDropdown">
         <!-- Empty State Centered -->
         <div v-if="activeTab === 'myWishes' && myWishes.length === 0" class="col-span-2 lg:col-span-4 flex justify-center">
           <EmptyState 
             title="No wishes yet" 
             :message="currentUser?.username === currentWishlist?.user.username ? 'Start adding items to your wishlist.' :  'hasn\'t added any wish.'"
-            :showButton="true"
             :currentUserUsername="currentWishlist?.user.username"
+            :showButton="true"
             buttonText="Add wish"
             :userOwnsWishlist="currentUser?.username === currentWishlist?.user.username"
             @button-click="openCreateWishModal"
@@ -60,25 +62,94 @@
 
         <WishCard 
           v-for="wish in filteredWishes"  
+          :isReserving="isReserving"
+          @removeFromFulfiled="removeFromFulfiled"
           :key="wish.id" 
           :wish="wish" 
           @preview="prevWish" 
-          :loggedInUser="currentUser.username"
+          :loggedInUser="currentUser?.username"
           :openDropdownId="openDropdownId" 
           @deleteWish="handleDeleteWish"
           @toggleDropdown="handleToggleDropdown" 
           @closeDropdown="handleCloseDropdown" 
           @editWish="openEditWishModal"
           @reserved="reservedWish"
+            @reserveWish="reserveWish"
           @updateSavedStatus="handleUpdateSavedStatus"
         
         />
       </div>
+      <div v-else class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 w-full gap-4 lg:gap-6 px-4 lg:px-12 py-6 pb-12 bg-white rounded-b-lg" @mouseleave="handleCloseDropdown">
+  <!-- Empty State Centered -->
+  <div v-if="activeTab === 'myWishes' && myWishes.length === 0" class="col-span-2 lg:col-span-4 flex justify-center">
+    <EmptyState 
+            title="No wishes yet" 
+            :message="currentUser?.username === currentWishlist?.user.username ? 'Start adding items to your wishlist.' :  'hasn\'t added any wish.'"
+            :currentUserUsername="currentWishlist?.user.username"
+            :showButton="true"
+            buttonText="Add wish"
+            :userOwnsWishlist="currentUser?.username === currentWishlist?.user.username"
+            @button-click="openCreateWishModal"
+          />
+  </div>
+
+  <div v-if="activeTab === 'myWishes' && myWishes.length > 0" 
+       class="flex flex-col items-center justify-center bg-gray-100 rounded-lg p-4 py-8 cursor-pointer lg:min-h-[360px]" 
+       @click="showCreateWishModal = true">
+    <div class="flex items-center justify-center w-12 h-12 bg-black rounded-full mb-4">
+      <img src="/assets/add.svg" alt="Add" class="h-5 w-5">
+    </div>
+    <div class="text-lg font-medium text-center text-gray-800 leading-relaxed">Make a Wish</div>
+  </div>
+
+  <div v-if="activeTab === 'reserved' && reservedWishes.length === 0" class="col-span-2 lg:col-span-4 flex justify-center">
+    <EmptyState 
+      title="No wishes reserved"
+      message="Your friends haven't reserved any wishes for you yet. Keep sharing your wishlist!"
+      :showButton="false"
+    />
+  </div>
+
+  <div v-if="activeTab === 'received' && receivedWishes.length === 0" class="col-span-2 lg:col-span-4 flex justify-center">
+    <EmptyState 
+      title="No wishes received"
+      message="You haven't received any wishes from your friends yet. Share your wishlist with them."
+      :showButton="false"
+    />
+  </div>
+
+  <WishCard 
+    v-for="wish in filteredWishes"  
+    :key="wish.id" 
+    :wish="wish" 
+    @preview="prevWish" 
+       :isReserving="isReserving"
+    :openDropdownId="openDropdownId" 
+    @deleteWish="handleDeleteWish"
+    @toggleDropdown="handleToggleDropdown" 
+    @closeDropdown="handleCloseDropdown" 
+    @editWish="openEditWishModal"
+    @reserved="reservedWish"
+    @updateSavedStatus="handleUpdateSavedStatus"
+  />
+      </div>
+
     </div>
 
     <!-- Modals -->
+
+
+    <AddToWishlist     :isAddingtoWishlist="isAddingtoWishlist" @saveToWishlist="saveToWishlist" v-if="AddToWishlistModal" :wish="wishToAdd" @close="AddToWishlistModal = false" />
+
     <WishDetailView 
+
+    :isReserving="isReserving"
+    :isFulfilling="isFulfilling"
+    :isUnReceiving="isUnReceiving"
+    :isReceiving="isReceiving"
+
     :isWishSaved="isWishSaved"
+    @showAddToWishlistModal="showAddToWishlistModal"
       @deleteWish="handleDeleteWish" 
       @editWish="openEditWishModal" 
       @wishUpdated="handleWishUpdate"
@@ -93,7 +164,7 @@
        @updateSavedStatus="handleUpdateSavedStatus"
 
 
-       @markAsReceived="markAsReceived"
+        @markAsReceived="markAsReceived"
         @markAsUnreceived="markAsUnreceived"
         @reserveWish="reserveWish"
         @markAsFulfilled="markAsFulfilled"
@@ -223,6 +294,9 @@ import DeleteConfirmationModal from '@/components/Dashboard/DeleteConfirmationMo
 import { eventBus } from '@/eventBus.js';
 import EmptyState from '@/components/Dashboard/EmptyState.vue';
 import GiftReservedModal from '@/components/GiftReservedModal.vue';
+import { isTokenExpired } from "@/router/index.js"; // Import the function
+import AddToWishlist from '@/components/AddToWishlist.vue';
+
 
 export default {
   name: "Wishlist",
@@ -239,9 +313,12 @@ export default {
     CreateWishModal,
     DeleteConfirmationModal,
     CreatedWishModal,
+    AddToWishlist
   },
   data() {
     return {
+      AddToWishlistModal: false,
+      wishToAdd: null,
       isShareMenuOpen: false,
       savedWishes: new Set(), // Add this to track saved wishes
       isWishSaved:false,
@@ -262,23 +339,32 @@ export default {
       editingWish: null,
       wishes: [],
       wishUpdated: false,
+      isReserving:false,
       wishCreated: false,
       createdWishId: null,
+      isFulfilling : false,
+      isUnReceiving: false,
+      isReceiving: false,
+      isAddingtoWishlist: false,
       loading: false,
       currentUser: null,
       successMessage: '' // Initialize successMessage
     };
   },
   computed: {
+    isLoggedIn() {
+      // Check if the user is logged in by verifying the token
+      return localStorage.getItem('authToken') && !isTokenExpired();
+    },
     myWishes() {
       return this.wishes.filter(wish => wish.status === null);
     },
     reservedWishes() {
-      return this.wishes.filter(wish => wish.status === 'reserved');
+      return this.wishes.filter(wish => wish.status === 'reserved' || wish.status === 'fulfiled' && wish.received != true);
     },
 
     receivedWishes() {
-      return this.wishes.filter(wish => wish.status === 'fulfiled');
+      return this.wishes.filter(wish => wish.received === true);
     },
     filteredWishes() {
       if (this.activeTab === 'myWishes') {
@@ -306,7 +392,10 @@ export default {
     },
   },
   async created() {
-    this.loadCurrentUser(); // Load user data when component is created
+    if(this.isLoggedIn){
+      
+      this.loadCurrentUser(); // Load user data when component is created
+    }
     this.loadData();
   },
   mounted() {
@@ -315,14 +404,59 @@ export default {
   },
   methods: {
 
+    showAddToWishlistModal(wish) {
+      this.wishToAdd = wish;
+      this.AddToWishlistModal = true;
+    },
 
-    async markAsReceived(wishId) {
+    async saveToWishlist(wish,  selectedWishlistId) {
+
+      this.isAddingtoWishlist = true; // Start loading state
+
+      this.wishToAdd = wish;
+
+      if (!selectedWishlistId) {
+        alert('Please select a wishlist');
+        return;
+      }
+      try {
+        const response = await this.$axios.post(`${this.$baseURL}/wishes/${wish.id}/copy`, {
+          wishlist_id: selectedWishlistId
+        }, {
+          headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
+        });
+        eventBus.onSuccess(response.data.message);
+
+      } catch (error) {
+        if (error.response) {
+          // Use eventBus to output error messages directly from the response
+          if (error.response.data.message) {
+            eventBus.onError(error.response.data.message);
+          } else if (error.response.data.errors) {
+            const errorMsg = Object.values(error.response.data.errors).flat().join(" ");
+            eventBus.onError(errorMsg);
+          } else {
+            eventBus.onError("An unexpected error occurred. Please try again.");
+          }
+        }
+      } finally {
+        this.AddToWishlistModal = false;
+        this.isAddingtoWishlist = false; // End loading state
+      }
+
+
+
+
+    },
+
+
+    async markAsReceived(wish) {
+  
       this.isReceiving = true;
       try {
       const response =  await this.$axios.put(
-          `${this.$baseURL}/wishes/${wishId}`,
+          `${this.$baseURL}/wishes/${wish.id}`,
           {
-            status: "fulfiled",
             received: true,
           },
           {
@@ -331,23 +465,31 @@ export default {
             },
           }
         );
-        this.wish.received = true;
         eventBus.onSuccess(response.data.message);
+        this.showPrevWish.received = true;
+        this.showPrevWish.status = "fulfiled";
       } catch (error) {
-        console.error("Error marking as received:", error);
-        const errorMsg =
-          error.response?.data?.message ||
-          "Error marking as received. Please try again.";
-        eventBus.onError(errorMsg);
+        if (error.response) {
+          // Use eventBus to output error messages directly from the response
+          if (error.response.data.message) {
+            eventBus.onError(error.response.data.message);
+          } else if (error.response.data.errors) {
+            const errorMsg = Object.values(error.response.data.errors).flat().join(" ");
+            eventBus.onError(errorMsg);
+          } else {
+            eventBus.onError("An unexpected error occurred. Please try again.");
+          }
+        }
       } finally {
+        this.showWishDetailsModal = false;
         this.isReceiving = false; // End loading state
       }
     },
-    async markAsUnreceived(wishId) {
+    async markAsUnreceived(wish) {
       this.isUnReceiving = true;
       try {
       const response =  await this.$axios.put(
-          `${this.$baseURL}/wishes/${wishId}`,
+          `${this.$baseURL}/wishes/${wish.id}`,
           {
             received: false,
           },
@@ -357,24 +499,33 @@ export default {
             },
           }
         );
-        this.wish.received = false;
         eventBus.onSuccess(response.data.message);
+        this.showPrevWish.received = false;
       } catch (error) {
-        console.error("Error marking as unreceived:", error);
-        const errorMsg =
-          error.response?.data?.message ||
-          "Error marking as unreceived. Please try again.";
-        eventBus.onError(errorMsg);
+        if (error.response) {
+          // Use eventBus to output error messages directly from the response
+          if (error.response.data.message) {
+            eventBus.onError(error.response.data.message);
+          } else if (error.response.data.errors) {
+            const errorMsg = Object.values(error.response.data.errors).flat().join(" ");
+            eventBus.onError(errorMsg);
+          } else {
+            eventBus.onError("An unexpected error occurred. Please try again.");
+          }
+        }
       } finally {
+        this.showWishDetailsModal = false;
         this.isUnReceiving = false;
       }
     },
 
-    async reserveWish(wishId) {
+    async reserveWish(wish) {
+      
+    
       this.isReserving = true; // Start loading state
       try {
       const response =  await this.$axios.put(
-          `${this.$baseURL}/wishes/${wishId}`,
+          `${this.$baseURL}/wishes/${wish.id}`,
           { status: "reserved" },
           {
             headers: {
@@ -387,7 +538,7 @@ export default {
           await this.$axios.post(
             `${this.$baseURL}/saved-wishes`,
             {
-              wish_id: wishId,
+              wish_id: wish.id,
             },
             {
               headers: {
@@ -397,8 +548,8 @@ export default {
           );
         }
 
-        this.wish.status = "reserved";
-        this.$emit("reserved", this.wish);
+     /*    this.wish.status = "reserved"; */
+
         eventBus.onSuccess(response.data.message);
 
         if (this.isDashboard) {
@@ -409,6 +560,7 @@ export default {
           this.closeModal();
           eventBus.onSuccess(response.data.message);
         }
+        this.reservedWish(wish)
       } catch (error) {
         if (error.response) {
           // Use eventBus to output error messages directly from the response
@@ -426,11 +578,11 @@ export default {
       }
     },
 
-    async markAsFulfilled(wishId) {
+    async markAsFulfilled(wish) {
       this.isFulfilling = true;
       try {
        const response = await this.$axios.put(
-          `${this.$baseURL}/wishes/${wishId}`,
+          `${this.$baseURL}/wishes/${wish.id}`,
           {
             status: "fulfiled",
           },
@@ -440,23 +592,30 @@ export default {
             },
           }
         );
-        this.wish.status = "fulfiled";
+        this.showPrevWish.status = "fulfiled";
         eventBus.onSuccess(response.data.message);
       } catch (error) {
-        console.error("Error marking as fulfiled:", error);
-        const errorMsg =
-          error.response?.data?.message ||
-          "Error marking as fulfiled. Please try again.";
-        eventBus.onError(errorMsg);
+        if (error.response) {
+          // Use eventBus to output error messages directly from the response
+          if (error.response.data.message) {
+            eventBus.onError(error.response.data.message);
+          } else if (error.response.data.errors) {
+            const errorMsg = Object.values(error.response.data.errors).flat().join(" ");
+            eventBus.onError(errorMsg);
+          } else {
+            eventBus.onError("An unexpected error occurred. Please try again.");
+          }
+        }
       } finally {
+        this.showWishDetailsModal = false;
         this.isFulfilling = false;
       }
     },
-    async cancelReservation(wishId) {
+    async cancelReservation(wish) {
       eventBus.setLoading(true);
       try {
       const response =  await this.$axios.put(
-          `${this.$baseURL}/wishes/${wishId}`,
+          `${this.$baseURL}/wishes/${wish.id}`,
           { status: null },
           {
             headers: {
@@ -465,19 +624,26 @@ export default {
           }
         );
 
-        this.wish.status = null;
-        eventBus.onSuccess(response.data.message);
+      this.showPrevWish.status = null;
+      eventBus.onSuccess(response.data.message);
 
-        setTimeout(() => {
+     /*    setTimeout(() => {
           window.location.reload();
-        }, 2000);
+        }, 2000); */
       } catch (error) {
-        console.error("Error canceling reservation:", error);
-        const errorMsg =
-          error.response?.data?.message ||
-          "Error canceling reservation. Please try again.";
-        eventBus.onError(errorMsg);
+        if (error.response) {
+          // Use eventBus to output error messages directly from the response
+          if (error.response.data.message) {
+            eventBus.onError(error.response.data.message);
+          } else if (error.response.data.errors) {
+            const errorMsg = Object.values(error.response.data.errors).flat().join(" ");
+            eventBus.onError(errorMsg);
+          } else {
+            eventBus.onError("An unexpected error occurred. Please try again.");
+          }
+        }
       } finally {
+        this.showWishDetailsModal  = false;
         eventBus.setLoading(false);
       }
     },
@@ -497,17 +663,49 @@ export default {
           }
         );
 
-        this.wish.status = null;
+        this.showPrevWish.status = null;
         eventBus.onSuccess(response.data.message);
       } catch (error) {
-        console.error("Error removing Fulfilled:", error);
-        const errorMsg =
-          error.response?.data?.message ||
-          "Error removing from Fulfilled. Please try again.";
-        eventBus.onError(errorMsg);
+        if (error.response) {
+          // Use eventBus to output error messages directly from the response
+          if (error.response.data.message) {
+            eventBus.onError(error.response.data.message);
+          } else if (error.response.data.errors) {
+            const errorMsg = Object.values(error.response.data.errors).flat().join(" ");
+            eventBus.onError(errorMsg);
+          } else {
+            eventBus.onError("An unexpected error occurred. Please try again.");
+          }
+        }
       } finally {
+        this.showWishDetailsModal  = false;
         eventBus.setLoading(false);
       }
+    },
+
+        async hasAddressClicked(wishId) {
+
+      try {
+        const wishlistId = this.$route.params.id;
+        await Promise.all([
+          this.fetchWishes(wishlistId),
+        ]);
+      } catch (error) {
+        console.error('Failed to load data:', error);
+      } finally {
+        this.showWishDetailsModal = true;
+        this.showPrevWish = this.wishes.find(w => w.id === wishId);
+        eventBus.setLoading(false);
+      }
+
+      
+
+    },
+
+    reservedWish(wish){
+      this.giftReservedWish = wish
+      this.showGiftReservedModal=true
+      this.loadData();
     },
 
 
@@ -567,19 +765,16 @@ export default {
         }
     },
 
-    reservedWish(wish){
-      this.giftReservedWish = wish
-      this.showGiftReservedModal=true
-      this.loadData();
-    },
 
     
     loadCurrentUser() {
-      const userData = JSON.parse(localStorage.getItem('user'));
-      if (userData) {
-        this.currentUser = userData;
-      }
-    },
+    const userData = JSON.parse(localStorage.getItem('user'));
+    if (userData) {
+      this.currentUser = userData;
+    } else {
+      this.currentUser = []; // Explicitly set to null if no user data
+    }
+  },
     async loadData() {
       this.loading = true; 
       try {
@@ -671,6 +866,7 @@ export default {
       this.isWishSaved = isWishSaved
       this.showPrevWish = this.wishes.find(w => w.id === wishId);
     },
+
     closeWishDetailsModal() {
       this.showWishDetailsModal = false;
       this.showPrevWish = null;
@@ -711,21 +907,31 @@ export default {
           
             try {
                 
-              await this.$axios.post(`${this.$baseURL}/wishes/${wishID}/address`,{} ,{
+             const response =  await this.$axios.post(`${this.$baseURL}/wishes/${wishID}/address`,{} ,{
               headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
             });
 
-            eventBus.onSuccess('Address request sent successfully.');
-            } catch (error) {
-              console.error("Error requesting address:", error);
-                const errorMsg = error.response?.data?.message || 'Error requesting address. Please try again.';
+            eventBus.onSuccess(response.data.message);
+           } catch (error) {
+            if (error.response) {
+              // Use eventBus to output error messages directly from the response
+              if (error.response.data.message) {
+                eventBus.onError(error.response.data.message);
+              } else if (error.response.data.errors) {
+                const errorMsg = Object.values(error.response.data.errors).flat().join(" ");
+                eventBus.onError(errorMsg);
+              } else {
+                eventBus.onError("An unexpected error occurred. Please try again.");
+              }
+            }
             } finally {
                 this.isRequestingAddress =false
                 this.showGiftReservedModal =false
             }
         },
+        
     async hasAddress(wishID) {
-      console.log('woking');
+      eventBus.setLoading(true);
           this.isHasAddress = true
           
             try {
@@ -739,14 +945,17 @@ export default {
             },
           }
         );
+        
 
-   /*          eventBus.onSuccess('Address request sent successfully.'); */
+
+        /* eventBus.onSuccess('Address request sent successfully.'); */
             } catch (error) {
               console.error("Error requesting address:", error);
                 const errorMsg = error.response?.data?.message || 'Error requesting address. Please try again.';
             } finally {
                 this.isHasAddress =false
-                this.showGiftReservedModal =false
+                this.showGiftReservedModal =false              
+                this.hasAddressClicked(wishID)
             }
         },
 

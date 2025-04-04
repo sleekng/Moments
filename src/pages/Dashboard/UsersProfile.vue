@@ -1,6 +1,6 @@
 <template>
     <div class="bg-white lg:bg-gray-100 py-10">
-      <AppHeader @showCategoryModal="$emit('showCategoryModal')" />
+<!--       <AppHeader  @showCategoryModal="$emit('showCategoryModal')" /> -->
       <div v-if="!loading" class="px-4 lg:px-16 pt-10 lg:pt-20">
         <ProfileDetails :user="user" :myWishlistCount="wishlists.length" />
         <TabNavigationsUserProfileWishlist
@@ -60,6 +60,7 @@
   import WishlistCard from '@/components/Dashboard/WishlistCard.vue';
   import WishDetailView from '@/components/Dashboard/WishDetailView.vue';
   import DeleteConfirmationModal from '@/components/Dashboard/DeleteConfirmationModal.vue';
+  import { isTokenExpired } from "@/router/index.js"; // Import the function
   
   export default {
     components: {
@@ -94,6 +95,13 @@
         reservedWishes: [],
         loading: true,  // Set loading initial state to true
       };
+    },
+
+    computed: {
+      isLoggedIn() {
+      // Check if the user is logged in by verifying the token
+      return localStorage.getItem('authToken') && !isTokenExpired();
+    }
     },
    
     async mounted() {

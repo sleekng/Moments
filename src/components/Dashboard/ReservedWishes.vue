@@ -5,7 +5,7 @@
   >
     <!-- Reserved Wishes -->
 
-    <div class="mb-8">
+    <div class="mb-8" v-if="filteredWishes('reserved').length > 0">
       <div class="text-[18px] lg:text-2xl font-bold mb-4">
         Wishes You Reserved for Your Friends
       </div>
@@ -25,6 +25,8 @@
           @newUpdate="newUpdate"
           class="md:w-[286px] w-40 flex-shrink-0"
           @updateSavedStatus="handleUpdateSavedStatus"
+           @removeFromFulfiled="removeFromFulfiled"
+           @showAddToWishlistModal="showAddToWishlistModal" 
         />
       </div>
     </div>
@@ -49,6 +51,8 @@
           @removeFromFulfiled="removeFromFulfiled"
           class="md:w-[286px] w-40 flex-shrink-0"
           @newUpdate="newUpdate"
+          @showAddToWishlistModal="showAddToWishlistModal" 
+          
         />
       </div>
     </div>
@@ -75,6 +79,11 @@ export default {
     };
   },
   methods: {
+
+    showAddToWishlistModal(wish) {
+        this.$emit('showAddToWishlistModal', wish);
+        },
+
     handleUpdateSavedStatus(wishId, isSaved) {
       const wish = this.wishes.find(w => w.id === wishId);
       if (wish) {
@@ -85,33 +94,8 @@ export default {
     newUpdate() {
       this.$emit("newUpdate");
     },
-    async removeFromFulfiled(wish) {
-      eventBus.setLoading(true);
-      try {
-        await this.$axios.put(
-          `${this.$baseURL}/wishes/${wish.id}`,
-          {
-            status: 'reserved',
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-            },
-          }
-        );
-
-        wish.status = 'reserved';
-        eventBus.onSuccess("Wish has been remove from Fulfilled.");
-        this.$emit("newUpdate");
-      } catch (error) {
-        console.error("Error removing Fulfilled:", error);
-        const errorMsg =
-          error.response?.data?.message ||
-          "Error removing from Fulfilled. Please try again.";
-        eventBus.onError(errorMsg);
-      } finally {
-        eventBus.setLoading(false);
-      }
+    async removeFromFulfiled(wishId) {
+        this.$emit('removeFromFulfiled', wishId)
     },
 
     async markAsFulfilled(wish) {

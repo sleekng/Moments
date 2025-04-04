@@ -53,7 +53,6 @@ export default {
           localStorage.setItem("authToken", token);
 
           // Send verification email signal
-          console.log('Sending verification...');
           await this.$axios.post(`${this.$baseURL}/verify-email`, {}, {
             headers: {
               'Accept': 'application/json',
@@ -67,12 +66,18 @@ export default {
         } else if (response.data.data.verified === true) {
           const token = response.data.data.token;
           const user = response.data.data; 
-
-         // Store token and user info
-         const expirationTime = Date.now() + 24 * 60 * 60 * 1000; // 24 hours
+          
+          // Store token and user info
+          const expirationTime = Date.now() + 24 * 60 * 60 * 1000; // 24 hours
           localStorage.setItem("authToken", token);
           localStorage.setItem("tokenExpiration", expirationTime);
           localStorage.setItem("user", JSON.stringify(user));
+          
+          
+
+
+
+          eventBus.onSuccess(response.data.message);
 
           // Redirect to dashboard
           this.$router.push({

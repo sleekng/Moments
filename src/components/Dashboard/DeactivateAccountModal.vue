@@ -90,13 +90,20 @@
           });
   
           if (!response.ok) {
-            throw new Error('Failed to deactivate account');
+            const errorData = await response.json();
+            if (response.status === 422) {
+              eventBus.onError(errorData.message || 'The password is incorrect');
+            } else {
+              eventBus.onError(errorData.message || 'Failed to delete account');
+            }
+            return;
           }
+          
   
           // Clear local storage and redirect to login
           localStorage.clear();
           this.$router.push('/login');
-          eventBus.onSuccess('Account deactivated successfully!');
+          eventBus.onSuccess('Account Deactivated');
         } catch (error) {
           eventBus.onError(error.message);
           console.error('Error deactivating account:', error);

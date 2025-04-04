@@ -74,7 +74,9 @@
                     <div class="flex-grow lg:hidden block">
                         <div class="space-y-1">
                             <h2 class="text-lg font-semibold text-gray-900">Tag Friends</h2>
-                            <p class="text-gray-900">Value thoughtful gift-giving and seek a convenient platform to</p>
+                            <p class="text-gray-900">Gifting is More Fun Together! <br>
+                            Tag your favorite people and let them in on your wishlist—because the best surprises are shared!
+                            </p>
                         </div>
                     </div>
 
@@ -85,7 +87,9 @@
                     <div class="flex-grow hidden lg:block">
                         <div class="space-y-1">
                             <h2 class="text-lg font-semibold text-gray-900">Tag Friends</h2>
-                            <p class="text-gray-900">Value thoughtful gift-giving and seek a convenient platform to</p>
+                            <p class="text-gray-900">Gifting is More Fun Together! <br>
+                            Tag your favorite people and let them in on your wishlist—because the best surprises are shared!
+                            </p>
                         </div>
                     </div>
 
@@ -96,7 +100,9 @@
                     <div class="flex flex-col lg:flex-row items-center">
                         <div class="space-y-2 lg:w-8/12">
                             <h2 class="text-lg font-semibold text-gray-900">Categorize Wishlist</h2>
-                            <p class="text-gray-900 w-4/5">Value thoughtful gift-giving and seek a convenient platform to share and discover gift ideas</p>
+                            <p class="text-gray-900 w-4/5">Your Wishlist, Your Way! <br>
+                            Organize your dream gifts by occasion, style, or need—making it easy for others to find the perfect one for you.
+                            </p>
                         </div>
                         <div class="flex my-10 h-[150px] w-full lg:w-6/12 pt-4 justify-center lg:justify-start items-center space-y-1 text-center lg:text-left animate-carousel relative">
                             <div class="whitespace-nowrap text-4xl font-bold absolute flex items-center lg:justify-start justify-center">Baby Shower</div>
@@ -115,7 +121,9 @@
                         <div class="flex-grow flex items-center h-auto">
                             <div class="space-y-1">
                                 <h2 class="text-lg font-semibold mt-4">Send Gifts</h2>
-                                <p>Value thoughtful gift-giving and seek a convenient platform to share and discover gift ideas</p>
+                                <p>Send Love, Not Just Gifts! <br>
+                                Discover thoughtful gifts and make someone’s day special with just a few clicks!
+                                </p>
                             </div>
                         </div>
                         <div class="flex flex-col justify-end items-end h-full pt-2">
@@ -128,7 +136,9 @@
                 <div class="bg-[#72C6EB] flex flex-col h-auto space-y-2 p-4 rounded-2xl col-span-1 lg:col-span-3 lg:row-start-2 group">
                     <div class="space-y-1">
                         <h2 class="text-lg font-semibold text-gray-900">Reminder</h2>
-                        <p class="text-gray-700">Value thoughtful gift-giving and seek a convenient platform to</p>
+                        <p class="text-gray-700">Never Miss a Wish! <br>
+                        Get timely nudges to create or update your wishlist, so your loved ones always know what makes you smile.
+                        </p>
                     </div>
                     <img src="/assets/Notifiction2.svg" alt="Track Wishes" class="w-64 h-auto transform transition-transform duration-300 group-hover:scale-105" />
                 </div>
@@ -140,7 +150,8 @@
                         <div class="flex-grow p-4 lg:hidden block">
                             <div class="space-y-1">
                                 <h2 class="text-lg font-semibold ">Track Wishes</h2>
-                                <p class="">Value thoughtful gift-giving and seek a convenient platform to share and discover gift ideas</p>
+                                <p class="">See Who’s Making Your Wish Come True! <br>
+                                    Stay in the loop—track reserved gifts and avoid duplicates while keeping the surprise alive!</p>
                             </div>
                         </div>
 
@@ -149,7 +160,8 @@
                         <div class="flex-grow p-4 hidden lg:block">
                             <div class="space-y-1">
                                 <h2 class="text-lg font-semibold ">Track Wishes</h2>
-                                <p class="">Value thoughtful gift-giving and seek a convenient platform to share and discover gift ideas</p>
+                                <p class="">See Who’s Making Your Wish Come True! <br>
+                                    Stay in the loop—track reserved gifts and avoid duplicates while keeping the surprise alive!</p>
                             </div>
                         </div>
                     </div>

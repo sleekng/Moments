@@ -56,7 +56,7 @@ export default {
             this.isSubmitting = true;
             this.opacity = 'opacity-40'
 
-            try {
+            try { 
                 eventBus.setLoading(true);
                 const response = await this.$axios.post(`${this.$baseURL}/forgot-password`, {
                     email: this.email

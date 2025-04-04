@@ -1,6 +1,6 @@
 <template>
-  <div class="lg:w-4/6 relative overflow-y-auto p-4 py-8 lg:p-8 flex flex-col lg:justify-center lg:items-center">
-    <div class="w-full lg:top-0 lg:p-8 flex flex-col justify-center items-center bg-white lg:absolute">
+  <div class="lg:w-3/4 h-full  relative overflow-y-auto p-4 py-8 lg:p-8 ">
+    <div class="w-full  flex flex-col justify-center items-center bg-white ">
       <!-- Logo -->
       <OptinLogo />
 
@@ -15,7 +15,7 @@
         up</h2>
     </div>
 
-    <div class="mb-10 relative left-hand lg:top-[400px] 2xl:top-[400px] w-full">
+    <div class="mb-10 relative left-hand  w-full">
       <!-- Form Inputs -->
       <div class="w-full space-y-4">
         <!-- Category dropdown -->
@@ -77,9 +77,9 @@
                 class="flex-1 min-w-[120px] border-none outline-none p-1" type="text" placeholder="Search friends..." />
 
                   <!-- Loader Icon -->
-  <div v-if="isLoading" class="flex items-center">
-    <i class="fas fa-spinner fa-spin"></i> <!-- FontAwesome loader -->
-  </div>
+            <div v-if="isLoading" class="flex items-center">
+              <i class="fas fa-spinner fa-spin"></i> <!-- FontAwesome loader -->
+            </div>
             </div>
 
             <!-- Filtered Friends Dropdown -->
@@ -240,11 +240,7 @@ export default {
       if (this.imageFile) {
         formData.append('photo', this.imageFile);
       } else {
-        // Fetch the category image and convert it to a Blob
-        const response = await fetch(this.categoryImage);
-        const blob = await response.blob();
-        const file = new File([blob], 'category-image.jpg', { type: blob.type });
-        formData.append('photo', file);
+      
       }
       formData.append('title', this.title);
       formData.append('date', this.date);

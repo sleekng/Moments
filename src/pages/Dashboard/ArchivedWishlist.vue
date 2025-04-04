@@ -1,6 +1,6 @@
 <template>
   <div class="bg-gray-100 pb-10">
-    <AppHeader @showCategoryModal="$emit('showCategoryModal')" />
+<!--     <AppHeader @showCategoryModal="$emit('showCategoryModal')" /> -->
 
     <div v-if="!loading" class="container mx-auto pt-20">
       <WishlistDetails  :canShow="currentUser?.username === currentWishlist?.user.username" @editWishlist="handleEditWishlist" :selectedWishlist="currentWishlist" />

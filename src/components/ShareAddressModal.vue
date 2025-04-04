@@ -1,5 +1,5 @@
 <template>
-  <div v-if="showShareAddressModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[500]">
+  <div v-if="showShareAddressModal" class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[999999999]">
     <div class="bg-white rounded-lg w-full max-w-lg p-6">
       <div class="flex justify-between items-center mb-6">
         <div class="flex items-center gap-3">
@@ -78,9 +78,17 @@ import { eventBus } from '@/eventBus.js';
 export default {
   name: 'ShareAddressModal',
   props: {
-    wishID: Number,
-    showShareAddressModal: Boolean
+    selectedNotification: {
+      type: Object,
+      required: true
+    },
+    showShareAddressModal: {
+      type: Boolean,
+      required: true
+    }
   },
+  emits: ['close', 'addressSelected', 'shareConfirmed'],
+  
   data() {
     return {
       tipMessage: 'For your safety, we recommend sharing your public address for general use and your private address to only trusted friends. Your privacy is important to us!',
@@ -122,12 +130,23 @@ export default {
     },
     handleSelect(addressId) {
       this.selectedAddressId = addressId;
+      this.$emit('addressSelected', addressId);
     },
     async confirmShare() {
       if (!this.selectedAddressId) return;
+      
+      this.$emit('shareConfirmed', {
+        addressId: this.selectedAddressId,
+        notification: this.selectedNotification
+      });
+    }
+/*     async confirmShare() {
+      if (!this.selectedAddressId) return;
+      const wishId = this.notification.action_id;
+      const notification_id = this.notification.id;
 
       try {
-        await this.$axios.put(`${this.$baseURL}/wishes/${this.wishID}/address/${this.selectedAddressId}`, {}, {
+        await this.$axios.put(`${this.$baseURL}/wishes/${wishId}/address/${this.selectedAddressId}`, {}, {
           headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
         });
 
@@ -141,7 +160,12 @@ export default {
         this.showShareAddressModal = false;
         this.showConfirmationModal = false;
       }
-    }
+    } */
+
+
+
+
+
   }
 };
 </script>

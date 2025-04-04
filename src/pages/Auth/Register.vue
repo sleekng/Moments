@@ -37,9 +37,9 @@ export default {
         const user = response.data.data; 
 
 
-        const expirationTime = Date.now() + 24 * 60 * 60 * 1000; // 24 hours
+          const expirationTime = Date.now() + 24 * 60 * 60 * 1000; // 24 hours
           localStorage.setItem("authToken", token);
-       /*    localStorage.setItem("tokenExpiration", expirationTime); */
+          localStorage.setItem("tokenExpiration", expirationTime);
           localStorage.setItem("user", JSON.stringify(user));
 
         // Redirect to /verification-sent

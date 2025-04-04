@@ -38,10 +38,10 @@
 
           <div  class="flex justify-between space-x-2">
             <button @click="hasAddress" :disabled="isHasAddress" :class="[
-                  'px-8 py-3 rounded-full relative',
+                  'px-8 py-3  rounded-full relative flex-1 w-1/2',
                   isHasAddress
-                    ? 'bg-[#F0F1F2] text-gray-800 font-medium hover:shadow-lg cursor-not-allowed flex-1   transition-all  py-3 px-4 rounded-full text-center focus:outline-none'
-                    : 'bg-[#F0F1F2] text-gray-800 font-medium hover:shadow-lg flex-1   transition-all  py-3 px-4 rounded-full text-center focus:outline-none',
+                    ? 'bg-[#F0F1F2] text-gray-800 font-medium hover:shadow-lg cursor-not-allowed flex-1   transition-all  py-2 px-2 rounded-full text-center focus:outline-none'
+                    : 'bg-[#F0F1F2] text-gray-800 font-medium hover:shadow-lg flex-1   transition-all  py-2 px-2 rounded-full text-center focus:outline-none',
                 ]">
                             <span class="w-full flex justify-center">
                                 <span v-if="isHasAddress" class="  absolute ">
@@ -51,10 +51,10 @@
                             </span>
             </button>
             <button @click="requestAddress" :disabled="isRequestingAddress" :class="[
-                  'px-8 py-3 rounded-full relative',
+                  'px-4 py-2  rounded-full  relative flex-1 w-1/2',
                   isRequestingAddress
-                    ? 'bg-primaryColor text-white hover:shadow-lg cursor-not-allowed'
-                    : 'bg-primaryColor text-white hover:shadow-lg',
+                    ? 'bg-primaryColor text-white hover:shadow-lg py-2 px-4 cursor-not-allowed'
+                    : 'bg-primaryColor text-white hover:shadow-lg py-2 px-4',
                 ]">
                             <span class="w-full flex justify-center">
                                 <span v-if="isRequestingAddress" class="  absolute ">

@@ -20,6 +20,7 @@
       <div v-if="wishlists.length" class="space-y-2">
         <p class="font-medium text-sm text-gray-500">Wishlist</p>
         <div v-for="wishlist in wishlists" :key="wishlist.name" class="flex items-center justify-between cursor-pointer">
+ 
           <div class="flex items-center space-x-2" @click="viewWishlist(wishlist,wishlist.username )">
             <img :src="wishlist.photo || '/assets/wishlist-category-placeholder.svg'" class="w-8 h-8 object-cover" alt="Wishlist Icon">
             <div>

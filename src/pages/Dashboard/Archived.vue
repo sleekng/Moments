@@ -1,6 +1,6 @@
 <template>
     <div class="bg-white lg:bg-gray-100 py-10">
-        <AppHeader @showCategoryModal="$emit('showCategoryModal')" />
+   <!--      <AppHeader @showCategoryModal="$emit('showCategoryModal')" /> -->
         <div v-if="!loading" class="px-4 lg:px-16 pt-10 lg:pt-20">
 
             <div class="text-2xl lg:px-12 rounded-t-lg py-4 bg-white  font-bold">
